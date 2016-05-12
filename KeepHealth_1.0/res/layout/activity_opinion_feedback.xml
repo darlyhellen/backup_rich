@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_ll_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/home_top_background"
+        android:padding="@dimen/activity_top_padding" >
+
+        <ImageButton
+            android:id="@+id/id_ibt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back_selector"
+            android:padding="@dimen/button_padding" />
+
+        <TextView
+            android:id="@+id/id_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="意见反馈"
+            android:textColor="@color/w_white"
+            android:textSize="@dimen/textview_large" />
+
+        <Button
+            android:id="@+id/id_bt_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_l_white"
+            android:clickable="false"
+            android:text="提交"
+            android:textColor="@color/w_l_white"
+            android:textSize="@dimen/textview_general" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/id_et"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="@dimen/activity_top_padding"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="请填写您对帮忙医的意见或建议"
+        android:textColor="@color/black"
+         android:textColorHint="@color/w_l_gray"
+        android:textSize="@dimen/textview_general" />
+
+    <GridView
+        android:id="@+id/aor_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_marginTop="25dp"
+        android:columnWidth="100dp"
+        android:horizontalSpacing="15dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="15dp" />
+
+</LinearLayout>

@@ -1,0 +1,118 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:orientation="vertical" >
+
+    <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+        android:id="@+id/id_CommonActivityTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonActivityTopView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bgwhite"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:maxLength="20"
+            android:id="@+id/id_et_original_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入原密码"
+            android:padding="@dimen/button_padding"
+            android:password="true"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bgwhite"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:maxLength="20"
+            android:id="@+id/id_et_new_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入6-20位新密码"
+            android:padding="@dimen/button_padding"
+            android:password="true"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bgwhite"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:maxLength="20"
+            android:id="@+id/id_et_sure_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请确认新密码"
+            android:padding="@dimen/button_padding"
+            android:password="true"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+    
+
+    <com.ytdinfo.keephealth.ui.view.CommonButton
+        android:id="@+id/id_bt_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonButton>
+
+</LinearLayout>

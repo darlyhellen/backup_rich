@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:id="@+id/id_ll_parent"
+    android:orientation="vertical" >
+
+    <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+        android:id="@+id/id_CommonActivityTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonActivityTopView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_view"
+        android:background="@color/bgwhite"
+        android:orientation="vertical" >
+
+        <com.ytdinfo.keephealth.ui.personaldata.PersonalDataItem_2View
+            android:id="@+id/id_PersonalDataItem_2View"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.personaldata.PersonalDataItem_2View>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <com.ytdinfo.keephealth.ui.view.CommonModifyView
+            android:id="@+id/id_PersonalDataItem_1View_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.view.CommonModifyView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <com.ytdinfo.keephealth.ui.view.CommonModifyView
+            android:id="@+id/id_PersonalDataItem_1View_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.view.CommonModifyView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <com.ytdinfo.keephealth.ui.view.CommonModifyView
+            android:id="@+id/id_PersonalDataItem_1View_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.view.CommonModifyView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <com.ytdinfo.keephealth.ui.view.CommonModifyView
+            android:id="@+id/id_PersonalDataItem_1View_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.view.CommonModifyView>
+    </LinearLayout>
+
+</LinearLayout>

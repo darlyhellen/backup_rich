@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_top_padding"
+    android:orientation="vertical"
+    >
+<TextView 
+    android:padding="5dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="您是否确认结束咨询？"
+    android:textColor="@color/w_gray"
+    android:textSize="@dimen/textview_large"
+    />
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <Button 
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cicle_green"
+        android:text="确定"
+        android:textSize="@dimen/textview_large"
+        android:textColor="@color/w_l_green"
+        />
+     <Button 
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_bt_bg"
+        android:text="取消"
+        android:textSize="@dimen/textview_large"
+        android:textColor="@color/w_white"
+        />
+</LinearLayout>
+</LinearLayout>

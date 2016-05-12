@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   >
+   <LinearLayout 
+       android:layout_marginRight="5dp"
+       android:paddingTop="10dp"
+       android:layout_alignParentRight="true"
+       android:background="@drawable/more_pop_bg"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       >
+       <Button 
+           android:id="@+id/id_bt_exit_chat"
+           android:background="@drawable/more_pop_item"
+           android:layout_width="match_parent"
+           android:layout_height="0dp"
+           android:layout_weight="1"
+           android:text="结束咨询"
+           android:textColor="@color/w_white"
+           android:textSize="@dimen/textview_general"
+           />
+       <Button 
+           android:gravity="center"
+           android:id="@+id/id_bt_docIntro"
+           android:background="@drawable/more_pop_item"
+           android:layout_width="match_parent"
+            android:layout_height="0dp"
+           android:layout_weight="1"
+           android:text="医生简介"
+           android:textColor="@color/w_white"
+           android:textSize="@dimen/textview_general"
+           />
+   </LinearLayout>
+    
+
+</RelativeLayout>

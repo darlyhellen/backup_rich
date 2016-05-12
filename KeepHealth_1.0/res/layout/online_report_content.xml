@@ -1,0 +1,222 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_ll_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgwhite"
+    android:orientation="vertical" >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_top_padding"
+            android:paddingRight="@dimen/activity_top_padding" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="姓名"
+                android:textColor="@color/w_gray"
+                android:textSize="@dimen/textview_general" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/online_et_named"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="必填"
+            android:padding="5dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+    </TableRow>
+    <!-- 性别选择 -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <TableRow
+        android:id="@+id/online_report_sex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_top_padding"
+            android:paddingRight="@dimen/activity_top_padding" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="性别"
+                android:textColor="@color/w_gray"
+                android:textSize="@dimen/textview_general" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/online_sex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="必选"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+
+        <ImageView
+            android:id="@+id/id_iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_top_padding"
+            android:src="@drawable/arrow_gray_down" />
+        <!-- 性别选择 -->
+    </TableRow>
+
+    <RelativeLayout
+        android:id="@+id/online_report_sex_chose"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#EBEBEB"
+        android:paddingLeft="@dimen/activity_top_padding"
+        android:paddingRight="@dimen/activity_top_padding"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <ImageButton
+                android:id="@+id/online_ibt_man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/boy_blue" />
+
+            <ImageButton
+                android:id="@+id/online_ibt_woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/girl_gray" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!-- 性别选择 -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_top_padding"
+            android:paddingRight="@dimen/activity_top_padding" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="年龄"
+                android:textColor="@color/w_gray"
+                android:textSize="@dimen/textview_general" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/online_et_age"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="必填"
+            android:maxLength="3"
+            android:padding="5dp"
+            android:phoneNumber="true"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/w_l_gray"
+            android:textSize="@dimen/textview_general" />
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_top_padding"
+            android:paddingRight="@dimen/activity_top_padding" >
+
+            <TextView
+                android:id="@+id/report_et_content_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="疾病描述"
+                android:textColor="@color/w_gray"
+                android:textSize="@dimen/textview_general" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+
+            <EditText
+                android:id="@+id/report_et_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="必填"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/w_l_gray"
+                android:textSize="@dimen/textview_general" />
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+</TableLayout>

@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:orientation="vertical" >
+
+    <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+        android:id="@+id/id_CommonActivityTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonActivityTopView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="请输入你注册或绑定的手机号，以获取验证码"
+        android:textColor="@color/w_l_gray"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <EditText
+        android:id="@+id/id_et_telephone"
+        android:phoneNumber="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bgwhite"
+        android:hint="请输入手机号"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/w_l_gray"
+        android:textSize="@dimen/textview_general" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <com.ytdinfo.keephealth.ui.view.CommonButton
+        android:id="@+id/id_bt_yanzhengma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonButton>
+
+</LinearLayout>

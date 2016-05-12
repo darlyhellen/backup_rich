@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp" >
+
+    <ImageView
+        android:id="@+id/id_iv_helper"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/icon_bang" />
+
+    <LinearLayout
+        android:paddingTop="13dp"
+         android:paddingBottom="13dp"
+          android:paddingLeft="17dp"
+           android:paddingRight="7dp"
+        android:background="@drawable/push_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_marginBottom="3dp"
+            android:id="@+id/id_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="糖尿病饮食12122"
+            android:textColor="#ff000000"
+            android:ellipsize="end" android:singleLine="true"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
+            <ImageView
+                android:layout_marginRight="5dp"
+                android:id="@+id/id_iv_icon"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="5dp"
+                android:src="@drawable/jiatingyisheng" />
+
+            <TextView
+                android:id="@+id/id_tv_desc"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="帮忙医后台管理系统帮忙医后台管理系统帮忙医后帮忙医后台管理系统帮忙医后台管理系统帮忙医后台管理系统帮忙医后台管理系统"
+                android:textColor="#aa000000"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
