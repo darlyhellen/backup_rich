@@ -34,4 +34,14 @@ public class CommonActivityTopView extends RelativeLayout {
 		tv_title.setText(title);
 	}
 
+	//
+	// public void setAlphaOf(float alpha) {
+	// this.setAlpha(alpha);
+	// }
+
+	public void setback() {
+		this.setAlpha(1.0f);
+		this.setBackgroundResource(R.drawable.top_bg2);
+	}
+
 }

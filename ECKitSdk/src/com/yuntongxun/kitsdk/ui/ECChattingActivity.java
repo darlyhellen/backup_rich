@@ -102,6 +102,7 @@ import com.yuntongxun.kitsdk.utils.ECNotificationManager;
 import com.yuntongxun.kitsdk.utils.EmoticonUtil;
 import com.yuntongxun.kitsdk.utils.FileAccessor;
 import com.yuntongxun.kitsdk.utils.FileUtils;
+import com.yuntongxun.kitsdk.utils.FontMainUtils;
 import com.yuntongxun.kitsdk.utils.LogUtil;
 import com.yuntongxun.kitsdk.utils.ToastUtil;
 import com.yuntongxun.kitsdk.view.ECAlertDialog;
@@ -1790,6 +1791,7 @@ public class ECChattingActivity extends ECSuperActivity implements
 	private void showExitChat() {
 		View view = View.inflate(getApplicationContext(), R.layout.exit_chat,
 				null);
+		FontMainUtils.changeTypeface(view);
 		Button sure = (Button) view.findViewById(R.id.ec_sure);
 		Button cancel = (Button) view.findViewById(R.id.ec_cancel);
 		sure.setOnClickListener(this);
@@ -2234,6 +2236,7 @@ public class ECChattingActivity extends ECSuperActivity implements
 			mProgressBar.setProgress(0);
 			View view = View.inflate(getApplicationContext(), R.layout.ytx_continue_chat,
 					null);
+			FontMainUtils.changeTypeface(view);
 			//TextView tips=(TextView) view.findViewById(R.id.tipad);
 			Button sure = (Button) view.findViewById(R.id.ec_sure);
 			Button cancel = (Button) view.findViewById(R.id.ec_cancel);

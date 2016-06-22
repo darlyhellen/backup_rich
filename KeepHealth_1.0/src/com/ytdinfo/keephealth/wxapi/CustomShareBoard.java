@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 package com.ytdinfo.keephealth.wxapi;
 
 import android.app.Activity;
@@ -15,15 +11,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
-import com.lidroid.xutils.util.LogUtils;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.bean.StatusCode;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
+import com.umeng.socialize.media.UMImage;
 import com.ytdinfo.keephealth.R;
-import com.ytdinfo.keephealth.app.Constants;
+import com.ytdinfo.keephealth.utils.ToastUtil;
 
 /**
  * 
@@ -38,9 +31,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.wxCallBack = mwxCallBack;
 	}
 
-	private UMSocialService mController = UMServiceFactory
-			.getUMSocialService(Constants.DESCRIPTOR);
 	private Activity mActivity;
+	// 分享四元素
+	private String titleName;
+	private String thumbUrl;
+	private String url;
+	private String siteDesc;
 
 	public CustomShareBoard(Activity activity) {
 		super(activity);
@@ -67,21 +63,39 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.setOutsideTouchable(true);
 	}
 
+	/**
+	 * 下午5:05:59
+	 * 
+	 * @author zhangyh2 TODO 设置分享内容
+	 */
+	public void setShareContent(String titleName, String thumbUrl, String url,
+			String siteDesc) {
+		this.titleName = titleName;
+		this.thumbUrl = thumbUrl;
+		this.url = url;
+		this.siteDesc = siteDesc;
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
+		UMImage image = new UMImage(mActivity, thumbUrl);
 		switch (id) {
 		case R.id.wechat:
-			performShare(SHARE_MEDIA.WEIXIN);
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN)
+					.setCallback(umShareListener).withText(siteDesc)
+					.withTitle(titleName).withMedia(image).withTargetUrl(url)
+					.share();
 			break;
 		case R.id.wechat_circle:
-			performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+					.setCallback(umShareListener).withText(siteDesc)
+					.withTitle(titleName).withMedia(image).withTargetUrl(url)
+					.share();
 			break;
 		case R.id.qq:
-			performShare(SHARE_MEDIA.QQ);
 			break;
 		case R.id.qzone:
-			performShare(SHARE_MEDIA.QZONE);
 			break;
 		case R.id.consel:
 			dismiss();
@@ -91,57 +105,45 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 	}
 
-	private void performShare(SHARE_MEDIA platform) {
-		mController.postShare(mActivity, platform, new SnsPostListener() {
+	private UMShareListener umShareListener = new UMShareListener() {
+		@Override
+		public void onResult(SHARE_MEDIA platform) {
+			Log.d("plat", "platform" + platform);
+			if (platform.name().equals("WEIXIN_FAVORITE")) {
+			} else {
+				if (wxCallBack != null)
+					mHandler.post(new Runnable() {
 
-			@Override
-			public void onStart() {
-				LogUtils.i("onStart share");
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							wxCallBack.shareComplete(true);
+							Log.i("----", "wxCallBack----true");
+
+						}
+					});
 			}
+		}
 
-			@Override
-			public void onComplete(SHARE_MEDIA platform, int eCode,
-					SocializeEntity entity) {
-				// String showText = platform.toString();
-				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
-					if (wxCallBack != null)
-						mHandler.post(new Runnable() {
+		@Override
+		public void onError(SHARE_MEDIA platform, Throwable t) {
+			if (wxCallBack != null)
+				mHandler.post(new Runnable() {
 
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								wxCallBack.shareComplete(true);
-								Log.i("----", "wxCallBack----true");
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						wxCallBack.shareComplete(false);
+						Log.i("----", "wxCallBack----false");
+					}
+				});
 
-							}
-						});
+		}
 
-					// showText += "平台分享成功";
-				} else {
-					if (wxCallBack != null)
-						mHandler.post(new Runnable() {
-
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								wxCallBack.shareComplete(false);
-								Log.i("----", "wxCallBack----false");
-							}
-						});
-
-					// showText += "平台分享失败";
-				}
-				// try {
-				// Intent intent = new Intent(mActivity, MainActivity.class);
-				// mActivity.startActivity(intent);
-
-				// } catch (Exception e) {
-				// // TODO: handle exception
-				// }
-				// Toast.makeText(mActivity, showText,
-				// Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
+		@Override
+		public void onCancel(SHARE_MEDIA platform) {
+			ToastUtil.showMessage(" 分享取消了");
+		}
+	};
 
 }

@@ -40,10 +40,12 @@ import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.NetworkReachabilityUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 import com.ytdinfo.keephealth.utils.ToastUtil;
+import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.kitsdk.ECDeviceKit;
 import com.yuntongxun.kitsdk.beans.ChatInfoBean;
 
 public class ReportAdapter extends BaseAdapter {
+	
 	private static final String TAG = ReportAdapter.class.getName();
 	private LayoutInflater inflater;
 	private List<ReportBean> list;
@@ -172,6 +174,7 @@ public class ReportAdapter extends BaseAdapter {
 	private MyProgressDialog myProgressDialog;
 
 	private void requestDoctor(String studyId, final Button buttons) {
+		if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS ){
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -216,6 +219,9 @@ public class ReportAdapter extends BaseAdapter {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		}else {
+			ToastUtil.showMessage("用户网络异常，通讯服务器连接不成功！", 1000);
 		}
 	}
 

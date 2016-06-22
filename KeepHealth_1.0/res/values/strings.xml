@@ -648,5 +648,5 @@
     <string name="title_activity_guide">GuideActivity</string>
     <string name="title_activity_modify_pass">ModifyPassActivity</string>
     <string name="bmyxzs_messge">您好！很高兴收到您的提问，医生正在接入中，请您稍后。</string>
-
+     <string name="umeng_socialize_sina">新浪</string>
 </resources>

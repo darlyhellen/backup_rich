@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//res/layout/login.xml=UTF-8
 encoding//src/com/ytdinfo/keephealth/ui/HomeFragment.java=UTF-8
+encoding//src/com/ytdinfo/keephealth/ui/HomeFragmentV21.java=UTF-8
 encoding//src/com/ytdinfo/keephealth/ui/NewsFragment.java=UTF-8
 encoding//src/com/ytdinfo/keephealth/ui/UserInfoFragment.java=UTF-8
 encoding//src/com/ytdinfo/keephealth/ui/view/MyAdGallery.java=UTF-8

@@ -14,12 +14,14 @@ package com.yuntongxun.kitsdk.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.umeng.comm.core.beans.CommConfig;
 import com.yuntongxun.eckitsdk.R;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.kitsdk.db.ConversationSqlManager;
@@ -31,6 +33,7 @@ import com.yuntongxun.kitsdk.ui.chatting.model.ECConversation;
 import com.yuntongxun.kitsdk.ui.chatting.view.CCPTextView;
 import com.yuntongxun.kitsdk.utils.DateUtil;
 import com.yuntongxun.kitsdk.utils.DemoUtils;
+import com.yuntongxun.kitsdk.utils.FontMainUtils;
 
 /**
  * 
@@ -185,7 +188,6 @@ public class ConversationAdapter extends CCPListAdapter<ECConversation> {
 			view = convertView;
 			mViewHolder = (ViewHolder) view.getTag();
 		}
-
 		ECConversation conversation = getItem(position);
 		if (conversation != null) {
 			String msgCount = conversation.getUnreadCount() > 100 ? "..."
@@ -226,7 +228,7 @@ public class ConversationAdapter extends CCPListAdapter<ECConversation> {
 				mViewHolder.user_avatar.setImageResource(R.drawable.icon_bang);
 			}
 		}
-
+		FontMainUtils.changeTypeface(view);
 		return view;
 	}
 

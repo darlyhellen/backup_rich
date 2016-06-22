@@ -24,9 +24,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -951,7 +951,7 @@ public class OnlineQuesActivity extends BaseActivity implements Callback,
 						.findViewById(R.id.chat_dialog_msg);
 				String desString = null;
 				if (!Chat_Dialog.timeCurl()) {
-					desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
+					desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
 				}else {
 					 desString = "亲，我们的医生都在忙碌，请稍等~";
 				}

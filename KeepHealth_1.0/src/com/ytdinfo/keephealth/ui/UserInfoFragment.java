@@ -10,10 +10,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
+import com.youzan.sdk.Callback;
+import com.youzan.sdk.YouzanSDK;
+import com.youzan.sdk.YouzanUser;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.model.UserModel;
@@ -21,11 +23,13 @@ import com.ytdinfo.keephealth.ui.login.LoginActivity;
 import com.ytdinfo.keephealth.ui.opinionfeedback.OpinionFeedbackActivity;
 import com.ytdinfo.keephealth.ui.personaldata.PersonalDataActivity;
 import com.ytdinfo.keephealth.ui.setting.SettingActivity;
+import com.ytdinfo.keephealth.ui.uzanstore.WebActivity;
+import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
 import com.ytdinfo.keephealth.utils.ImageLoaderUtils;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 
-public class UserInfoFragment extends Fragment {
+public class UserInfoFragment extends BaseFragment {
 	private String TAG = "UserInfoFragment";
 
 	private UserInfoItem_2View userInfoItem_2View_1;
@@ -34,11 +38,15 @@ public class UserInfoFragment extends Fragment {
 	private UserInfoItem_2View userInfoItem_2View_4;
 	// ----------V3添加关于我们
 	private UserInfoItem_2View userInfoItem_2View_5;
+	// ----------V4添加有赞商城入口
+	private UserInfoItem_2View userInfoItem_2View_6;
 
 	private UserInfoItem_1View userInfoItem_1View;
-
+	
 	private DisplayImageOptions options;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
+
+	private MyProgressDialog synuser;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +75,9 @@ public class UserInfoFragment extends Fragment {
 		userInfoItem_2View_5 = (UserInfoItem_2View) rootView
 				.findViewById(R.id.id_UserInfoItem_2View_5);
 
+		userInfoItem_2View_6 = (UserInfoItem_2View) rootView
+				.findViewById(R.id.id_UserInfoItem_2View_6);
+
 		userInfoItem_1View = (UserInfoItem_1View) rootView
 				.findViewById(R.id.id_UserInfoItem_1View);
 
@@ -81,12 +92,16 @@ public class UserInfoFragment extends Fragment {
 				R.drawable.setting));
 		userInfoItem_2View_5.setIcon(getResources().getDrawable(
 				R.drawable.about_us_icon));
+
+		userInfoItem_2View_6.setIcon(getResources().getDrawable(
+				R.drawable.about_us_icon));
 		// 设置各个标题
 		userInfoItem_2View_1.setTitle("体检报告解读");
 		userInfoItem_2View_2.setTitle("我的预约");
 		userInfoItem_2View_3.setTitle("意见反馈");
 		userInfoItem_2View_4.setTitle("设置");
 		userInfoItem_2View_5.setTitle("关于我们");
+		userInfoItem_2View_6.setTitle("帮忙医商城");
 
 	}
 
@@ -178,6 +193,71 @@ public class UserInfoFragment extends Fragment {
 			}
 		});
 
+		userInfoItem_2View_6.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				registerYouzanUserForWeb();
+			}
+		});
+
+	}
+
+	/**
+	 * 上午10:46:12
+	 * 
+	 * @author zhangyh2 TODO 有赞直接注册窗口
+	 */
+	protected void registerYouzanUserForWeb() {
+		// TODO Auto-generated method stub
+		synuser = new MyProgressDialog(getActivity());
+		synuser.setMessage("加载中...");
+		synuser.show();
+		String jsonUserModel = SharedPrefsUtil
+				.getValue(Constants.USERMODEL, "");
+		UserModel userModel = new Gson().fromJson(jsonUserModel,
+				UserModel.class);
+
+		if (userModel == null) {
+			// 用户去登录
+			synuser.dismiss();
+			Intent i11 = new Intent();
+			i11.setClass(getActivity(), LoginActivity.class);
+			startActivity(i11);
+		}
+
+		/**
+		 * 打开有赞入口网页需先注册有赞用户
+		 * 
+		 * <pre>
+		 * 如果你们App的用户这个时候还没有登录, 请先跳转你们的登录页面, 然后再回来同步用户信息
+		 * 
+		 * 或者参考{@link LoginWebActivity}
+		 * </pre>
+		 */
+		YouzanUser user = new YouzanUser();
+		user.setUserId(userModel.getPid() + "");
+		int sex = 0;
+		if ("Man".endsWith(userModel.getUserSex())) {
+			sex = 1;
+		}
+		user.setGender(sex);
+		user.setNickName(userModel.getAddition1());
+		user.setTelephone(userModel.getMobilephone());
+		user.setUserName(userModel.getUserName());
+		YouzanSDK.asyncRegisterUser(user, new Callback() {
+			@Override
+			public void onCallback() {
+				synuser.dismiss();
+				Intent intent = new Intent(getActivity(), WebActivity.class);
+				// 传入链接, 请修改成你们店铺的链接
+				intent.putExtra("loadUrl",
+						"https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl");
+				startActivity(intent);
+
+			}
+		});
 	}
 
 	@Override

@@ -3,13 +3,14 @@ package com.ytdinfo.keephealth.app;
 import android.os.Environment;
 
 public class Constants {
+
 	// AppID：wxe9dfaf997a35d828
 	// AppSecret：e98b52d02f8112bcc93181490b980aab
 	private Constants() {
 	};
- 
-	public static  String DESCRIPTOR = "com.umeng.share";
- 
+
+	public static String DESCRIPTOR = "com.umeng.share";
+
 	/** 是否第一次使用 */
 	public static final String ISFIRSTCOME = "isfirstcome_new";
 	/** 新消息提醒 */
@@ -23,7 +24,7 @@ public class Constants {
 	/** 加载banner判断 */
 	public static final String ISLOADED = "isloaded";
 	/** 用户token标示 */
-	public static final String TOKEN = "token_new";
+	public static final String TOKEN = "token_new_v2";
 	public static final String CHECKEDID_RADIOBT = "checkedid_radiobt";
 	public static final String CHECKISUPDATE = "checkisupdate";
 
@@ -51,22 +52,66 @@ public class Constants {
 	// 在线问诊人员信息
 	public static final String ONLINE_QUES_USERMODEL = "OnlineQuestionUserModel";
 	public static final String ONLINE_QUES_USERMODEL_ME = "OnlineQuestionUserModel_me";
+
+	public static final String IS_USER_NAME_AS_NICK_NAME = "is_user_name_as_nick_name";
 	/** 服务器地址 */
 	// 开发环境
+	public static final String ROOT_URl = "http://172.3.207.15";
 
-//	public static final String ROOT_URl = "http://172.3.207.15";
- 
 	// 测试环境
-//	 public static final String ROOT_URl = "http://172.3.207.26";
+	// public static final String ROOT_URl = "http://172.3.207.26";
 	// 正式环境
-	  public static final String ROOT_URl = "http://api.bmyi.cn";
- 
-//	 public static final String ROOT_URl = "http://172.3.207.26";
+	// public static final String ROOT_URl = "http://api.bmyi.cn";
+
 	// public static final String ROOT_URl = "http://test.rayelink.com";
 	// public static final String ROOT_URl = "http://192.168.0.148:818";
 	// public static final String ROOT_URl = "http://192.168.0.155";
 	// public static final String ROOT_URl = "http://api.bmyi.cn";
- 
+
+	public static final String ROOT_WEB = "http://test.bmyi.cn:8080";
+	/*** get the main page 3 point information */
+	public static final String INFORMATIONS = ROOT_WEB + "/Home/GetNewsLists";
+	/**
+	 * 上午11:59:16 TODO最新资讯
+	 */
+	public static final String NEWSLISTS = ROOT_WEB + "/Home/NewsListForAPP";
+	/**
+	 * 上午11:59:16 TODO对应咨询
+	 */
+	public static final String NEWSPAGE = ROOT_WEB + "/Home/NewsPage";
+	/**
+	 * 上午11:43:55 TODO微官网首页
+	 */
+	public static final String HOMEINDEX = ROOT_WEB + "/home/index";
+	/**
+	 * 上午11:43:55 TODO预约挂号
+	 */
+	public static final String DOCTORLIST = ROOT_WEB + "/Doctor/DoctorList";
+	/**
+	 * 上午11:43:55 TODO专家排班表
+	 */
+	public static final String ORDERLIST = ROOT_WEB + "/Order/OrderList";
+	/**
+	 * 上午11:43:55 TODO洁牙
+	 */
+	public static final String KOUQIANG = ROOT_URl
+			+ "/Go/?url=/html/add_server/kouqiang/List.html ";
+	/**
+	 * 上午11:43:55 TODO康复医疗
+	 */
+	public static final String KANGFULILIAO = ROOT_URl
+			+ "/html/add_server/kangfuliliao/List.html";
+	/**
+	 * 上午11:43:55 TODOAHA
+	 */
+	public static final String AHA = ROOT_URl
+			+ "/Go/?url=/html/add_server/aha/homePage.html";
+	/**
+	 * 上午11:43:55 TODO胶囊胃镜
+	 */
+	public static final String WEIJING = ROOT_URl
+			+ "/Go/?url=/html/add_server/weijing/List.html";
+
 	public static final String SERVICE_URl = ROOT_URl + "/APIAccount/";
 	/** 登录地址 */
 	public static final String LOGIN_URl = SERVICE_URl + "GetAPIAccountInfo2";
@@ -176,7 +221,7 @@ public class Constants {
 	/**
 	 * 下午4:06:35 TODO 关于我们
 	 */
-	public static final String ABOUTUS = ROOT_URl+"/Html/about_us.html";
+	public static final String ABOUTUS = ROOT_URl + "/Html/about_us.html";
 	/** 获取体检报告 */
 	public static final String CHOICE_REPORT_URl = ROOT_URl
 			+ "/api/AppClient/ReportList";

@@ -1,5 +1,8 @@
 package com.ytdinfo.keephealth.ui.view;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -7,6 +10,7 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -25,6 +29,9 @@ import android.widget.LinearLayout;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.MyApp;
 import com.ytdinfo.keephealth.utils.LogUtil;
@@ -144,26 +151,59 @@ public class MyAdGallery extends Gallery implements OnItemClickListener,
 			imageview.setLayoutParams(new LayoutParams(
 					android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 					android.view.ViewGroup.LayoutParams.MATCH_PARENT));
-			if (mUrllist.size() == 0) {// 本地加载图片
-				LogUtil.i("wpc",
-						"mListImagePath.size()==" + mListImagePath.size());
-				LogUtil.i("wpc",
-						"mListImagePath.get(i)==" + mListImagePath.get(i));
-				// imageview.setImageResource(mAdsId[i]); // 为ImageView设置要显示的图片
-				ImageLoader.getInstance().displayImage(
-						"file://" + mListImagePath.get(i), imageview);
-			} else { // 网络加载图片
-				LogUtil.i("wpc", "mUrllist.size()==" + mUrllist.size());
-				LogUtil.i("wpc", "mUrllist.get(i)==" + mUrllist.get(i));
-				// BitmapHelp.getBitmapUtils(mContext).display(imageview,
-				// mUrllist.get(i).getImageURL());
-				ImageLoader.getInstance().displayImage(mUrllist.get(i),
-						imageview);
+			if(mUrllist.size()==0)
+			{
+					ImageLoader.getInstance().displayImage(
+							"file://" + mListImagePath.get(i), imageview);
+			}else{
+				ImageLoader.getInstance().displayImage(mUrllist.get(i),imageview,new ImageLoadingListener() {
+					
+					@Override
+					public void onLoadingStarted(String arg0, View arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+						// TODO Auto-generated method stub
+						((ImageView)arg1).setImageResource(R.drawable.private_doc);
+					}
+					
+					@Override
+					public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onLoadingCancelled(String arg0, View arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			}
 			listImgs.add(imageview);
 		}
 	}
+	
+	private boolean isExistNetImage(String imageUrl)
+	{
+		try{
+			URL url = new URL(
+	                imageUrl);
+	        // 返回一个 URLConnection 对象，它表示到 URL 所引用的远程对象的连接。
+	        URLConnection uc = url.openConnection();
+	        // 打开的连接读取的输入流。
+	        InputStream in = uc.getInputStream();
+		}catch(Exception e)
+		{
+			return false;
+		}
+		return true;
+	}
 
+	
 	/** 初始化圆点 */
 	private void initOvalLayout() {
 		/*

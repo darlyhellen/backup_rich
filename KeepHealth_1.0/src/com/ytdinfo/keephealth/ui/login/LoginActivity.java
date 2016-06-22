@@ -29,6 +29,20 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.rayelink.eckit.MainChatControllerListener;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.CommunitySDK;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.beans.CommUser.Gender;
+import com.umeng.comm.core.beans.CommUser.USERNAME_LEN_RULE;
+import com.umeng.comm.core.beans.Source;
+import com.umeng.comm.core.constants.ErrorCode;
+import com.umeng.comm.core.impl.CommunityFactory;
+import com.umeng.comm.core.impl.CommunitySDKImpl;
+import com.umeng.comm.core.listeners.Listeners.CommListener;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
+import com.umeng.comm.core.login.LoginListener;
+import com.umeng.comm.core.nets.Response;
+import com.umeng.comm.core.nets.responses.PortraitUploadResponse;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
@@ -39,6 +53,7 @@ import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.BaseActivity;
 import com.ytdinfo.keephealth.ui.MainActivity;
 import com.ytdinfo.keephealth.ui.forgetpass.FindPassActivity;
+import com.ytdinfo.keephealth.ui.personaldata.CommonModifyInfoActivity;
 import com.ytdinfo.keephealth.ui.personaldata.PersonalDataActivity;
 import com.ytdinfo.keephealth.ui.register.RegisterActivity;
 import com.ytdinfo.keephealth.ui.view.CommonButton;
@@ -248,39 +263,73 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			if (!loginStatus.equals("Fail")) {
 				String token = jsonObject.getString("Token");
 				String usermodel = jsonObject.getString("UserModel");
-//				String userId = jsonObject.getJSONObject("UserModel")
-//						.getString("ID");
-				String voip=jsonObject.getJSONObject("UserModel")
-						.getString("voipAccount");
+				String voip = jsonObject.getJSONObject("UserModel").getString(
+						"voipAccount");
 				SharedPrefsUtil.putValue(Constants.TOKEN, token);
 				SharedPrefsUtil.putValue(Constants.USERID, voip);
 				SharedPrefsUtil.putValue(Constants.USERMODEL, usermodel);
 				String s = SharedPrefsUtil.getValue(Constants.TOKEN, null);
-				//连接云通讯
-			    MyApp.ConnectYunTongXun();
-			   // requestGetUserGroup();
+
 				// 跳到首页
-				UserModel userModel = new Gson().fromJson(usermodel,
+				final UserModel userModel = new Gson().fromJson(usermodel,
 						UserModel.class);
 				dbUtil = DBUtilsHelper.getInstance().getDb();
-				
-				//初始化帮忙医小助手
-				InitBMY();
-				//初始化会话信息
-				InitConservationClosed();
-				
-				Intent i;
-				if (null == userModel.getIDcard()
-						|| "".equals(userModel.getIDcard())) {
-					i = new Intent(this, PersonalDataActivity.class);
+				Log.e("UMNEG_Commnity", "login start!");
+				// 链接登录微社区
+				CommunitySDK sdk = CommunityFactory.getCommSDK(this);
+				sdk.initSDK(this.getApplicationContext());
+				CommUser suser = new CommUser();
+				if (userModel.getAddition1()==null||userModel.getAddition1()=="") {
+					suser.name = userModel.getUserName();
 				} else {
-					i = new Intent(this, MainActivity.class);
-					SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);  
+					suser.name = userModel.getAddition1();
 				}
-				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-				finish();
-			
+				suser.id = "UM_" + userModel.getMobilephone();
+				suser.customField = userModel.getUserType();
+				if ("Man".equalsIgnoreCase(userModel.getUserSex())) {
+					suser.gender = Gender.MALE;
+				} else if ("Woman".equalsIgnoreCase(userModel.getUserSex())) {
+					suser.gender = Gender.FEMALE;
+				}
+				suser.age = userModel.getAge();
+				suser.iconUrl = userModel.getHeadPicture();
+				Log.e("UMNEG_Commnity", "login start2!");
+				sdk.loginToUmengServerBySelfAccount(LoginActivity.this, suser,
+						new LoginListener() {
+							@Override
+							public void onStart() {
+								// TODO Auto-generated method stub
+								Log.e("UMNEG_Commnity", "login start3!");
+								Log.e("onStart", "start");
+							}
+
+							@Override
+							public void onComplete(int arg0, CommUser arg1) {
+								Log.e("UMNEG_Commnity", "login result is" + arg0);
+								// TODO Auto-generated method stub
+								if (ErrorCode.NO_ERROR == arg0) {
+									// 初始化帮忙医小助手
+									InitBMY();
+									// 初始化会话信息
+									InitConservationClosed();
+									// 连接云通讯
+									MyApp.ConnectYunTongXun();
+									Intent i;
+									if (null == userModel.getIDcard()
+											|| "".equals(userModel.getIDcard())) {
+										i = new Intent(LoginActivity.this, PersonalDataActivity.class);
+									} else {
+										i = new Intent(LoginActivity.this, MainActivity.class);
+										SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);
+									}
+									i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+									startActivity(i);
+									finish();
+								}
+							}
+						});	 
+				
+				
 			} else {
 				ToastUtil.showMessage(message);
 				handler.sendEmptyMessage(0x341);
@@ -290,21 +339,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			handler.sendEmptyMessage(0x341);
 		}
 	}
-	Handler mHandler;
 	
-	private void InitConservationClosed()
-	{
-		mHandler=new Handler()
-		{
+	
+	
+	
+	
+
+	Handler mHandler;
+
+	private void InitConservationClosed() {
+		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if(msg.what==0x01)
-				{
-					IMChattingHelper.sendECMessage((ECMessage)msg.obj);
+				if (msg.what == 0x01) {
+					IMChattingHelper.sendECMessage((ECMessage) msg.obj);
 				}
 			}
 		};
-		
+
 		HttpClient.get(LoginActivity.this, Constants.LOGIN_CLOSE_SUBJECT,
 				new RequestParams(), new RequestCallBack<String>() {
 					@Override
@@ -312,21 +364,23 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						Log.e("String", arg0.result);
 						try {
 							JSONObject jsonObject = new JSONObject(arg0.result);
-							JSONObject data=jsonObject.getJSONObject("Data");
-							if(data!=null)
-							{
-								if(data.getBoolean("HasValue"))
-								{
-									String subjectId=data.getJSONObject("SubjectInfo").getString("Id");
-									String docVoip=data.getString("VoipAccount");
-									MainChatControllerListener.getInstance().closeSubject(subjectId, docVoip,mHandler);								}
+							JSONObject data = jsonObject.getJSONObject("Data");
+							if (data != null) {
+								if (data.getBoolean("HasValue")) {
+									String subjectId = data.getJSONObject(
+											"SubjectInfo").getString("Id");
+									String docVoip = data
+											.getString("VoipAccount");
+									MainChatControllerListener.getInstance()
+											.closeSubject(subjectId, docVoip,
+													mHandler);
 								}
+							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
-						
+
 					}
 
 					@Override
@@ -336,42 +390,38 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					}
 				});
 	}
-	
-	
-	
-	
-	private void InitBMY()
-	{
-				//判断是否有帮忙医的消息
-			  	DBUtil dbUtil = new DBUtil(MyApp.getInstance());
-			  	TBNews mObject =dbUtil.queryFirst();
-				if(mObject!=null )
-				{
-					 ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-				        //设置消息的属性：发出者，接受者，发送时间等
-				        msg.setForm("10000");
-				        msg.setMsgTime(System.currentTimeMillis());
-				        // 设置消息接收者
-				        msg.setTo("10000");
-				        msg.setSessionId("10000");
-				        // 设置消息发送类型（发送或者接收）
-				        msg.setDirection(ECMessage.Direction.RECEIVE);
-				        // 创建一个文本消息体，并添加到消息对象中
-				        ECTextMessageBody msgBody = new ECTextMessageBody(mObject.getTitle());
-				    	// 调用接口发送IM消息
-						msg.setMsgTime(System.currentTimeMillis());
-						msg.setBody(msgBody);
-					    msg.setMsgStatus(MessageStatus.SUCCESS);
-					    if(ECDeviceKit.getInstance().getUserId()!=null){
-					    long salId= ConversationSqlManager.querySessionIdForBySessionId("10000");
-					    if(salId==0)//没有
-						  ConversationSqlManager.insertSessionRecordV2(msg, 1);
-					    }
-				}
-		
+
+	private void InitBMY() {
+		// 判断是否有帮忙医的消息
+		DBUtil dbUtil = new DBUtil(MyApp.getInstance());
+		TBNews mObject = dbUtil.queryFirst();
+		if (mObject != null) {
+			ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
+			// 设置消息的属性：发出者，接受者，发送时间等
+			msg.setForm("10000");
+			msg.setMsgTime(System.currentTimeMillis());
+			// 设置消息接收者
+			msg.setTo("10000");
+			msg.setSessionId("10000");
+			// 设置消息发送类型（发送或者接收）
+			msg.setDirection(ECMessage.Direction.RECEIVE);
+			// 创建一个文本消息体，并添加到消息对象中
+			ECTextMessageBody msgBody = new ECTextMessageBody(
+					mObject.getTitle());
+			// 调用接口发送IM消息
+			msg.setMsgTime(System.currentTimeMillis());
+			msg.setBody(msgBody);
+			msg.setMsgStatus(MessageStatus.SUCCESS);
+			if (ECDeviceKit.getInstance().getUserId() != null) {
+				long salId = ConversationSqlManager
+						.querySessionIdForBySessionId("10000");
+				if (salId == 0)// 没有
+					ConversationSqlManager.insertSessionRecordV2(msg, 1);
+			}
+		}
+
 	}
-	
-	
+
 	private void requestGetUserGroup() {
 		// TODO Auto-generated method stub
 		HttpClient.get(LoginActivity.this, Constants.GETUSERGROUPS_URL,
@@ -385,43 +435,64 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 							JSONObject data = jsonObject.getJSONObject("Data");
 							String statusCode = data.getString("statusCode");
 							if (statusCode.equals("000000")) {
-								if(data.has("groups")&&data.getString("groups")!=null&&!data.getString("groups").equals("null")){
+								if (data.has("groups")
+										&& data.getString("groups") != null
+										&& !data.getString("groups").equals(
+												"null")) {
 									List<UserGroupBean> list = new Gson().fromJson(
 											data.getString("groups"),
 											new TypeToken<List<UserGroupBean>>() {
 											}.getType());
 									for (int i = 0; i < list.size(); i++) {
-										UserGroupBean userGroupBean = list.get(i);
-										if(!GroupSqlManager.isExitGroup(userGroupBean.getGroupId()))
-										{
-											ECGroup group =new ECGroup();
-											group.setGroupId(userGroupBean.getGroupId());
-											group.setName(userGroupBean.getName());
-											group.setDateCreated(userGroupBean.getDateCreated());
-											group.setGroupType(Integer.parseInt(userGroupBean.getType()));
-											group.setCount(Integer.parseInt(userGroupBean.getCount()));
+										UserGroupBean userGroupBean = list
+												.get(i);
+										if (!GroupSqlManager
+												.isExitGroup(userGroupBean
+														.getGroupId())) {
+											ECGroup group = new ECGroup();
+											group.setGroupId(userGroupBean
+													.getGroupId());
+											group.setName(userGroupBean
+													.getName());
+											group.setDateCreated(userGroupBean
+													.getDateCreated());
+											group.setGroupType(Integer
+													.parseInt(userGroupBean
+															.getType()));
+											group.setCount(Integer
+													.parseInt(userGroupBean
+															.getCount()));
 											group.setPermission(Permission.PRIVATE);
-										 
-											GroupSqlManager.insertGroup(group, true, false);
-											  ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-										        //设置消息的属性：发出者，接受者，发送时间等
-										        msg.setForm(ECDeviceKit.getInstance().getUserId());
-										        msg.setMsgTime(System.currentTimeMillis());
-										        // 设置消息接收者
-										        msg.setTo(userGroupBean.getGroupId());
-										        msg.setSessionId(userGroupBean.getGroupId());
-										        // 设置消息发送类型（发送或者接收）
-										        msg.setDirection(ECMessage.Direction.RECEIVE);
-										        // 创建一个文本消息体，并添加到消息对象中
-										        ECTextMessageBody msgBody = new ECTextMessageBody("");
-										    	// 调用接口发送IM消息
-												msg.setMsgTime(System.currentTimeMillis());
-											  msg.setBody(msgBody);
-											  msg.setMsgStatus(MessageStatus.SUCCESS);
-											  
-											 // IMChattingHelper.sendECMessage(msg);
-	 									  ConversationSqlManager.insertSessionRecord(msg); 
-											
+
+											GroupSqlManager.insertGroup(group,
+													true, false);
+											ECMessage msg = ECMessage
+													.createECMessage(ECMessage.Type.TXT);
+											// 设置消息的属性：发出者，接受者，发送时间等
+											msg.setForm(ECDeviceKit
+													.getInstance().getUserId());
+											msg.setMsgTime(System
+													.currentTimeMillis());
+											// 设置消息接收者
+											msg.setTo(userGroupBean
+													.getGroupId());
+											msg.setSessionId(userGroupBean
+													.getGroupId());
+											// 设置消息发送类型（发送或者接收）
+											msg.setDirection(ECMessage.Direction.RECEIVE);
+											// 创建一个文本消息体，并添加到消息对象中
+											ECTextMessageBody msgBody = new ECTextMessageBody(
+													"");
+											// 调用接口发送IM消息
+											msg.setMsgTime(System
+													.currentTimeMillis());
+											msg.setBody(msgBody);
+											msg.setMsgStatus(MessageStatus.SUCCESS);
+
+											// IMChattingHelper.sendECMessage(msg);
+											ConversationSqlManager
+													.insertSessionRecord(msg);
+
 										}
 									}
 								}
@@ -437,8 +508,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 					}
 				});
-	} 
- 
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -449,8 +520,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
-
- 
 	@Override
 	public void onResume() {
 		super.onResume();

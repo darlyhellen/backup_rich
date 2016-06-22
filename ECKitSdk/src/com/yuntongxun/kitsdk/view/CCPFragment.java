@@ -14,6 +14,7 @@ package com.yuntongxun.kitsdk.view;
 
 import com.yuntongxun.eckitsdk.R;
 import com.yuntongxun.kitsdk.utils.DensityUtil;
+import com.yuntongxun.kitsdk.utils.FontMainUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -163,6 +164,7 @@ public abstract  class CCPFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        FontMainUtils.changeTypeface(getView());
     }
 
     @Override

@@ -16,8 +16,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
@@ -37,14 +37,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.rayelink.eckit.SDKCoreHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgentJSInterface;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
+import com.umeng.socialize.UMShareAPI;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
@@ -61,6 +54,7 @@ import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 import com.ytdinfo.keephealth.utils.ToastUtil;
 import com.ytdinfo.keephealth.wxapi.CustomShareBoard;
 import com.ytdinfo.keephealth.wxapi.WXCallBack;
+import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.kitsdk.ECDeviceKit;
 import com.yuntongxun.kitsdk.beans.ChatInfoBean;
 
@@ -86,8 +80,8 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
 
 	public CustomShareBoard shareBoard;
 
-	private UMSocialService mController = UMServiceFactory
-			.getUMSocialService(Constants.DESCRIPTOR);
+	// private UMSocialService mController = UMServiceFactory
+	// .getUMSocialService(Constants.DESCRIPTOR);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -368,75 +362,80 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
 	}
 
 	private void requestDoctor(String studyId) {
-		// TODO Auto-generated method stub
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("SubjectType", "1");
-			jsonObject.put("UserID", userModel.getID());
-			jsonObject.put("UserName", userModel.getUserName());
-			jsonObject.put("UserSex", userModel.getUserSex());
-			jsonObject.put("Age", userModel.getAge());
-			jsonObject.put("HeadPicture", userModel.getHeadPicture());
-			jsonObject.put("RelationShip", "1");
-			jsonObject.put("StudyID", studyId);
-			jsonObject.put("AttachPics", null);
-			jsonObject.put("BodyContent", null);
-			HttpClient.post(Constants.STARTCHAT_URl, jsonObject.toString(),
-					new RequestCallBack<String>() {
-						@Override
-						public void onStart() {
-							// TODO Auto-generated method stub
-							super.onStart();
-							myProgressDialog = new MyProgressDialog(context);
-							myProgressDialog.setMessage("正在请求...");
-							myProgressDialog.show();
-						}
+		if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS ){
+			// TODO Auto-generated method stub
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("SubjectType", "1");
+				jsonObject.put("UserID", userModel.getID());
+				jsonObject.put("UserName", userModel.getUserName());
+				jsonObject.put("UserSex", userModel.getUserSex());
+				jsonObject.put("Age", userModel.getAge());
+				jsonObject.put("HeadPicture", userModel.getHeadPicture());
+				jsonObject.put("RelationShip", "1");
+				jsonObject.put("StudyID", studyId);
+				jsonObject.put("AttachPics", null);
+				jsonObject.put("BodyContent", null);
+				HttpClient.post(Constants.STARTCHAT_URl, jsonObject.toString(),
+						new RequestCallBack<String>() {
+							@Override
+							public void onStart() {
+								// TODO Auto-generated method stub
+								super.onStart();
+								myProgressDialog = new MyProgressDialog(context);
+								myProgressDialog.setMessage("正在请求...");
+								myProgressDialog.show();
+							}
 
-						@Override
-						public void onSuccess(ResponseInfo<String> arg0) {
-							// TODO Auto-generated method stub
-							LogUtil.i(TAG, arg0.result);
-							myProgressDialog.dismiss();
-							analyzeJson(arg0.result);
+							@Override
+							public void onSuccess(ResponseInfo<String> arg0) {
+								// TODO Auto-generated method stub
+								LogUtil.i(TAG, arg0.result);
+								myProgressDialog.dismiss();
+								analyzeJson(arg0.result);
 
-						}
+							}
 
-						@Override
-						public void onFailure(HttpException arg0, String arg1) {
-							// TODO Auto-generated method stub
-							myProgressDialog.dismiss();
-						}
-					});
+							@Override
+							public void onFailure(HttpException arg0, String arg1) {
+								// TODO Auto-generated method stub
+								myProgressDialog.dismiss();
+							}
+						});
 
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			ToastUtil.showMessage("用户网络异常，通讯服务器连接不成功！", 1000);
 		}
+	
 	}
 
 	private void analyzeJson(String json) {
 		// TODO Auto-generated method stub
-//		if (!Chat_Dialog.timeCurl()) {
-//			final AlertDialog dialog = new AlertDialog.Builder(context)
-//					.create();
-//			dialog.show();
-//			dialog.setCanceledOnTouchOutside(false);
-//			Window window = dialog.getWindow();
-//			window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
-//			TextView msg = (TextView) window.findViewById(R.id.chat_dialog_msg);
-//			String desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
-//			msg.setText(desString);
-//			Button sure = (Button) window.findViewById(R.id.chat_dialog_sure);
-//			sure.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					// TODO Auto-generated method stub
-//					dialog.dismiss();
-//				}
-//			});
-//			return;
-//		}
+		// if (!Chat_Dialog.timeCurl()) {
+		// final AlertDialog dialog = new AlertDialog.Builder(context)
+		// .create();
+		// dialog.show();
+		// dialog.setCanceledOnTouchOutside(false);
+		// Window window = dialog.getWindow();
+		// window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
+		// TextView msg = (TextView) window.findViewById(R.id.chat_dialog_msg);
+		// String desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
+		// msg.setText(desString);
+		// Button sure = (Button) window.findViewById(R.id.chat_dialog_sure);
+		// sure.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		// dialog.dismiss();
+		// }
+		// });
+		// return;
+		// }
 		try {
 			JSONObject jsonObject = new JSONObject(json);
 			JSONObject data = jsonObject.getJSONObject("Data");
@@ -455,9 +454,9 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
 						.findViewById(R.id.chat_dialog_msg);
 				String desString = null;
 				if (!Chat_Dialog.timeCurl()) {
-					desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
-				}else {
-					 desString = "亲，我们的医生都在忙碌，请稍等~";
+					desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
+				} else {
+					desString = "亲，我们的医生都在忙碌，请稍等~";
 				}
 				msg.setText(desString);
 				Button sure = (Button) window
@@ -569,7 +568,8 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
 	@JavascriptInterface
 	public void shareWebSiteToPlatForm(String titleName, String thumbUrl,
 			String url, String siteDesc) {
-		setShareContent(titleName, thumbUrl, url, siteDesc);
+		// setShareContent(titleName, thumbUrl, url, siteDesc);
+		shareBoard.setShareContent(titleName, thumbUrl, url, siteDesc);
 		Log.i("shareWebSiteToPlatForm", titleName + thumbUrl + url + siteDesc);
 		postShare();
 	}
@@ -596,147 +596,24 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
 		Log.i("shareComplete", "webview.loadUrl--e" + flag);
 	}
 
-	/**
-	 * @功能描述 : 添加微信平台分享
-	 * @return
-	 */
-	private void addWXPlatform() {
-		// 注意：在微信授权的时候，必须传递appSecret
-		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-		String appId = "wxe9dfaf997a35d828";
-		String appSecret = "e98b52d02f8112bcc93181490b980aab";
-		// 添加微信平台
-		UMWXHandler wxHandler = new UMWXHandler(this, appId, appSecret);
-		wxHandler.addToSocialSDK();
 
-		// 支持微信朋友圈
-		UMWXHandler wxCircleHandler = new UMWXHandler(this, appId, appSecret);
-		wxCircleHandler.setToCircle(true);
-		wxCircleHandler.addToSocialSDK();
-	}
-
-	/**
-	 * @功能描述 : 添加QQ平台支持 QQ分享的内容， 包含四种类型， 即单纯的文字、图片、音乐、视频. 参数说明 : title, summary,
-	 *       image url中必须至少设置一个, targetUrl必须设置,网页地址必须以"http://"开头 . title :
-	 *       要分享标题 summary : 要分享的文字概述 image url : 图片地址 [以上三个参数至少填写一个] targetUrl
-	 *       : 用户点击该分享时跳转到的目标地址 [必填] ( 若不填写则默认设置为友盟主页 )
-	 * @return
-	 */
-	private void addQQQZonePlatform() {
-		String appId = "1104513231";
-		String appKey = "VFVBeqWa7Rv2ZeDf";
-		// 添加QQ支持, 并且设置QQ分享内容的target url
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, appId, appKey);
-		qqSsoHandler.setTargetUrl("http://www.umeng.com/social");
-		qqSsoHandler.addToSocialSDK();
-
-		// 添加QZone平台
-		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, appId,
-				appKey);
-		qZoneSsoHandler.addToSocialSDK();
-	}
-
-	/**
-	 * 根据不同的平台设置不同的分享内容</br>
-	 */
-	private void setShareContent(String titleName, String thumbUrl, String url,
-			String siteDesc) {
-		//
-		// // 配置SSO
-		// mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
-
-		// // qq空间分享
-		// QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this,
-		// "1104513231", "VFVBeqWa7Rv2ZeDf");
-		// qZoneSsoHandler.addToSocialSDK();
-		// mController
-		// .setShareContent("友盟社会化组件（SDK）让移动应用快速整合社交分享功能。http://www.umeng.com/social");
-		//
-		// UMImage urlImage = new UMImage(this,
-		// "http://www.umeng.com/images/pic/social/integrated_3.png");
-		//
-		// // 视频分享
-		// UMVideo video = new UMVideo(
-		// "http://v.youku.com/v_show/id_XNTc0ODM4OTM2.html");
-		// video.setTitle("友盟社会化组件视频");
-		// video.setThumb(urlImage);
-		//
-		// UMusic uMusic = new UMusic(
-		// "http://music.huoxing.com/upload/20130330/1364651263157_1085.mp3");
-		// uMusic.setAuthor("umeng");
-		// uMusic.setTitle("天籁之音");
-		// uMusic.setThumb("http://www.umeng.com/images/pic/social/chart_1.png");
-
-		Log.i("setShareContent", titleName + "======" + siteDesc + "======="
-				+ url + "========" + thumbUrl);
-		// 微信分享
-		WeiXinShareContent weixinContent = new WeiXinShareContent();
-		weixinContent.setShareContent(siteDesc);
-		weixinContent.setTitle(titleName);
-		weixinContent.setTargetUrl(url);
-		UMImage urlImage = new UMImage(this, thumbUrl);
-		weixinContent.setShareMedia(urlImage);
-		mController.setShareMedia(weixinContent);
-
-		// 设置微信圈分享的内容
-		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent(siteDesc);
-		circleMedia.setTitle(titleName);
-		circleMedia.setTargetUrl(url);
-		circleMedia.setShareMedia(urlImage);
-		mController.setShareMedia(circleMedia);
-
-		// UMImage image = new UMImage(this, BitmapFactory.decodeResource(
-		// getResources(), R.drawable.divider));
-		// image.setTitle("thumb title");
-		// image.setThumb("http://www.umeng.com/images/pic/social/integrated_3.png");
-		//
-		// UMImage qzoneImage = new UMImage(this,
-		// "http://www.umeng.com/images/pic/social/integrated_3.png");
-		// qzoneImage
-		// .setTargetUrl("http://www.umeng.com/images/pic/social/integrated_3.png");
-		//
-		// // 设置QQ空间分享内容
-		// QZoneShareContent qzone = new QZoneShareContent();
-		// qzone.setShareContent("share test");
-		// qzone.setTargetUrl("http://www.umeng.com");
-		// qzone.setTitle("QZone title");
-		// qzone.setShareMedia(urlImage);
-		// // qzone.setShareMedia(uMusic);
-		// mController.setShareMedia(qzone);
-		//
-		// video.setThumb(new UMImage(this, BitmapFactory.decodeResource(
-		// getResources(), R.drawable.divider)));
-		//
-		// QQShareContent qqShareContent = new QQShareContent();
-		// qqShareContent.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能 -- QQ");
-		// qqShareContent.setTitle("hello, title");
-		// qqShareContent.setShareMedia(image);
-		// qqShareContent.setTargetUrl("http://www.umeng.com/social");
-		// mController.setShareMedia(qqShareContent);
-		//
-		// // 视频分享
-		// UMVideo umVideo = new UMVideo(
-		// "http://v.youku.com/v_show/id_XNTc0ODM4OTM2.html");
-		// umVideo.setThumb("http://www.umeng.com/images/pic/home/social/img-1.png");
-		// umVideo.setTitle("友盟社会化组件视频");
-		//
-		// TencentWbShareContent tencent = new TencentWbShareContent();
-		// tencent.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能-腾讯微博。http://www.umeng.com/social");
-		// // 设置tencent分享内容
-		// mController.setShareMedia(tencent);
-
-	}
 
 	@JavascriptInterface
 	public void setSharedTheme(String theme) {
 		Constants.DESCRIPTOR = theme;
-		mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
 		LogUtil.i("变更分享主题" + theme);
 		shareBoard = new CustomShareBoard(WebViewActivity.this);
 		shareBoard.setWXCallBack(WebViewActivity.this);
-		addWXPlatform();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
 	}
 
 }

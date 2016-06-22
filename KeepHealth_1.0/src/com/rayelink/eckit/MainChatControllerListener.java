@@ -186,7 +186,7 @@ public class MainChatControllerListener implements ChatControllerListener {
 											window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
 											TextView msg = (TextView) window
 													.findViewById(R.id.chat_dialog_msg);
-											String desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
+											String desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
 											msg.setText(desString);
 											Button sure = (Button) window
 													.findViewById(R.id.chat_dialog_sure);

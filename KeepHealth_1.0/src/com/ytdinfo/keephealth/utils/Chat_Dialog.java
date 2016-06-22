@@ -20,7 +20,7 @@ public class Chat_Dialog {
 		int minute = cal.get(Calendar.MINUTE);//  获取分钟
 		int minuteOfDay = hour * 60 + minute;//  从0:00分开是到目前为止的分钟数
 		final int start = 9 * 60;//  起始时间 17:20的分钟数
-		final int end = 18 * 60;//  结束时间 19:00的分钟数
+		final int end = 20 * 60;//  结束时间 19:00的分钟数
 		if (minuteOfDay >= start && minuteOfDay <= end) {
 			return true;
 		} else {

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -44,7 +47,6 @@ import cn.jpush.android.api.JPushInterface;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -53,6 +55,19 @@ import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rayelink.eckit.SDKCoreHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.CommunitySDK;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.impl.CommunityFactory;
+import com.umeng.comm.core.impl.CommunitySDKImpl;
+import com.umeng.comm.core.listeners.Listeners.CommListener;
+import com.umeng.comm.core.nets.Response;
+import com.umeng.comm.core.sdkmanager.LocationSDKManager;
+import com.umeng.comm.core.sdkmanager.LoginSDKManager;
+import com.umeng.comm.ui.fragments.CommunityMainFragment;
+import com.umeng.community.UserLogin;
+import com.umeng.community.location.DefaultLocationImpl;
+import com.umeng.message.PushAgent;
 import com.umeng.update.UmengDialogButtonListener;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -66,12 +81,17 @@ import com.ytdinfo.keephealth.jpush.ExampleUtil;
 import com.ytdinfo.keephealth.model.DocInfoBean;
 import com.ytdinfo.keephealth.model.DocOnline;
 import com.ytdinfo.keephealth.model.TBNews;
+import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.service.UpdateService;
 import com.ytdinfo.keephealth.ui.login.LoginActivity;
+import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
 import com.ytdinfo.keephealth.utils.DBUtil;
+import com.ytdinfo.keephealth.utils.DialogCustomInterface;
+import com.ytdinfo.keephealth.utils.DialogUtils;
 import com.ytdinfo.keephealth.utils.ImageLoaderUtils;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
+import com.ytdinfo.keephealth.utils.ToastUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.kitsdk.ECDeviceKit;
 import com.yuntongxun.kitsdk.db.ContactSqlManager;
@@ -86,15 +106,19 @@ import com.yuntongxun.kitsdk.utils.DateUtil;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Base2Activity implements
 		OnUpdateMsgUnreadCountsListener {
+
 	private String TAG = "MainActivity";
 	private AlertDialog alertDialog;
 	private RadioGroup radioGroup;
 	private FragmentManager fragmentManager;
-	private HomeFragment homeFragment;
+	private HomeFragmentV21 homeFragment;
+	private ClinicFragment clinicFragment;
 	private ConversationListFragment newsFragment;
 	private UserInfoFragment userInfoFragment;
-	private RadioButton radioButton0, radioButton1, radioButton2;
-
+	private CommunityMainFragment community;
+	public RadioButton radioButton0, radioButton1, radioButton2, radioButton3,
+			radioButtonClinic;
+	CommunitySDK mCommSDK = null;
 	private int oldBtn = 0;
 	private boolean flag = true;
 
@@ -108,26 +132,28 @@ public class MainActivity extends Base2Activity implements
 		this.radioButton0 = radioButton0;
 	}
 
-	private String fromPersonData;
 	private ImageView newsPoint;
 
 	public static List<DocOnline> onlines;
+
+	private MyProgressDialog synuser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		PushAgent mPushAgent = PushAgent.getInstance(this);
+		mPushAgent.enable();
+		// 设置地理位置SDK
+		LocationSDKManager.getInstance().addAndUse(new DefaultLocationImpl());
+		LoginSDKManager.getInstance().addAndUse(new UserLogin());
 
-		// 检查更新
-		// if (SharedPrefsUtil.getValue(Constants.CHECKISUPDATE, false)
-		// && SharedPrefsUtil.getValue(Constants.NOTUPDATE, 0) <= Calendar
-		// .getInstance().get(Calendar.DAY_OF_YEAR)) {
-		//
-		// checkISupdate();
-		//
-		// // showUpdateDialog();
-		// }
-		startCheck();
+		// 公司服务端接口提供的更新检测
+		if (Calendar.getInstance().get(Calendar.DAY_OF_YEAR) >= SharedPrefsUtil
+				.getValue(Constants.NOTUPDATE, 0)) {
+			checkISupdate();
+		}
+		// startCheck();
 
 		// 统计活跃用户
 		statisticActiveUser();
@@ -162,6 +188,166 @@ public class MainActivity extends Base2Activity implements
 		initListener();
 		registerMessageReceiver(); // used for receive msg
 		init();
+		initTypeFace();
+	}
+
+	// 判断社区姓名的问题
+	public void checkCommunityUserName() {
+		if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null))// 用户已经登录啦
+		{
+			UserModel userModel = new Gson().fromJson(
+					SharedPrefsUtil.getValue(Constants.USERMODEL, ""),
+					UserModel.class);
+			if (CommConfig.getConfig().loginedUser.name.equals(userModel
+					.getUserName()))// 用户名相同
+			{
+				if (!SharedPrefsUtil.getValue(
+						Constants.IS_USER_NAME_AS_NICK_NAME, false)) {
+					String message = "欢迎访问帮忙医社区，您正在使用的用户名 "
+							+ CommConfig.getConfig().loginedUser.name
+							+ " 有可能是您的真实姓名，为保护您的隐私，您可以在下面设置昵称用于社区交流。";
+					DialogUtils.getInstance().setDialgoInterFace(
+							new DialogCustomInterface() {
+								@Override
+								public void sure(Dialog view) {
+									// TODO Auto-generated method stub
+									final String name = ((EditText) view
+											.getWindow().findViewById(
+													R.id.extra)).getText()
+											.toString();
+
+									if (name == null
+											|| "".equals(name)
+											|| CommConfig.getConfig().loginedUser.name
+													.equals(name)) {// 用户名为空
+										// 进入社区
+										clickRadioButton(R.id.tab_rb_4);
+										SharedPrefsUtil
+												.putValue(
+														Constants.IS_USER_NAME_AS_NICK_NAME,
+														true);
+									} else {
+										if (name.length() < 4
+												|| name.length() > 14) {
+											ToastUtil.showMessage(
+													"名字长度不符合规则，长度大于4，小于15个。",
+													1000);
+											return;
+										}
+										CommUser user = CommConfig.getConfig().loginedUser;
+										user.name = name;
+										CommunitySDKImpl.getInstance()
+												.updateUserProfile(user,
+														new CommListener() {
+															@Override
+															public void onStart() {
+																// TODO
+																// Auto-generated
+																// method stub
+															}
+
+															@Override
+															public void onComplete(
+																	Response arg0) {
+																// TODO
+																// Auto-generated
+																// method stub
+																if (Response.NO_ERROR == arg0.errCode)
+																	requestModifyInfo(name);
+
+															}
+														});
+									}
+									view.dismiss();
+								}
+
+								@Override
+								public void cancel(Dialog view) {
+									// TODO Auto-generated method stub
+									view.dismiss();
+								}
+							});
+					DialogUtils.getInstance().showDialog(MainActivity.this,
+							R.layout.dialog_is_user_current, message);
+					DialogUtils.getInstance().setSureText("进入社区");
+				}
+
+			}
+
+		}
+
+	}
+
+	/**
+	 * 将修改后的信息上传服务器
+	 */
+	public void requestModifyInfo(final String nickName) {
+
+		try {
+			JSONObject jsonParam = new JSONObject();
+			jsonParam.put("photo", "");
+			jsonParam.put("fileName", "");
+			String userJson = SharedPrefsUtil.getValue(Constants.USERMODEL, "");
+			UserModel userModel = new Gson()
+					.fromJson(userJson, UserModel.class);
+			jsonParam.put("sex", userModel.getUserSex());
+			jsonParam.put("Name", userModel.getUserName());
+			jsonParam.put("Addition1", nickName);
+			jsonParam.put("IDcard", userModel.getIDcard());
+			jsonParam.put("UserAccount", userModel.getUserAccount());
+			HttpClient.post(Constants.MODIFYINFO_URl, jsonParam.toString(),
+					new RequestCallBack<String>() {
+
+						@Override
+						public void onStart() {
+							Log.i("HttpUtil", "onStart");
+						}
+
+						@Override
+						public void onLoading(long total, long current,
+								boolean isUploading) {
+							Log.i("HttpUtil", "onLoading");
+						}
+
+						@Override
+						public void onSuccess(ResponseInfo<String> responseInfo) {
+							// 存本地
+							UserModel userModel = new Gson().fromJson(
+									SharedPrefsUtil.getValue(
+											Constants.USERMODEL, ""),
+									UserModel.class);
+							userModel.setAddition1(nickName);
+							SharedPrefsUtil.putValue(Constants.USERMODEL,
+									userModel.toString());
+							// radioButton3.setChecked(true);
+							radioGroup.check(R.id.tab_rb_4);
+							SharedPrefsUtil.putValue(
+									Constants.IS_USER_NAME_AS_NICK_NAME, false);
+						}
+
+						@Override
+						public void onFailure(HttpException error, String msg) {
+
+						}
+					});
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private void initTypeFace() {
+		Typeface face = Typeface.createFromAsset(getAssets(),
+				"fonts/lantinghei-font.TTF");
+
+		CommunitySDK mCommSDK = CommunityFactory.getCommSDK(this);
+		mCommSDK.initSDK(this.getApplicationContext());
+		CommConfig.getConfig().setTypeface(face);
 	}
 
 	/**
@@ -452,6 +638,8 @@ public class MainActivity extends Base2Activity implements
 		radioButton0 = (RadioButton) findViewById(R.id.tab_rb_1);
 		radioButton1 = (RadioButton) findViewById(R.id.tab_rb_2);
 		radioButton2 = (RadioButton) findViewById(R.id.tab_rb_3);
+		radioButton3 = (RadioButton) findViewById(R.id.tab_rb_4);
+		radioButtonClinic = (RadioButton) findViewById(R.id.tab_rb_clinic);
 		newsPoint = (ImageView) findViewById(R.id.news_point);
 	}
 
@@ -459,7 +647,7 @@ public class MainActivity extends Base2Activity implements
 		// TODO Auto-generated method stub
 		fragmentManager = getSupportFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		homeFragment = new HomeFragment();
+		homeFragment = new HomeFragmentV21();
 		transaction.add(R.id.framelayout, homeFragment);
 		transaction.show(homeFragment);
 		transaction.commit();
@@ -527,12 +715,8 @@ public class MainActivity extends Base2Activity implements
 								if (isOnline) {
 									// 医生在线
 									textView.setText(docInfoBean.getUserName());
-//									BitmapUtils bitmapUtils = new BitmapUtils(
-//											MyApp.getInstance());
-//									bitmapUtils.display(imageView,
-//											docInfoBean.getHeadPicture());
-									
-									imageLoader.displayImage(docInfoBean.getHeadPicture(),
+									imageLoader.displayImage(
+											docInfoBean.getHeadPicture(),
 											imageView,
 											ImageLoaderUtils.getOptions2());
 									imageView.setAlpha(1.0f);
@@ -540,11 +724,8 @@ public class MainActivity extends Base2Activity implements
 								} else {
 									// 医生离线
 									textView.setText(docInfoBean.getUserName());
-//									BitmapUtils bitmapUtils = new BitmapUtils(
-//											MyApp.getInstance());
-//									bitmapUtils.display(imageView,
-//											docInfoBean.getHeadPicture());
-									imageLoader.displayImage(docInfoBean.getHeadPicture(),
+									imageLoader.displayImage(
+											docInfoBean.getHeadPicture(),
 											imageView,
 											ImageLoaderUtils.getOptions2());
 									imageView.setAlpha(0.5f);
@@ -581,22 +762,14 @@ public class MainActivity extends Base2Activity implements
 				if (isOnline) {
 					// 医生在线
 					textView.setText(contact.getNickname());
-//					BitmapUtils bitmapUtils = new BitmapUtils(
-//							MyApp.getInstance());
-//					bitmapUtils.display(imageView, contact.getRemark());
-//					imageView.setAlpha(1.0f);
 					imageView.setAlpha(1.0f);
-					imageLoader.displayImage(contact.getRemark(),
-							imageView,
+					imageLoader.displayImage(contact.getRemark(), imageView,
 							ImageLoaderUtils.getOptions2());
-//					imageView.setImageResource(R.drawable.ic_launcher);
-//					imageView.setAlpha(1.0f);
 					isonline.setImageResource(R.drawable.choices_icon_selected);
 				} else {
 					// 医生离线
 					textView.setText(contact.getNickname());
-					imageLoader.displayImage(contact.getRemark(),
-							imageView,
+					imageLoader.displayImage(contact.getRemark(), imageView,
 							ImageLoaderUtils.getOptions2());
 					imageView.setAlpha(0.5f);
 					isonline.setImageResource(R.drawable.close_icon_selected);
@@ -641,20 +814,14 @@ public class MainActivity extends Base2Activity implements
 	private void initListener() {
 		// TODO Auto-generated method stub
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// TODO Auto-generated method stub
-				// int position = radioButtonPosition(checkedId);
-				// flag = position > oldBtn ? true : false;//
-				// 根据点击顺序判断fragment的进入方�?
-				// oldBtn = position;
-				// SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT,
-				// position);
 				clickRadioButton(checkedId);
 			}
 		});
 	}
+
+	private FragmentTransaction transaction;
 
 	@SuppressLint("ResourceAsColor")
 	public void clickRadioButton(int checkedId) {
@@ -665,7 +832,7 @@ public class MainActivity extends Base2Activity implements
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, position);
 
 		changeRadioButtonTextColor();
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction = fragmentManager.beginTransaction();
 		if (flag) {
 			transaction.setCustomAnimations(R.anim.anim_push_from_right,
 					R.anim.anim_pop_from_right);
@@ -680,7 +847,7 @@ public class MainActivity extends Base2Activity implements
 			radioButton0.setTextColor(getResources().getColor(
 					R.color.w_RadioButton));
 			if (homeFragment == null) {
-				homeFragment = new HomeFragment();
+				homeFragment = new HomeFragmentV21();
 				transaction.add(R.id.framelayout, homeFragment);
 			} else {
 				if (homeFragment.isVisible())
@@ -690,9 +857,10 @@ public class MainActivity extends Base2Activity implements
 			transaction.commitAllowingStateLoss();
 			break;
 		case R.id.tab_rb_2:
-			radioButton1.setTextColor(getResources().getColor(
-					R.color.w_RadioButton));
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
+				radioGroup.check(R.id.tab_rb_2);
+				radioButton1.setTextColor(getResources().getColor(
+						R.color.w_RadioButton));
 				if (newsFragment == null) {
 					newsFragment = new ConversationListFragment();
 					newsFragment
@@ -706,7 +874,7 @@ public class MainActivity extends Base2Activity implements
 				transaction.commitAllowingStateLoss();
 				// 每次打开此页面。或者刷新此页面都进行请求服务端，医生在线列表。<b>需要在这里查询数据库获取DoctorID</b>
 				Cursor cursor = ConversationSqlManager.getConversationCursor();
-				if (cursor!=null) {
+				if (cursor != null) {
 					List<String> param = new ArrayList<String>();
 					while (cursor.moveToNext()) {
 						int num = cursor.getColumnIndex("sessionId");
@@ -716,8 +884,8 @@ public class MainActivity extends Base2Activity implements
 					RequestParams params = new RequestParams();
 					params.addQueryStringParameter(new BasicNameValuePair(
 							"voipAccounts", param.toString()));
-					params.addQueryStringParameter(new BasicNameValuePair("rType",
-							"Android"));
+					params.addQueryStringParameter(new BasicNameValuePair(
+							"rType", "Android"));
 					HttpClient.get(this, Constants.DOCISONLINE, params,
 							new RequestCallBack<String>() {
 
@@ -763,43 +931,15 @@ public class MainActivity extends Base2Activity implements
 								}
 							});
 				}
-				/*
-				 * System.out.println("device///"+CCPHelper.getInstance().getDevice
-				 * ()); if(null==CCPHelper.getInstance().getDevice()||CCPHelper.
-				 * getInstance().getDevice().isOnline()!=State.ONLINE){
-				 * CCPHelper.getInstance().registerCCP( new
-				 * CCPHelper.RegistCallBack() {
-				 * 
-				 * @Override public void onRegistResult(int reason, String msg)
-				 * { // Log.i("XXX", String.format("%d, %s", // reason, msg));
-				 * if (reason==8192) { Intent intent = new Intent();
-				 * intent.setClass(MainActivity.this,
-				 * GroupMessageListActivity.class); if (flag) {
-				 * startActivityForResult(intent,1001); }else {
-				 * startActivityForResult(intent,1002); } } else {
-				 * 
-				 * } } });}else { Intent intent = new Intent();
-				 * intent.setClass(MainActivity.this,
-				 * GroupMessageListActivity.class); if (flag) {
-				 * startActivityForResult(intent,1001); }else {
-				 * startActivityForResult(intent,1002); } }
-				 */} else {
+			} else {
 				Intent i = new Intent(MainActivity.this, LoginActivity.class);
 				startActivityForResult(i, 1003);
 			}
-
-			/*
-			 * if (newsFragment == null) { newsFragment = new NewsFragment();
-			 * transaction.add(R.id.framelayout, newsFragment); } else { if
-			 * (newsFragment.isVisible()) return;
-			 * transaction.show(newsFragment); }
-			 */
 			break;
 		case R.id.tab_rb_3:
-			radioButton2.setTextColor(getResources().getColor(
-					R.color.w_RadioButton));
-
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
+				radioButton2.setTextColor(getResources().getColor(
+						R.color.w_RadioButton));
 				if (userInfoFragment == null) {
 					userInfoFragment = new UserInfoFragment();
 					transaction.add(R.id.framelayout, userInfoFragment);
@@ -814,8 +954,102 @@ public class MainActivity extends Base2Activity implements
 				startActivityForResult(i, 1003);
 			}
 			break;
-		}
+		case R.id.tab_rb_4:
+			radioButton3.setTextColor(getResources().getColor(
+					R.color.w_RadioButton));
+			if (community == null) {
+				community = new CommunityMainFragment();
+				community.setBackButtonVisibility(View.GONE);
+				transaction.add(R.id.framelayout, community);
+			} else {
+				if (community.isVisible())
+					return;
+				transaction.show(community);
+			}
+			transaction.commitAllowingStateLoss();
+			break;
+		case R.id.tab_rb_clinic:
+			// 首页点击门诊跳转进入Fragment的WebView中
+			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
+				radioButtonClinic.setTextColor(getResources().getColor(
+						R.color.w_RadioButton));
+				LogUtils.i("R.id.tab_rb_clinic");
+				if (clinicFragment == null) {
+					synuser = new MyProgressDialog(this);
+					synuser.setMessage("加载中...");
+					synuser.show();
+					String jsonUserModel = SharedPrefsUtil.getValue(
+							Constants.USERMODEL, "");
+					UserModel userModel = new Gson().fromJson(jsonUserModel,
+							UserModel.class);
 
+					JSONObject jsonParam = new JSONObject();
+					// UserModel参数说明：
+					// UserName(姓名)；Telphone（手机号）;pID;HeadPicture(用户头像)
+					try {
+						jsonParam.put("UserName", userModel.getUserName());
+						jsonParam.put("Telphone", userModel.getMobilephone());
+						jsonParam.put("pID", userModel.getPid());
+						jsonParam
+								.put("HeadPicture", userModel.getHeadPicture());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					HttpClient.post(
+							"http://test.bmyi.cn:8080/OAuth/ValidBindUsers",
+							jsonParam.toString(),
+							new RequestCallBack<String>() {
+
+								@Override
+								public void onSuccess(ResponseInfo<String> arg0) {
+									// TODO Auto-generated method stub
+									try {
+										JSONObject object = new JSONObject(
+												arg0.result.toString());
+										String stat = object
+												.getString("Status");
+										String msg = object
+												.getString("Message");
+										if ("Success".equals(stat)) {
+											// 跳入门诊
+											clinicFragment = new ClinicFragment();
+											transaction.add(R.id.framelayout,
+													clinicFragment);
+											transaction
+													.commitAllowingStateLoss();
+										}
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+										ToastUtil.showMessage("诊所资料同步失败，请重试");
+									}
+									synuser.dismiss();
+								}
+
+								@Override
+								public void onFailure(HttpException arg0,
+										String arg1) {
+									// TODO Auto-generated method stub
+									LogUtils.i(arg1);
+									synuser.dismiss();
+									ToastUtil.showMessage("诊所资料同步失败，请重试");
+								}
+							});
+				} else {
+					if (clinicFragment.isVisible()) {
+						return;
+					}
+					transaction.show(clinicFragment);
+					transaction.commitAllowingStateLoss();
+				}
+			} else {
+				Intent i = new Intent(MainActivity.this, LoginActivity.class);
+				startActivityForResult(i, 1003);
+			}
+			break;
+		}
 	}
 
 	@SuppressLint("ResourceAsColor")
@@ -825,22 +1059,10 @@ public class MainActivity extends Base2Activity implements
 		flag = position > oldBtn ? true : false;// 根据点击顺序判断fragment的进入方�?
 		oldBtn = position;
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, position);
-
 		radioButton1.setChecked(true);
-
 		changeRadioButtonTextColor();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		// if (flag) {
-		// transaction.setCustomAnimations(R.anim.anim_push_from_right,
-		// R.anim.anim_pop_from_right);
-		// } else {
-		// transaction.setCustomAnimations(R.anim.anim_push_from_left,
-		// R.anim.anim_pop_from_left);
-		// }
-
 		hideFragments(transaction);
-
-		// radioButton1.setChecked(true);
 		radioButton1.setTextColor(getResources()
 				.getColor(R.color.w_RadioButton));
 		if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
@@ -873,6 +1095,12 @@ public class MainActivity extends Base2Activity implements
 		if (userInfoFragment != null) {
 			transaction.hide(userInfoFragment);
 		}
+		if (community != null) {
+			transaction.hide(community);
+		}
+		if (clinicFragment != null) {
+			transaction.hide(clinicFragment);
+		}
 
 	}
 
@@ -880,6 +1108,8 @@ public class MainActivity extends Base2Activity implements
 		radioButton0.setTextColor(getResources().getColor(R.color.w_gray));
 		radioButton1.setTextColor(getResources().getColor(R.color.w_gray));
 		radioButton2.setTextColor(getResources().getColor(R.color.w_gray));
+		radioButton3.setTextColor(getResources().getColor(R.color.w_gray));
+		radioButtonClinic.setTextColor(getResources().getColor(R.color.w_gray));
 	}
 
 	private int radioButtonPosition(int checkedId) {
@@ -887,12 +1117,15 @@ public class MainActivity extends Base2Activity implements
 		switch (checkedId) {
 		case R.id.tab_rb_1:
 			return 0;
-		case R.id.tab_rb_2:
+		case R.id.tab_rb_clinic:
 			return 1;
-		case R.id.tab_rb_3:
+		case R.id.tab_rb_4:
 			return 2;
+		case R.id.tab_rb_2:
+			return 3;
+		case R.id.tab_rb_3:
+			return 4;
 		}
-
 		return 0;
 	}
 
@@ -915,7 +1148,14 @@ public class MainActivity extends Base2Activity implements
 		case 1003:
 			radioButton0.setChecked(true);
 			break;
-
+		case 1004:
+			// 门诊
+			radioButtonClinic.setChecked(true);
+			break;
+		case 1005:
+			// 微社区
+			radioButton3.setChecked(true);
+			break;
 		default:
 			break;
 		}
@@ -938,12 +1178,6 @@ public class MainActivity extends Base2Activity implements
 				firstime = System.currentTimeMillis();
 				return true;
 			} else {
-				/*
-				 * Intent intent = new Intent();
-				 * intent.setClass(MainActivity.this, MainActivity.class);
-				 * intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				 * //注意本行的FLAG设置 startActivity(intent);
-				 */
 				SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);
 				SharedPrefsUtil.putValue(Constants.CHECKISUPDATE, true);
 				LogUtil.i("wpc2", "onKeyDown===true");
@@ -965,7 +1199,8 @@ public class MainActivity extends Base2Activity implements
 		super.onResume();
 		try {
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)
-					&& newsFragment == null&&SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS ) {
+					&& newsFragment == null
+					&& SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
 				fragmentManager = getSupportFragmentManager();
 				FragmentTransaction transaction = fragmentManager
 						.beginTransaction();
@@ -975,6 +1210,7 @@ public class MainActivity extends Base2Activity implements
 				transaction.hide(newsFragment);
 				transaction.commit();
 			}
+			checkCommunityUserName();
 		} catch (Exception e) {
 
 		}
@@ -1075,19 +1311,6 @@ public class MainActivity extends Base2Activity implements
 				}
 			}
 		}.start();
-
-		// try{
-		// if(ConversationSqlManager.getInstance().qureyAllSessionUnreadCount()==0)
-		// {
-		// newsPoint.setVisibility(View.GONE);
-		// }else {
-		// newsPoint.setVisibility(View.VISIBLE);
-		// }
-		// }catch(Exception e )
-		// {
-		//
-		// }
-
 	}
 
 }

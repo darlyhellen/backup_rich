@@ -40,6 +40,7 @@ import com.yuntongxun.kitsdk.ui.chatting.model.ImageTxRow;
 import com.yuntongxun.kitsdk.ui.chatting.model.VoiceRxRow;
 import com.yuntongxun.kitsdk.ui.chatting.model.VoiceTxRow;
 import com.yuntongxun.kitsdk.utils.DateUtil;
+import com.yuntongxun.kitsdk.utils.FontMainUtils;
 import com.yuntongxun.kitsdk.utils.LogUtil;
 import com.yuntongxun.kitsdk.utils.MediaPlayTools;
 
@@ -191,6 +192,7 @@ public class ChattingListAdapter extends BaseAdapter {
         }else {
         	baseHolder.getChattingAvatar().setImageResource(R.drawable.icon_bang);
 		}
+        FontMainUtils.changeTypeface(chatView);
         return chatView;
     }
 

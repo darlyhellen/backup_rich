@@ -1,22 +1,24 @@
 package com.ytdinfo.keephealth.ui;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.rayelink.eckit.BroadCastAction;
 import com.rayelink.eckit.MainChatControllerListener;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.common.ui.util.FontUtils;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.MyApp;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends SwipeBackActivity {
 	InternalReceiver internalReceiver = null;
 
 	@Override
@@ -70,6 +72,7 @@ public class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		JPushInterface.clearAllNotifications(MyApp.getInstance());
+		 FontUtils.changeTypeface(getWindow().getDecorView());
 	}
 
 	private void cancelUser() {

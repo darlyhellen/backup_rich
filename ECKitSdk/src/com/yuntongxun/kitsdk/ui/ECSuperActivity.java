@@ -1,6 +1,7 @@
 package com.yuntongxun.kitsdk.ui;
 
 import com.yuntongxun.kitsdk.core.ECKitConstant;
+import com.yuntongxun.kitsdk.utils.FontMainUtils;
 import com.yuntongxun.kitsdk.utils.LogUtil;
 import com.yuntongxun.kitsdk.view.CCPActivityBase;
 import com.yuntongxun.kitsdk.view.TopBarView;
@@ -147,6 +148,7 @@ public abstract class ECSuperActivity extends FragmentActivity {
         // HSCoreService
         super.onResume();
         mBaseActivity.onResume();
+        FontMainUtils.changeTypeface(getWindow().getDecorView());
         
     }
 

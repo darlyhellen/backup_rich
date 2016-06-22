@@ -2,9 +2,9 @@
 <resources>
 
     <!-- 标题背景色_浅绿 -->
-    <color name="main_green">#ff66cd99</color> 
+    <color name="main_green">#ff66cd99</color>
     <!-- 标题背景色_深绿 -->
-    <color name="main_h_green">#ff32a06A</color>       
+    <color name="main_h_green">#ff32a06A</color>
     <!-- 标题背景色 -->
     <color name="title_bg">#ff71c0bc</color>
     <!-- 浅绿色 -->
@@ -102,10 +102,9 @@
     <color name="none_color">#00000000</color>
     <color name="albumback">#E1E0DE</color>
     <color name="plugin_camera_black">#000000</color>
-    
-         <color name="x_default_text_color">#ff535353</color>
+    <color name="x_default_text_color">#ff535353</color>
     <color name="darkGrey">#848284</color>
-	<color name="list_view_background_default">#fff1f1f1</color>
+    <color name="list_view_background_default">#fff1f1f1</color>
     <color name="abc_search_url_text_normal">#ff7fa87f</color>
 
     <item name="abc_search_url_text_selected" type="color">@*android:color/black</item>
@@ -168,12 +167,13 @@
     <color name="bottom_notepad_panel_bg">#FFF4F4F4</color>
     <color name="hint_color_white_bg">#ffc5c5c5</color>
     <color name="devideline_listview">#ffe5e2d4</color>
+
     <item name="menu_pressed_color" type="color">@color/small_line_color</item>
+
     <color name="bg_bottom_tip">#cc000000</color>
     <color name="bg_warning">#fffde1b6</color>
     <color name="text_warning">#ffb8956b</color>
 
-    
     <!-- 蓝色 -->
     <color name="blue01">#3BA6FB</color>
     <color name="blue02">#0C8EF8</color>
@@ -197,7 +197,7 @@
     <color name="green03">#C9FFDE</color>
     <color name="green04">#31F77E</color>
     <color name="green05">#9BECF9</color>
-    
+
     <!-- 紫色 -->
     <color name="violet01">#DB96FF</color>
     <color name="violet02">#BE55F5</color>
@@ -235,9 +235,13 @@
     <color name="sign_mood_selected">#ff9B9B9C</color>
     <color name="sign_mood_nomal">#00000000</color>
     <color name="sign_mood_nomal_0">#e0e0e0</color>
-    
-    
     <color name="dialog_title_color">#ff3cac17</color>
+
     <dimen name="DialogTitleTextSize">20.0dip</dimen>
+
     <color name="big_line_color">#40000000</color>
+
+    <!-- the version v21 main page color -->
+    <color name="v21_titles">#474747</color>
+
 </resources>

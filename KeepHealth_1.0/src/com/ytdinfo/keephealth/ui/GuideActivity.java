@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -15,14 +16,17 @@ import android.widget.LinearLayout;
 import cn.jpush.android.api.JPushInterface;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.CommunitySDK;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.impl.CommunityFactory;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.adapter.ImageAdapter;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 
-public class GuideActivity extends BaseActivity implements OnPageChangeListener,
-		OnClickListener {
+public class GuideActivity extends BaseActivity implements
+		OnPageChangeListener, OnClickListener {
 
 	private ViewPager viewPager;
 	private List<View> viewList;
@@ -34,41 +38,47 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener,
 	private int currentIndex = 0;// 当前页面,默认首页
 
 	private Button startButton;
+	private CommunitySDK mCommSDK=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+	    mCommSDK = CommunityFactory.getCommSDK(this);
+	    mCommSDK.initSDK(this.getApplicationContext());
 		SharedPrefsUtil.putValue(Constants.CHECKISUPDATE, true);
 		LogUtil.i("wpc2", "GuideActivity===true");
-		
-		String isFirstCome = SharedPrefsUtil.getValue(Constants.ISFIRSTCOME, "YES");
-		if(isFirstCome.equals("YES")){
-			//第一次使用
+		String isFirstCome = SharedPrefsUtil.getValue(Constants.ISFIRSTCOME,
+				"YES");
+		if (isFirstCome.equals("YES")) {
+			// 第一次使用
 			setContentView(R.layout.activity_guide);
 			initViewPager();// 初始化ViewPager对象
 			initPoint();// 初始化导航小圆点
-			
-			//设置非第一次使用
+
+			// 设置非第一次使用
 			SharedPrefsUtil.putValue(Constants.ISFIRSTCOME, "NO");
-			
-		}else {
-			//直接进入MainActivity
+			initTypeFace();
+		} else {
+			// 直接进入MainActivity
 			intoMainActivity();
 		}
-		
-		
 	}
 	
 	
+	private void initTypeFace()
+	{
+		 Typeface face = Typeface.createFromAsset(getAssets(), "fonts/lantinghei-font.TTF");	  
+		 CommConfig.getConfig().setTypeface(face);
+	}
 	
-	
+
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		initTypeFace();
 		JPushInterface.onResume(this);
-		
+
 		MobclickAgent.onPageStart("GuideActivity");
 		MobclickAgent.onResume(this);
 	}
@@ -78,7 +88,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener,
 		super.onPause();
 
 		JPushInterface.onPause(this);
-		
+
 		MobclickAgent.onPageEnd("GuideActivity");
 		MobclickAgent.onPause(this);
 	}
@@ -163,8 +173,6 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener,
 
 	}
 
-	
-
 	@Override
 	public void onClick(View v) {
 		// 利用刚设置的标识符跳转页面
@@ -172,14 +180,14 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener,
 		viewPager.setCurrentItem((Integer) v.getTag());
 
 	}
-	
+
 	public void intoMainActivity() {
 		Intent intent = new Intent(GuideActivity.this, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		 startActivity(intent);
-		 
-		 finish();
-		
+		startActivity(intent);
+
+		finish();
+
 	}
 
 }

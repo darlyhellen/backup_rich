@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract.CommonDataKinds.Nickname;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +26,13 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.util.LogUtils;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.impl.CommunitySDKImpl;
+import com.umeng.comm.core.listeners.Listeners.CommListener;
+import com.umeng.comm.core.nets.Response;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
@@ -149,6 +156,16 @@ public class CommonModifyInfoActivity extends BaseActivity {
 						// 上传到服务器
 						requestModifyInfo();
 					}
+				} else if (title.equals("昵称")) {
+					// 长度小于14个字符
+					String name = et.getText().toString();
+					LogUtils.i(et.getText().toString() + "---" + name);
+					if (!isNiChengLen(name)) {
+						ToastUtil.showMessage("昵称支持3-14位字母、汉字和数字");
+					} else {
+						// 上传到服务器
+						requestModifyInfo();
+					}
 				} else {
 					Pattern pattern = Pattern
 							.compile("([^\\._\\w\\u4e00-\\u9fa5])*");
@@ -172,6 +189,39 @@ public class CommonModifyInfoActivity extends BaseActivity {
 				et.setText("");
 			}
 		});
+	}
+
+	/**
+	 * 上午10:28:28
+	 * 
+	 * @author zhangyh2 TODO 判断昵称长度是否符合规范(大于3个字节，小于15个字节)。
+	 * @return <code>true</code> 匹配，<code>false</code> 不匹配
+	 */
+	protected boolean isNiChengLen(String name) {
+		// TODO Auto-generated method stub
+		Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5A-Za-z0-9]*");
+		Matcher matcher = pattern.matcher(name);
+
+		Pattern charPattern = Pattern.compile("^[\\u4e00-\\u9fa5]");
+		if (!matcher.matches()) {
+			// 不匹配
+			return false;
+		} else {
+			int lenth = 0;
+			for (int i = 0; i < name.length(); i++) {
+				char eve = name.charAt(i);
+				lenth++;
+				Matcher m = charPattern.matcher(eve+"");
+				if (m.matches()) {
+					lenth++;
+				}
+			}
+			if (lenth > 15 || lenth < 3) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 	}
 
 	/**
@@ -204,19 +254,32 @@ public class CommonModifyInfoActivity extends BaseActivity {
 
 				jsonParam.put("Name", et.getText().toString().trim());
 
+				jsonParam.put("Addition1", userModel.getAddition1());
+
 				jsonParam.put("IDcard", userModel.getIDcard());
 
 				jsonParam.put("UserAccount", userModel.getUserAccount());
 
+			} else if (title.equals("昵称")) {
+				jsonParam.put("Name", userModel.getUserName());
+
+				jsonParam.put("Addition1", et.getText().toString().trim());
+
+				jsonParam.put("IDcard", userModel.getIDcard());
+
+				jsonParam.put("UserAccount", userModel.getUserAccount());
 			} else if (title.equals("身份证号")) {
 				jsonParam.put("Name", userModel.getUserName());
 
+				jsonParam.put("Addition1", userModel.getAddition1());
 				jsonParam.put("IDcard", et.getText().toString().trim());
 
 				jsonParam.put("UserAccount", userModel.getUserAccount());
 
 			} else {
 				jsonParam.put("Name", userModel.getUserName());
+
+				jsonParam.put("Addition1", userModel.getAddition1());
 
 				jsonParam.put("IDcard", userModel.getIDcard());
 
@@ -246,8 +309,6 @@ public class CommonModifyInfoActivity extends BaseActivity {
 
 						@Override
 						public void onSuccess(ResponseInfo<String> responseInfo) {
-							Log.i("HttpUtil", "onSuccess");
-
 							Log.i("HttpUtil", "onSuccess==="
 									+ responseInfo.result.toString());
 							ToastUtil.showMessage("修改成功");
@@ -261,7 +322,25 @@ public class CommonModifyInfoActivity extends BaseActivity {
 								// 存入修改后的姓名
 								userModel.setUserName(et.getText().toString()
 										.trim());
-
+							} else if (title.equals("昵称")) {
+								// 存入修改后的昵称
+							     CommUser user = CommConfig.getConfig().loginedUser;
+							     user.name=et.getText().toString();
+								CommunitySDKImpl.getInstance().updateUserProfile(user, new CommListener() {
+									
+									@Override
+									public void onStart() {
+										// TODO Auto-generated method stub
+									}
+									
+									@Override
+									public void onComplete(Response arg0) {
+										// TODO Auto-generated method stub
+										
+									}
+								});
+								userModel.setAddition1(et.getText().toString()
+										.trim());
 							} else if (title.equals("身份证号")) {
 								// 存入修改后的身份证号
 								userModel.setIDcard(et.getText().toString()

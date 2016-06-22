@@ -66,7 +66,6 @@ import com.ytdinfo.keephealth.ui.view.MyPopWindow;
 import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
 import com.ytdinfo.keephealth.utils.Chat_Dialog;
 import com.ytdinfo.keephealth.utils.DBUtilsHelper;
-import com.ytdinfo.keephealth.utils.ImageLoaderUtils;
 import com.ytdinfo.keephealth.utils.ImageTools;
 import com.ytdinfo.keephealth.utils.JsonUtil;
 import com.ytdinfo.keephealth.utils.LogUtil;
@@ -677,7 +676,7 @@ public class OnlineQuesActivityForV3 extends BaseActivity implements
 							.findViewById(R.id.chat_dialog_msg);
 					String desString = null;
 					if (!Chat_Dialog.timeCurl()) {
-						desString = "亲，非常抱歉，我们的服务时间是工作日9：00－18：00，欢迎下次来咨询，祝您身体健康！";
+						desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
 					}else {
 						 desString = "亲，我们的医生都在忙碌，请稍等~";
 					}

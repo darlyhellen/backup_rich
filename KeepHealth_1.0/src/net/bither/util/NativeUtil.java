@@ -16,6 +16,10 @@
 
 package net.bither.util;
 
+import java.io.File;
+
+import com.yuntongxun.kitsdk.utils.DemoUtils;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -44,29 +48,28 @@ public class NativeUtil {
 		Rect rect = new Rect(0, 0, bit.getWidth(), bit.getHeight());// original
 		rect = new Rect(0, 0, bit.getWidth() / 2, bit.getHeight() / 2);// 缩小3倍
 		canvas.drawBitmap(bit, null, rect, null);
-		saveBitmap(result, quality, fileName, optimize);
+		DemoUtils.saveBitmapToLocal(new File(fileName), result);
+		//saveBitmap(result, quality, fileName, optimize);
 		result.recycle();
 		// } else {
 		// saveBitmap(bit, quality, fileName, optimize);
 		// }
 
 	}
+//
+//	private static void saveBitmap(Bitmap bit, int quality, String fileName,
+//			boolean optimize) {
+//		compressBitmap(bit, bit.getWidth(), bit.getHeight(), quality,
+//				fileName.getBytes(), optimize);
+//	}
+//
+//	private static native String compressBitmap(Bitmap bit, int w, int h,
+//			int quality, byte[] fileNameBytes, boolean optimize);
 
-	private static void saveBitmap(Bitmap bit, int quality, String fileName,
-			boolean optimize) {
-
-		compressBitmap(bit, bit.getWidth(), bit.getHeight(), quality,
-				fileName.getBytes(), optimize);
-
-	}
-
-	private static native String compressBitmap(Bitmap bit, int w, int h,
-			int quality, byte[] fileNameBytes, boolean optimize);
-
-	static {
-		System.loadLibrary("jpegbither");
-		System.loadLibrary("bitherjni");
-
-	}
+//	static {
+//		System.loadLibrary("jpegbither");
+//		System.loadLibrary("bitherjni");
+//
+//	}
 
 }

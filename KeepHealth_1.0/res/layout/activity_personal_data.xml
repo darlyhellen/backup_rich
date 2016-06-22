@@ -42,6 +42,17 @@
             android:background="@color/divider" />
 
         <com.ytdinfo.keephealth.ui.view.CommonModifyView
+            android:id="@+id/id_PersonalDataItem_V21_Addition1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.ytdinfo.keephealth.ui.view.CommonModifyView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+        
+        <com.ytdinfo.keephealth.ui.view.CommonModifyView
             android:id="@+id/id_PersonalDataItem_1View_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >

@@ -55,7 +55,7 @@ public class BitmapCompressorUtil {
         return image;
     }
     @SuppressLint("NewApi")
-	public static String compressBitmap2(Bitmap image,int maxkb,String smallFileName) {
+	public static String compressBitmap23(Bitmap image,int maxkb,String smallFileName) {
    
     	FileInputStream fileInputStream = null ;
     	int options = 100;

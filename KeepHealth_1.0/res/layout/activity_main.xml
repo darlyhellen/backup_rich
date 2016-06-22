@@ -5,27 +5,6 @@
     android:background="@color/bgwhite"
     tools:context=".IAintelligentguidance" >
 
-    <!--
-    <RelativeLayout
-        android:id="@+id/content0"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_hight"
-        android:background="@color/title_bg" 
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="项目"
-            android:textColor="#ffffffff"
-            android:textSize="20sp" />
-
-    
-    </RelativeLayout>
-    -->
-
     <FrameLayout
         android:id="@+id/framelayout"
         android:layout_width="match_parent"
@@ -59,6 +38,32 @@
             android:drawableTop="@drawable/home__selector"
             android:gravity="center"
             android:text="首页"
+            android:textColor="@color/w_gray"
+            android:textSize="@dimen/textview_radioButton" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_clinic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/w_white"
+            android:button="@null"
+            android:drawableTop="@drawable/clinic__selector"
+            android:gravity="center"
+            android:text="门诊"
+            android:textColor="@color/w_gray"
+            android:textSize="@dimen/textview_radioButton" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/w_white"
+            android:button="@null"
+            android:drawableTop="@drawable/healty__selector"
+            android:gravity="center"
+            android:text="健康圈"
             android:textColor="@color/w_gray"
             android:textSize="@dimen/textview_radioButton" />
 

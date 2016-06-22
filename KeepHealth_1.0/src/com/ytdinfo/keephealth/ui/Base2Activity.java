@@ -11,6 +11,7 @@ import cn.jpush.android.api.JPushInterface;
 
 import com.rayelink.eckit.BroadCastAction;
 import com.rayelink.eckit.MainChatControllerListener;
+import com.umeng.common.ui.util.FontUtils;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.MyApp;
 import com.ytdinfo.keephealth.utils.LogUtil;
@@ -45,6 +46,7 @@ public class Base2Activity extends FragmentActivity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		JPushInterface.clearAllNotifications(MyApp.getInstance());
+		 FontUtils.changeTypeface(getWindow().getDecorView());
 	}
 
 	public static final String INTETN_ACTION_EXIT_CCP_DEMO = "exit_demo";

@@ -11,11 +11,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +29,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,6 +42,13 @@ import com.rayelink.eckit.AppUserAccount;
 import com.rayelink.eckit.MainChatControllerListener;
 import com.rayelink.eckit.SDKCoreHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UHandler;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.entity.UMessage;
+import com.umeng.socialize.PlatformConfig;
+import com.youzan.sdk.YouzanSDK;
 import com.ytdinfo.keephealth.utils.CommomUtil;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
@@ -48,15 +57,18 @@ import com.yuntongxun.kitsdk.ECDeviceKit;
 import com.yuntongxun.kitsdk.beans.ChatInfoBean;
 import com.yuntongxun.kitsdk.ui.chatting.model.IMChattingHelper;
 
+//import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+
 public class MyApp extends Application {
+	
 	public static final String TAG = MyApp.class.getName();
 	private static MyApp instance;
 
 	/**
 	 * 上午11:35:19 TODO 服务器地址
 	 */
-	private static String xml = CommomUtil.setUpXml("ruiyi.cloopen.com", "8085",
-			"ruiyi.cloopen.com", "8888", "ruiyi.cloopen.com", "8090");
+	private static String xml = CommomUtil.setUpXml("ruiyi.cloopen.com",
+			"8085", "ruiyi.cloopen.com", "8888", "ruiyi.cloopen.com", "8090");
 
 	/**
 	 * 单例，返回一个实例
@@ -87,6 +99,76 @@ public class MyApp extends Application {
 		MobclickAgent.openActivityDurationTrack(false);
 		initImageLoader();
 		initYunTongXunConfig();
+		// 分享初始化
+		PlatformConfig.setWeixin("wxe9dfaf997a35d828",
+				"e98b52d02f8112bcc93181490b980aab");
+		// 豆瓣RENREN平台目前只能在服务器端配置
+		// 新浪微博
+		PlatformConfig.setSinaWeibo("275392174",
+				"d96fb6b323c60a42ed9f74bfab1b4f7a");
+		PlatformConfig.setQQZone("1104513231", "VFVBeqWa7Rv2ZeDf");
+		// 初始化微社区
+
+		// 推送通知
+		PushAgent.getInstance(this).setDebugMode(true);
+
+		PushAgent.getInstance(this).setMessageHandler(
+				new UmengMessageHandler() {
+					@Override
+					public void dealWithNotificationMessage(Context arg0,
+							UMessage msg) {
+						super.dealWithNotificationMessage(arg0, msg);
+					}
+				});
+		PushAgent.getInstance(this).setNotificationClickHandler(new UHandler() {
+			@Override
+			public void handleMessage(Context context, UMessage uMessage) {
+				com.umeng.comm.core.utils.Log.d("notifi", "getting message");
+				try {
+					JSONObject jsonObject = uMessage.getRaw();
+					String feedid = "";
+					if (jsonObject != null) {
+						com.umeng.comm.core.utils.Log.d("json",
+								jsonObject.toString());
+						JSONObject extra = uMessage.getRaw().optJSONObject(
+								"extra");
+						feedid = extra
+								.optString(com.umeng.comm.core.constants.Constants.FEED_ID);
+					}
+					Class myclass = Class.forName(uMessage.activity);
+					Intent intent = new Intent(context, myclass);
+					Bundle bundle = new Bundle();
+					bundle.putString(
+							com.umeng.comm.core.constants.Constants.FEED_ID,
+							feedid);
+					intent.putExtras(bundle);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+				} catch (Exception e) {
+					com.umeng.comm.core.utils.Log.d("class", e.getMessage());
+				}
+			}
+		});
+
+		initUzan();
+	}
+
+	/**
+	 * 上午11:14:20
+	 * 
+	 * @author zhangyh2 TODO 初始化有赞SDK
+	 */
+	private void initUzan() {
+		// TODO Auto-generated method stub
+		/**
+		 * 初始化
+		 * 
+		 * @param Context
+		 *            application Context
+		 * @param userAgent
+		 *            用户代理, 填写UA
+		 */
+		YouzanSDK.init(this, "9d4c27edeafad2e13a1464165102698");
 	}
 
 	/**
@@ -111,15 +193,14 @@ public class MyApp extends Application {
 							JSONObject data = jsonObject.getJSONObject("Data");
 							String change = data.getString("isChange");
 							if ("true".equals(change)) {
-//								AppUserAccount.changeToZYAppConfig();
+								// AppUserAccount.changeToZYAppConfig();
 								// 新通道
 								Log.i("MyApp_ConnectYunTongXun", "链接云云通讯");
 								Log.i("MyApp_ConnectYunTongXun", xml);
 								ECDevice.initServer(instance, xml);
 							}
 						} catch (JSONException e) {
-						}
-						finally{
+						} finally {
 							ConnectYunTongXun();
 							InitChatController();
 						}
@@ -137,18 +218,17 @@ public class MyApp extends Application {
 							JSONObject data = jsonObject.getJSONObject("Data");
 							String change = data.getString("isChange");
 							if ("true".equals(change)) {
-//								AppUserAccount.changeToZYAppConfig();
+								// AppUserAccount.changeToZYAppConfig();
 								Log.i("MyApp_ConnectYunTongXun", "链接云云通讯");
 								Log.i("MyApp_ConnectYunTongXun", xml);
 								ECDevice.initServer(instance, xml);
 							}
 						} catch (JSONException e) {
-							
-						}finally{
+
+						} finally {
 							ConnectYunTongXun();
 							InitChatController();
 						}
-						
 
 					}
 				});
@@ -211,31 +291,24 @@ public class MyApp extends Application {
 	private void initImageLoader() {
 		File cacheDir = StorageUtils.getOwnCacheDirectory(
 				getApplicationContext(), "KeepHealth/image");
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				this)
-				// .memoryCacheExtraOptions(480, 800)
-				// max width, max height，即保存的每个缓存文件的最大长宽
-				.threadPoolSize(3)
-				// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				.denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
-				// You can pass your own memory cache
-				// implementation/你可以通过自己的内存缓存实现
-				.memoryCacheSize(2 * 1024 * 1024)
-				.discCacheSize(50 * 1024 * 1024)
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				// 将保存的时候的URI名称用MD5 加密
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.discCacheFileCount(100)
-				// 缓存的文件数量
-				.discCache(new UnlimitedDiscCache(cacheDir))
-				// 自定义缓存路径
-				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-				.imageDownloader(
-						new BaseImageDownloader(this, 5 * 1000, 30 * 1000))
-				.writeDebugLogs().build();// 开始构建
-		ImageLoader.getInstance().init(config);
+		ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(
+				this);
+		config.memoryCacheExtraOptions(480, 800); // default = device screen
+													// dimensions 内存缓存文件的最大长宽
+		config.diskCacheExtraOptions(480, 800, null);
+		config.threadPoolSize(3);
+		config.threadPriority(Thread.NORM_PRIORITY - 2);
+		config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+		config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+		config.memoryCacheSize(2 * 1024 * 1024); // 内存缓存的最大值
+		config.memoryCacheSizePercentage(13);
+		config.diskCacheFileCount(100);
+		config.tasksProcessingOrder(QueueProcessingType.LIFO);
+		config.denyCacheImageMultipleSizesInMemory();
+		// config.writeDebugLogs(); // Remove for release app
+		config.diskCache(new UnlimitedDiskCache(cacheDir));
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(config.build());
 	}
 
 	public void showToast(String text) {
@@ -368,10 +441,10 @@ public class MyApp extends Application {
 		super.onLowMemory();
 
 	}
-
+/*
 	static {
 		System.loadLibrary("jpegbither");
 		System.loadLibrary("bitherjni");
 
-	}
+	}*/
 }

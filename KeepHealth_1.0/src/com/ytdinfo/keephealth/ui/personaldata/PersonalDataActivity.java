@@ -45,7 +45,8 @@ import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 import com.ytdinfo.keephealth.utils.ToastUtil;
 
 @SuppressLint("NewApi")
-public class PersonalDataActivity extends BaseActivity implements OnClickListener {
+public class PersonalDataActivity extends BaseActivity implements
+		OnClickListener {
 	private String TAG = "PersonalDataActivity";
 	// /* 用来标识请求照相功能的activity */
 	// private static final int CAMERA_WITH_DATA = 3021;
@@ -66,6 +67,7 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 	private CommonModifyView personalDataItem_1View_3;
 	private CommonModifyView personalDataItem_1View_4;
 	private CommonModifyView personalDataItem_1View_5;
+	private CommonModifyView addtion;
 
 	private AlertDialog alertDialog;
 	private LinearLayout ll_parent;
@@ -88,7 +90,7 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_data);
-		
+
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 2);
 
 		LogUtil.i("wpc", "onCreate");
@@ -166,6 +168,10 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 		personalDataItem_1View_2.tv_title.setText("姓名");
 		// personalDataItem_1View_2.tv_desc.setText(userModel.getUserName());
 
+		// V21 调整用户昵称
+		addtion = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_V21_Addition1);
+		addtion.tv_title.setText("昵称");
+
 		personalDataItem_1View_3 = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_1View_3);
 		personalDataItem_1View_3.tv_title.setText("手机号码");
 		// personalDataItem_1View_3.tv_desc.setText(userModel.getMobilephone());
@@ -230,6 +236,8 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 
 		personalDataItem_1View_2.tv_desc.setText(userModel.getUserName());
 
+		addtion.tv_desc.setText(userModel.getAddition1());
+
 		personalDataItem_1View_3.tv_desc.setText(transformMobile(userModel
 				.getMobilephone()));
 		mobilePhone = userModel.getMobilephone();
@@ -281,6 +289,8 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 		personalDataItem_2View.setOnClickListener(this);
 		// 姓名
 		personalDataItem_1View_2.setOnClickListener(this);
+		// 昵称
+		addtion.setOnClickListener(this);
 		// 手机号码不可修改
 		personalDataItem_1View_3.setOnClickListener(new OnClickListener() {
 
@@ -328,10 +338,10 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 		case R.id.id_PersonalDataItem_2View:
 			// 头像
 			pop.showAtLocation(ll_parent, Gravity.BOTTOM, 0, 0);
-			
-//			Intent intent = new Intent(this, MyPopWindow.class);
-//			intent.putExtra("needCrop", true);
-//			startActivityForResult(intent, 0x123);
+
+			// Intent intent = new Intent(this, MyPopWindow.class);
+			// intent.putExtra("needCrop", true);
+			// startActivityForResult(intent, 0x123);
 			// showPopWindow();
 			break;
 		case R.id.id_PersonalDataItem_1View_2:
@@ -345,6 +355,18 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 			i12.putExtra("desc", personalDataItem_1View_2.tv_desc.getText()
 					.toString());
 			startActivity(i12);
+
+			break;
+
+		case R.id.id_PersonalDataItem_V21_Addition1:
+			// 昵称
+			Intent addtions = new Intent();
+			addtions.setClass(PersonalDataActivity.this,
+					CommonModifyInfoActivity.class);
+			// 将“姓名”传过去
+			addtions.putExtra("title", addtion.tv_title.getText().toString());
+			addtions.putExtra("desc", addtion.tv_desc.getText().toString());
+			startActivity(addtions);
 
 			break;
 		case R.id.id_PersonalDataItem_1View_5:
@@ -386,7 +408,7 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 		if (head != null) {
 			head.recycle();
 			head = null;
-//			System.gc();
+			// System.gc();
 		}
 	}
 
@@ -558,12 +580,12 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-//		if (resultCode == 1001) {
-//			Uri uri= data.getData();
-//			head = (Bitmap)data.getExtras().get("data");
-//			requestModifyInfo();
-//		}
+
+		// if (resultCode == 1001) {
+		// Uri uri= data.getData();
+		// head = (Bitmap)data.getExtras().get("data");
+		// requestModifyInfo();
+		// }
 		LogUtil.i(TAG, "onActivityResult");
 		if (requestCode == Constants.CROP_PICKED_WITH_DATA) {
 			// 裁剪
@@ -578,11 +600,10 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 
 				}
 			}
-		} 
-		else {
+		} else {
 			// 拍照或相册
 			String head_path = mypop.INonActivityResult(requestCode, data, 0);
-			if(head_path==null){
+			if (head_path == null) {
 				return;
 			}
 			File temp = new File(head_path);
@@ -619,8 +640,8 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 
 	}
 
-	
 	private MyProgressDialog progressDialog;
+
 	/**
 	 * 将修改后的信息上传服务器
 	 */
@@ -646,8 +667,9 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 						@Override
 						public void onStart() {
 							Log.i("HttpUtil", "onStart");
-							
-							progressDialog  = new MyProgressDialog(PersonalDataActivity.this);
+
+							progressDialog = new MyProgressDialog(
+									PersonalDataActivity.this);
 							progressDialog.setMessage("保存中...");
 							progressDialog.show();
 						}
@@ -664,7 +686,7 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 
 							Log.i("HttpUtil", "onSuccess==="
 									+ responseInfo.result.toString());
-							
+
 							progressDialog.dismiss();
 							ToastUtil.showMessage("修改成功");
 
@@ -703,7 +725,7 @@ public class PersonalDataActivity extends BaseActivity implements OnClickListene
 							LogUtil.i("===============", error.toString());
 							LogUtil.i("=================",
 									Constants.MODIFYINFO_URl);
-							
+
 							ToastUtil.showMessage("网络获取失败");
 							progressDialog.dismiss();
 						}

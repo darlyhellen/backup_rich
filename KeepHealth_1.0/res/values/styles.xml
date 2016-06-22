@@ -909,4 +909,10 @@
         <item name="android:button">@null</item>
         <item name="android:layout_weight">1.0</item>
     </style>
+    
+    <!-- 左滑Activity关闭主题 -->
+    <style name="AppTheme.Transparent">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

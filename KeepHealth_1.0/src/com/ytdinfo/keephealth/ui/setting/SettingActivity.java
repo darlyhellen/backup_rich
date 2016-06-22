@@ -1,5 +1,6 @@
 package com.ytdinfo.keephealth.ui.setting;
 
+import activeandroid.util.Log;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,11 @@ import android.widget.ImageButton;
 import com.google.gson.Gson;
 import com.rayelink.eckit.MainChatControllerListener;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.impl.CommunitySDKImpl;
+import com.umeng.comm.core.login.LoginListener;
+import com.umeng.common.ui.util.BroadcastUtils;
+import com.youzan.sdk.YouzanSDK;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.model.UserModel;
@@ -110,7 +116,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public void showDialog() {
-		if(alertDialog != null && alertDialog.isShowing()){
+		if (alertDialog != null && alertDialog.isShowing()) {
 			return;
 		}
 		alertDialog = new AlertDialog.Builder(SettingActivity.this).create();
@@ -118,13 +124,13 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		alertDialog.setCanceledOnTouchOutside(false);
 		Window window = alertDialog.getWindow();
 		window.setContentView(R.layout.exit_app);
-//		ImageView close = (ImageView) window.findViewById(R.id.cto_close);
-//		close.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				alertDialog.dismiss();
-//			}
-//		});
+		// ImageView close = (ImageView) window.findViewById(R.id.cto_close);
+		// close.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// alertDialog.dismiss();
+		// }
+		// });
 		Button cancel = (Button) window.findViewById(R.id.cto_cancle);
 		cancel.setOnClickListener(new OnClickListener() {
 
@@ -152,16 +158,38 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		SharedPrefsUtil.remove(Constants.USERID);
 		SharedPrefsUtil.remove(Constants.USERMODEL);
 		SharedPrefsUtil.remove(Constants.ONLINE_QUES_USERMODEL);
+		CommunitySDKImpl.getInstance().logout(SettingActivity.this, new LoginListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete(int stCode, CommUser userInfo) {
+                BroadcastUtils.sendUserLogoutBroadcast(getApplication());
+                finish();
+            }
+        });
 		MainChatControllerListener.closeAllSubject(false);
-		DBUtilsHelper.instance=null;
+		DBUtilsHelper.instance = null;
 		ToastUtil.showMessage("已退出");
+ 
+		loginOutUzan();
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-	
-	
-	
+
+	/**
+	 * 上午11:17:13
+	 * 
+	 * @author zhangyh2 TODO
+	 */
+	private void loginOutUzan() {
+		// TODO Auto-generated method stub
+		// App帐号退出或者切换时, 记得执行{@code YouzanSDK.userLogout()}登出有赞用户(这个很重要)
+		YouzanSDK.userLogout(this);
+	}
 
 	@Override
 	public void onResume() {
