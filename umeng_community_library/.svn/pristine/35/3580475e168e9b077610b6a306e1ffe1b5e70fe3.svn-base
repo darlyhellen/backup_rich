@@ -1,0 +1,18 @@
+/**下午3:32:29
+ * @author zhangyh2
+ * ShareListener.java
+ * TODO
+ */
+package com.umeng;
+
+import android.content.Context;
+
+/**
+ * @author zhangyh2 ShareListener 下午3:32:29 TODO
+ */
+public interface MainShareListener {
+
+	public void shared(Context context,String titleName, String thumbUrl, String url,
+			String siteDesc);
+
+}

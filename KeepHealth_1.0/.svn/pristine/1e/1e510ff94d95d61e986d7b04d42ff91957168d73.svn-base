@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="babaiban_name">
+        <item>0006</item>
+        <!-- 0006 眼科 -->
+        <item>0006</item>
+        <item>0006</item>
+        <!-- 0006 视力 -->
+        <item>1000</item>
+        <!-- 1000 备用 -->
+        <item>0005</item>
+        <!-- 0005 外科 -->
+        <item>0005</item>
+        <item>1000</item>
+        <item>0018</item>
+        <!-- 0018 采血处 -->
+        <item>0010</item>
+        <item>0023</item>
+        <!-- 0010 B超 -->
+        <item>0010</item>
+        <item>0023</item>
+        <item>0010</item>
+        <item>0023</item>
+        <item>0004</item>
+        <!-- 0004 内科 -->
+        <item>0004</item>
+        <item>0011</item>
+        <!-- 0011 心电图 -->
+        <item>0004</item>
+        <item>0004</item>
+        <item>0011</item>
+        <item>0011</item>
+        <item>0011</item>
+        <item>0008</item>
+        <!-- 0008 耳鼻喉 -->
+        <item>0008</item>
+        <item>0003</item>
+        <!-- 0003 一般检查 -->
+        <item>0005</item>
+        <item>0010</item>
+        <item>0023</item>
+        <item>0007</item>
+        <!-- 0007 妇科 -->
+        <item>0007</item>
+        <item>0004</item>
+        <item>0009</item>
+        <!-- 0009 口腔 -->
+        <item>0033</item>
+        <!-- 0033 中医 -->
+        <item>0102</item>
+        <!-- 0102 钼靶 -->
+        <item>0101</item>
+        <!-- 0101 DR -->
+        <item>0103</item>
+        <!-- 0103 CT -->
+        <item>0027</item>
+        <!-- 0027 动脉硬化 -->
+        <item>1000</item>
+        <item>0014</item>
+        <item>0015</item>
+        <!-- 0014 骨密度/呼气试验 -->
+        <item>0013</item>
+        <!-- 0013 经颅多普勒 -->
+        <item>0012</item>
+        <item>0016</item>
+        <!-- 0012 呼气试验/肺功能 -->
+    </string-array>
+
+    <integer-array name="babaiban_room">
+        <item>130</item>
+        <item>131</item>
+        <item>132</item>
+        <item>126</item>
+        <item>108</item>
+        <item>107</item>
+        <item>106</item>
+        <item>105</item>
+        <item>127</item>
+        <item>127</item>
+        <item>128</item>
+        <item>128</item>
+        <item>129</item>
+        <item>129</item>
+        <item>113</item>
+        <item>112</item>
+        <item>120</item>
+        <item>111</item>
+        <item>119</item>
+        <item>109</item>
+        <item>118</item>
+        <item>110</item>
+        <item>103</item>
+        <item>102</item>
+        <item>101</item>
+        <item>117</item>
+        <item>135</item>
+        <item>135</item>
+        <item>123</item>
+        <item>122</item>
+        <item>121</item>
+        <item>136</item>
+        <item>137</item>
+        <item>138</item>
+        <item>139</item>
+        <item>150</item>
+        <item>221</item>
+        <item>220</item>
+        <item>219</item>
+        <item>219</item>
+        <item>218</item>
+        <item>217</item>
+        <item>217</item>
+    </integer-array>
+    <integer-array name="babaiban_roomnub">
+        <item>130</item>
+        <item>131</item>
+        <item>132</item>
+        <item>126</item>
+        <item>108</item>
+        <item>107</item>
+        <item>106</item>
+        <item>105</item>
+        <item>127</item>
+        <item>128</item>
+        <item>129</item>
+        <item>113</item>
+        <item>112</item>
+        <item>120</item>
+        <item>111</item>
+        <item>119</item>
+        <item>109</item>
+        <item>118</item>
+        <item>110</item>
+        <item>103</item>
+        <item>102</item>
+        <item>101</item>
+        <item>117</item>
+        <item>135</item>
+        <item>123</item>
+        <item>122</item>
+        <item>121</item>
+        <item>136</item>
+        <item>137</item>
+        <item>138</item>
+        <item>139</item>
+        <item>150</item>
+        <item>221</item>
+        <item>220</item>
+        <item>219</item>
+        <item>218</item>
+        <item>217</item>
+        <item>000</item>
+    </integer-array>
+
+    <string-array name="jingan_name">
+        <item>0010</item>
+        <!-- 0010 B超 -->
+    </string-array>
+
+    <integer-array name="jingan_room">
+        <item>218</item>
+    </integer-array>
+    <integer-array name="jingan_roomnum">
+        <item>218</item>
+    </integer-array>
+    <integer-array name="jingan_roomnub">
+        <item>221</item>
+        <item>225</item>
+        <item>226</item>
+        <item>227</item>
+        <item>228</item>
+        <item>222</item>
+        <item>223</item>
+        <item>219</item>
+        <item>218</item>
+        <item>217</item>
+        <item>251</item>
+        <item>250</item>
+        <item>229</item>
+        <item>230</item>
+        <item>256</item>
+        <item>255</item>
+        <item>253</item>
+        <item>252</item>
+        <item>216</item>
+        <item>212</item>
+        <item>213</item>
+        <item>215</item>
+        <item>257</item>
+        <item>258</item>
+        <item>260</item>
+        <item>208</item>
+        <item>211</item>
+        <item>210</item>
+        <item>209</item>
+        <item>207</item>
+        <item>262</item>
+        <item>261</item>
+        <item>265</item>
+        <item>263</item>
+        <item>206</item>
+        <item>205</item>
+        <item>203</item>
+        <item>268</item>
+        <item>266</item>
+        <item>267</item>
+        <item>201</item>
+    </integer-array>
+
+    <string-array name="xuhui_name">
+        <item>0101</item>
+        <item>0103</item>
+        <item>1000</item>
+        <item>0027</item>
+        <item>0014</item>
+        <item>1111</item>
+        <item>0033</item>
+        <item>0012</item>
+    </string-array>
+
+    <integer-array name="xuhui_room">
+        <item>301</item>
+        <item>303</item>
+        <item>311</item>
+        <item>323</item>
+        <item>331</item>
+        <item>343</item>
+        <item>312</item>
+        <item>313</item>
+    </integer-array>
+    <integer-array name="xuhui_roomnub">
+        <item>136</item>
+        <item>137</item>
+        <item>104</item>
+        <item>105</item>
+        <item>106</item>
+        <item>107</item>
+        <item>108</item>
+        <item>109</item>
+        <item>110</item>
+        <item>111</item>
+        <item>112</item>
+        <item>124</item>
+        <item>129</item>
+        <item>130</item>
+        <item>131</item>
+        <item>132</item>
+        <item>133</item>
+        <item>134</item>
+        <item>116</item>
+        <item>115</item>
+        <item>114</item>
+        <item>113</item>
+        <item>120</item>
+        <item>119</item>
+        <item>118</item>
+        <item>117</item>
+        <item>123</item>
+        <item>122</item>
+        <item>121</item>
+        <item>128</item>
+        <item>127</item>
+        <item>126</item>
+        <item>125</item>
+        <item>000</item>
+    </integer-array>
+
+</resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/im_chat_foot"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+      android:background="#F8F8F8"
+    android:orientation="vertical"
+ >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:minHeight="40dip"
+      android:padding="3dp"
+       android:orientation="horizontal"
+       android:paddingLeft="3dp"
+       android:paddingStart="3dp"
+       android:paddingRight="6dp"
+       android:paddingEnd="6dp"
+      >
+      <ImageButton
+            android:id="@+id/btn_voice1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginRight="11.0dip"
+            android:background="@null"
+            android:contentDescription="语音说话与键盘输入切换"
+			android:src="@drawable/ytx_chatting_setmode_voice_btn"
+            />
+       
+
+            <com.voice.demo.group.baseui.CCPEditText
+                android:id="@+id/im_content_et"
+              android:textColor="@color/black"
+                android:background="@drawable/bg_textbox"
+                android:maxHeight="60dp"
+                android:minHeight="30.0dip"
+                android:hint="将问题描述全面更利于医生解答"
+                android:textSize="14sp"
+                android:singleLine="false"
+                android:layout_weight="1.0"
+                android:inputType="textCapSentences|textMultiLine"
+                style="@style/CCPEditText"
+                android:visibility="visible"
+                android:padding="4dip"
+              />
+            <Button
+                android:id="@+id/btn_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_record"
+                android:maxHeight="80dp"
+                android:minHeight="30.0dip"
+                android:layout_weight="1.0"
+                android:visibility="gone"
+              android:text="按住说话"
+              android:textSize="16sp"
+              android:textColor="@color/main_green"
+              android:padding="8dp"
+              android:layout_gravity="center_vertical"
+              />
+     <ImageButton
+         android:id="@+id/btn_emoji"
+            android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:padding="4dp"
+                android:src="@drawable/ytx_chatting_setmode_biaoqing_btn"
+                />
+           
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center" >
+                <Button
+                     android:id="@+id/btn_file"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:paddingLeft="5.0dip"
+                    android:paddingRight="5.0dip"
+                    android:background="@drawable/type_select_btn"
+                    android:visibility="visible"
+                    android:minWidth="44dp"
+                     />
+
+                <Button
+                    android:id="@+id/im_send_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/ytx_chat_send_btn"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:minWidth="44dp"
+                    android:text="发送"
+                    android:textColor="#ff7f7f7f"
+                    android:textSize="14.0dip" 
+                    android:visibility="gone"/>
+            </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/chatting_bottom_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#E1E1E1"
+        android:orientation="vertical" >
+
+        <!-- <include
+            android:id="@+id/tools_stub"
+            layout="@layout/chatting_tools" /> -->
+
+        <com.voice.demo.group.baseui.AppPanel
+            android:id="@+id/chatting_app_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

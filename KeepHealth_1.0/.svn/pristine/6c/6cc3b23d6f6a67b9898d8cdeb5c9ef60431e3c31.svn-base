@@ -1,0 +1,252 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/home_top_background"
+        android:orientation="vertical" >
+
+        <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+            android:id="@+id/ia_conmmontopview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#54B896" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="44dp" >
+
+        <TextView
+            android:id="@+id/ia_guide_city_text"
+            style="@style/TextViewShow"
+            android:paddingLeft="30px"
+            android:textSize="16sp"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:id="@+id/ia_guide_city"
+            style="@style/TextViewShow"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ia_image_city"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:src="@drawable/arrow_gray_down"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/back_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="44dp" >
+
+        <Spinner
+            android:id="@+id/ia_guide_local"
+            style="@style/TextViewShow"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown" />
+
+        <ImageView
+            android:id="@+id/ia_image_local"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:src="@drawable/arrow_gray_down" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="20px"
+        android:background="@color/back_line" />
+
+    <TableRow
+        android:id="@+id/ia_guide_table_row"
+        android:layout_width="fill_parent"
+        android:layout_height="44dp"
+        android:background="@android:color/white"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/ia_guide_first"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/first_floor" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/back_line" />
+
+        <TextView
+            android:id="@+id/ia_guide_secend"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/secend_floor" />
+    </TableRow>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/back_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/ia_guide_name"
+                style="@style/TextViewShow"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <RelativeLayout
+                android:id="@+id/ia_guide_relative_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ia_guide_relative_sec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="5dp" />
+            <include layout="@layout/ia_guide_declare" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/back_line" />
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@color/guide_bottom" >
+
+        <LinearLayout
+            android:id="@+id/ia_intel_tijianyuyue"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ia_intel_tijianyuyue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ia_intel_tijianyuyue"
+                android:textColor="#52a8a8"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/back_line" />
+
+        <LinearLayout
+            android:id="@+id/ia_intel_baogaochaxun"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ia_intel_baogaochaxun" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ia_intel_baogaochaxun"
+                android:textColor="#52a8a8"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/back_line" />
+
+        <LinearLayout
+            android:id="@+id/ia_intel_baogaoxiangqing"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ia_intel_baogaoxiangqing" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ia_intel_baogaoxiangqing"
+                android:textColor="#52a8a8"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </TableRow>
+
+</LinearLayout>

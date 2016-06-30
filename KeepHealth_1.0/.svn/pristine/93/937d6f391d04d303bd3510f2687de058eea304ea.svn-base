@@ -1,0 +1,107 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_rl_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bggray"
+    android:orientation="vertical" >
+
+    <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+        android:id="@+id/id_CommonActivityTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/cr_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/crb_re"
+        android:layout_below="@id/id_CommonActivityTopView"
+        android:divider="@color/divider"
+        android:dividerHeight="0.5dp"
+        android:focusable="false"
+        android:scrollbars="none"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/crb_re"
+        android:layout_below="@id/id_CommonActivityTopView" >
+
+        <Button
+            android:id="@+id/id_iv_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:drawableTop="@drawable/nodata"
+            android:text="没有体检报告"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/crb_re1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bgwhite"
+        android:layout_above="@+id/crb_re"
+        android:paddingTop="5dp"
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/tv_b13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="想解读其他报告？"
+            android:textColor="@color/w_l_gray" />
+
+        <Button
+            android:id="@+id/id_bt_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_b13"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/login_bt_bg"
+            android:padding="10dp"
+            android:text="去查询体检报告"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/crb_re"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bgwhite"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/tv_b11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="没有瑞慈体检报告?"
+            android:textColor="#fffe2e2e" />
+
+        <Button
+            android:id="@+id/id_bt_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_b11"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/login_bt_bg_blue"
+            android:padding="10dp"
+            android:text="填写问诊信息"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

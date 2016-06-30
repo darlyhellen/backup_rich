@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="温馨提示"
+        android:textColor="@color/main_green"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/chat_dialog_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textColor="@color/w_gray"
+        android:textSize="@dimen/textview_general" />
+
+    <Button
+        android:id="@+id/chat_dialog_sure"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/login_bt_bg"
+        android:text="确定"
+        android:textColor="@color/w_white"
+        android:textSize="@dimen/textview_large" />
+
+</LinearLayout>

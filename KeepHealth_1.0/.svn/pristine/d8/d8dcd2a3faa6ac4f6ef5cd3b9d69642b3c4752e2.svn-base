@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 专职为有赞商城启动一个WebView -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/home_top_background"
+        android:padding="@dimen/activity_top_padding" >
+
+        <ImageButton
+            android:id="@+id/id_webview_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back_selector"
+            android:padding="@dimen/button_padding" />
+
+        <TextView
+            android:id="@+id/id_webview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/w_white"
+            android:textSize="@dimen/textview_large" />
+
+        <Button
+            android:id="@+id/id_webview_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_l_white"
+            android:clickable="false"
+            android:text="提交"
+            android:textColor="@color/w_l_white"
+            android:textSize="@dimen/textview_general"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <com.ytdinfo.keephealth.ui.view.MyWebView
+        android:id="@+id/id_webview_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:isScrollContainer="true"
+        android:scrollbars="none" />
+
+</LinearLayout>

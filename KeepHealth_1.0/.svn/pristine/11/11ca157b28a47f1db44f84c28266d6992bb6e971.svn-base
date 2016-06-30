@@ -1,0 +1,241 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w_white"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+   <com.ytdinfo.keephealth.ui.view.ScrollHeaderView
+       android:id="@+id/v21_home_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:scrollbars="none" 
+        android:background="@color/w_white"> 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.ytdinfo.keephealth.ui.view.MyAdGallery
+                android:id="@+id/id_v21_adv"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginBottom="21dp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/v21_ovalLayout"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_marginTop="-40dp"
+                android:gravity="center"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@color/back_line" />
+
+            <!-- 上面为标题和广告栏，下面为内容状态栏 -->
+
+            <include layout="@layout/home_frag_org_v21" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/back_line" />
+
+            <!-- 添加综合服务 -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="综合服务"
+                android:textColor="@android:color/black" >
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/back_line" />
+
+            <!-- 综合服务内容 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/v21_zh_wjjn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_zh_wjjn" />
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/back_line" />
+
+                    <ImageView
+                        android:id="@+id/v21_zh_aha"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_zh_aha" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/back_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/v21_zh_ck"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_zh_ck" />
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/back_line" />
+
+                    <ImageView
+                        android:id="@+id/v21_zh_kfll"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_zh_kfll" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 添加新闻 -->
+
+
+            <!-- <View -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="15dp" -->
+            <!-- android:background="@color/back_line" /> -->
+
+
+            <!-- <LinearLayout -->
+            <!-- android:id="@+id/v21_main_information_showing" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:orientation="vertical" -->
+            <!-- android:visibility="gone" > -->
+
+
+            <!-- <LinearLayout -->
+            <!-- android:id="@+id/v21_main_information" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="44dp" -->
+            <!-- android:gravity="center" -->
+            <!-- android:orientation="horizontal" -->
+            <!-- android:paddingRight="15dp" > -->
+
+
+            <!-- <ImageView -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:paddingLeft="15dp" -->
+            <!-- android:paddingRight="15dp" -->
+            <!-- android:src="@drawable/ic_remenzixun" /> -->
+
+
+            <!-- <TextView -->
+            <!-- android:layout_width="0dp" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:layout_weight="1" -->
+            <!-- android:text="热门资讯" -->
+            <!-- android:textColor="@color/black" -->
+            <!-- android:textSize="@dimen/textview_general" /> -->
+
+
+            <!-- <ImageView -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:src="@drawable/arrow_gray" /> -->
+            <!-- </LinearLayout> -->
+
+
+            <!-- <View -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="0.5dp" -->
+            <!-- android:background="@color/back_line" /> -->
+
+
+            <!-- <com.ytdinfo.keephealth.ui.view.WholseListViewV21 -->
+            <!-- android:id="@+id/v21_main_healthy_circle" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:divider="@color/w_white" -->
+            <!-- android:dividerHeight="10dp" -->
+            <!-- android:listSelector="#00000000" > -->
+            <!-- </com.ytdinfo.keephealth.ui.view.WholseListViewV21> -->
+
+
+            <!-- <View -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="15dp" -->
+            <!-- android:background="@color/white" /> -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@color/back_line" />
+            <!-- </LinearLayout> -->
+
+
+            <!-- 添加热门咨询 -->
+
+            <FrameLayout
+                android:id="@+id/hot_news_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@color/back_line" />
+            <!-- 添加精彩社区 -->
+
+            <FrameLayout
+                android:id="@+id/hot_discuss_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </FrameLayout>
+        </LinearLayout>
+     </com.ytdinfo.keephealth.ui.view.ScrollHeaderView>
+
+       <com.ytdinfo.keephealth.ui.view.CommonActivityTopView
+        android:id="@+id/v21_home_title"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.ytdinfo.keephealth.ui.view.CommonActivityTopView>
+
+</RelativeLayout>

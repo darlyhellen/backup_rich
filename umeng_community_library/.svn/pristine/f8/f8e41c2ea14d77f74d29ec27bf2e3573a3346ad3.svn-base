@@ -1,0 +1,47 @@
+/**下午3:48:52
+ * @author zhangyh2
+ * WXQShareHelper.java
+ * TODO
+ */
+package com.umeng;
+
+/**
+ * @author zhangyh2 WXQShareHelper 下午3:48:52 TODO
+ */
+public class MainShareHelper {
+
+	private static MainShareHelper instance;
+
+	private MainShareListener listener;
+
+	/**
+	 * 下午3:49:23
+	 * 
+	 * @author zhangyh2
+	 */
+	private MainShareHelper() {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @return the instance
+	 */
+	public static MainShareHelper getInstance() {
+		if (instance == null) {
+			instance = new MainShareHelper();
+		}
+		return instance;
+	}
+
+	public void setListener(MainShareListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * @return the listener
+	 */
+	public MainShareListener getListener() {
+		return listener;
+	}
+
+}

@@ -1,0 +1,68 @@
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+     >
+     <RelativeLayout 
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+             android:background="@color/bgwhite"
+                 android:descendantFocusability="blocksDescendants"
+         >
+     <TextView 
+         android:id="@+id/crli_title"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="林霞 2014年4月体检报告"
+         android:textSize="16sp"
+         android:textColor="@color/w_gray"
+         android:layout_marginTop="15dp"
+         android:singleLine="true"
+         android:layout_toLeftOf="@+id/crli_bt"
+         android:layout_marginRight="10dp"
+         android:layout_alignLeft="@+id/tv21"
+         />
+     <TextView 
+         android:id="@+id/tv21"
+         android:layout_below="@id/crli_title"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="体检日期："
+         android:textSize="14sp"
+         android:textColor="@color/w_l_gray"
+         android:layout_marginLeft="15dp"
+         android:layout_marginTop="5dp"
+         android:singleLine="true"
+         />
+     <TextView 
+         android:id="@+id/crli_date"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+           android:text="2014-8.3"
+         android:textSize="16sp"
+         android:textColor="@color/w_l_gray"
+         android:layout_marginLeft="10dp"
+         android:singleLine="true"
+         android:layout_toRightOf="@id/tv21"
+         android:layout_alignTop="@id/tv21"
+         />
+<Button 
+    android:id="@+id/crli_bt"
+    android:layout_width="wrap_content"
+   android:layout_height="wrap_content"
+   android:text="找医生解读"
+   android:textColor="@color/main_green"
+   android:textSize="16sp"
+   android:background="@drawable/icon_bt_border"
+   android:padding="8dp"
+   android:layout_centerVertical="true"
+   android:layout_alignParentRight="true"
+   android:layout_marginRight="10dp"
+   android:focusable="false"
+    />
+</RelativeLayout>
+
+</LinearLayout>

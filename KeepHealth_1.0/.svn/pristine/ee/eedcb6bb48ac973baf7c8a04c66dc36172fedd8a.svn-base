@@ -1,0 +1,108 @@
+package com.ytdinfo.keephealth.ui;
+
+import java.lang.reflect.Field;
+
+import android.annotation.SuppressLint;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
+import android.widget.TextView;
+
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.FeedItem;
+import com.umeng.comm.core.utils.DeviceUtils;
+import com.umeng.comm.core.utils.ResFinder;
+import com.umeng.comm.ui.fragments.PostBtnAnimFragment;
+import com.umeng.common.ui.presenter.impl.HotDiscussFeedPresenter;
+import com.umeng.common.ui.util.BroadcastUtils;
+import com.ytdinfo.keephealth.R;
+
+public class HotDiscussFragment extends PostBtnAnimFragment<HotDiscussFeedPresenter> {
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        mPostBtn.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected HotDiscussFeedPresenter createPresenters() {
+    	HotDiscussFeedPresenter presenter = new HotDiscussFeedPresenter(this);
+        return presenter;
+    }
+
+    @Override
+    protected void loadMoreFeed() {
+        // 没有网络的情况下从数据库加载
+        if (!DeviceUtils.isNetworkAvailable(getActivity())) {
+            onRefreshEnd();
+            mPresenter.loadDataFromDB();
+            return;
+        }
+        if(isCanLoadMore()){
+            mPresenter.fetchNextPageData();
+        }else{
+            onRefreshEnd();
+        }
+    }
+
+    public void cleanAdapterData() {
+        if (mFeedLvAdapter != null) {
+            mFeedLvAdapter.getDataSource().clear();
+            mFeedLvAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 推荐页面不接受新发布的feed。【不可删除】
+     */
+    // @Override
+    // protected void registerBroadcast() {
+    // BroadcastUtils.registerFeedUpdateBroadcast(getActivity(), mReceiver);
+    // }
+
+    @Override
+    protected void postFeedComplete(FeedItem feedItem) {
+        updateForwardCount(feedItem, 1);
+    }
+
+    @Override
+    public void initAdapter() {
+        // 添加Header
+        TextView headerView = (TextView)LayoutInflater.from(getActivity()).inflate(
+                ResFinder.getLayout("umeng_comm_text_header_view"), null);
+        headerView.setTypeface(CommConfig.getConfig().getTypeface());
+        headerView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //跳转到主页面的
+            	((MainActivity)getActivity()).clickRadioButton(R.id.tab_rb_4);
+            }
+        });
+
+        mFeedsListView.addHeaderView(headerView);
+        super.initAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        BroadcastUtils.unRegisterBroadcast(getActivity(), mReceiver);
+        super.onDestroy();
+    }
+
+    /**
+     * 主动调用加载数据。 【注意】该接口仅仅在退出登录时，跳转到FeedsActivity清理数据后重新刷新数据</br>
+     */
+    public void loadDataFromServer() {
+        if (mPresenter != null) {
+            mPresenter.loadDataFromServer();
+        }
+    }
+
+   
+
+}
+

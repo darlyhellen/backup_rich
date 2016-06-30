@@ -1,0 +1,79 @@
+package com.umeng.community;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.impl.CommunitySDKImpl;
+import com.umeng.comm.core.listeners.Listeners.CommListener;
+import com.umeng.comm.core.nets.Response;
+import com.umeng.comm.custom.AppAdd;
+import com.ytdinfo.keephealth.R;
+import com.ytdinfo.keephealth.app.Constants;
+import com.ytdinfo.keephealth.app.HttpClient;
+import com.ytdinfo.keephealth.model.UserModel;
+import com.ytdinfo.keephealth.ui.MainActivity;
+import com.ytdinfo.keephealth.ui.login.LoginActivity;
+import com.ytdinfo.keephealth.utils.DialogCustomInterface;
+import com.ytdinfo.keephealth.utils.DialogUtils;
+import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
+import com.ytdinfo.keephealth.utils.ToastUtil;
+
+public class UmengNickNameUtils {
+	
+	
+	
+	public static  void handleUmengName(Context mContext)
+	{
+		int flag=UmengNickNameUtils.checkNameIsUserName(mContext);
+		switch (flag) {
+			case 0:
+				Intent mIntent=new Intent(mContext,LoginActivity.class);
+				mIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				mContext.startActivity(mIntent);
+				break;
+			case 1:
+				UmengNickNameUtils.showModifyNickNameDialog(mContext);
+				break;
+			default:
+				((MainActivity)mContext).radioGroupCheckId(R.id.tab_rb_4);
+				break;
+		}	
+	}
+
+	
+	//0 用户未登录     1用户登录,昵称就是用户名 ，且确定用户名做为昵称     2用户没有昵称 
+	public static int  checkNameIsUserName(Context mContext)
+	{
+		return	AppAdd.getAppInterface().appAddCheckNameIsUserName(mContext);
+	}
+	
+	
+	
+	public static void showModifyNickNameDialog(final Context mContext)
+	{
+		AppAdd.getAppInterface().appAddShowModifyNickNameDialog(mContext);
+	}
+	
+	
+	
+
+	
+	
+}

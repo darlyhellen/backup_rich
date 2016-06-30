@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+   android:id="@+id/ll_popup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#55000000"
+    >
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+<TextView 
+    android:padding="5dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="您是否确认结束咨询？"
+    android:layout_marginTop="15dp"
+    android:textColor="@color/w_gray"
+    android:textSize="@dimen/textview_large"
+    />
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <Button 
+        android:id="@+id/ec_sure"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_circle_green"
+        android:text="确定"
+        android:textSize="@dimen/textview_large"
+        android:textColor="@color/w_l_green"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        />
+     <Button 
+         android:id="@+id/ec_cancel"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/login_bt_bg"
+        android:text="取消"
+        android:textSize="@dimen/textview_large"
+        android:textColor="@color/w_white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="15dp"
+        />
+</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

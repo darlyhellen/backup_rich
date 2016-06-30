@@ -1,0 +1,18 @@
+# Config account info for test demo from Cloud Communication Platform web site, Of course, 
+# you should be as a developer at first.
+
+# This config info was must be write before apps running
+#please write rest_server_address info
+server_address=https://app.cloopen.com
+
+#please write rest_server_port info
+server_port=8883
+
+#please write main account info
+main_account=8a48b5514efd1c3a014f00c88d2303db
+
+#please write main token info
+main_token=1d8efc525b0b4c0a9be33d0fecd8b249
+
+#please write app id
+app_id=aaf98f894efcded4014f05f582360cd0

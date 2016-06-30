@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright (c) 2013 The CCP project authors. All Rights Reserved.
+ 
+   Use of this source code is governed by a Beijing Speedtong Information Technology Co.,Ltd license
+   that can be found in the LICENSE file in the root of the web site.
+ 
+    				http://www.yuntongxun.com
+ 
+   An additional intellectual property rights grant can be found
+   in the file PATENTS.  All contributing project authors may
+   be found in the AUTHORS file in the root of the source tree.
+ -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatting_bg_ll"
+    style="@style/NavPage"
+    android:background="#E4E3E3"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical" >
+    <!--    <ProgressBar 
+	    android:id="@+id/gc_progressbar" 
+	    style="?android:attr/progressBarStyleHorizontal" 
+		android:layout_width="match_parent" 
+		android:layout_height="2dp" 
+		/>    -->
+
+<RelativeLayout
+        android:id="@+id/title_chat_single"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/home_bg" >
+
+        <ImageView
+            android:id="@+id/gc_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:padding="10dp"
+            android:src="@drawable/back_selector" />
+
+        <TextView
+            android:id="@+id/gc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/gc_title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gc_title"
+            android:layout_centerInParent="true"
+            android:text="等待医生回复..."
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/gc_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_white_selector"
+            android:paddingBottom="3dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp"
+            android:text="结束咨询"
+            android:visibility="gone"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:id="@+id/mp_re"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/gc_progressbar"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="5"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="10"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/gc_progressbar"
+                android:layout_alignParentRight="true"
+                android:paddingRight="5dp"
+                android:text="15分钟"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <ProgressBar
+                android:id="@+id/gc_progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentBottom="true"
+                android:progressDrawable="@drawable/progressbar_color" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/chatting_content"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" >
+        <com.yuntongxun.kitsdk.ui.chatting.listview.ECPullDownView
+            android:id="@+id/chatting_pull_down_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ListView
+                android:id="@+id/chatting_history_lv"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@null"
+                android:cacheColorHint="#00000000"
+                android:divider="@null"
+                android:listSelector="@drawable/ytx_chat_listitem"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical"
+                android:scrollingCache="false" />
+        </com.yuntongxun.kitsdk.ui.chatting.listview.ECPullDownView>
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <com.yuntongxun.kitsdk.ui.chatting.view.CCPChattingFooter2
+            android:id="@+id/nav_footer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/message_editor_hight"
+            layout="@layout/ytx_include_message_newmask" />
+    </RelativeLayout>
+    
+        
+    
+	 <RelativeLayout
+	    android:id="@+id/retry_chat"
+	    android:visibility="gone"
+	    android:background="#FFFFFF"
+        android:layout_width="fill_parent"
+        android:paddingBottom="5dp"
+        android:layout_height="wrap_content">
+        <Button  
+            android:id="@+id/btn_retry_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:layout_marginBottom="5dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                  android:background="@drawable/login_bt_bg"
+                android:padding="10dp"
+            android:text="再次咨询"
+             android:textColor="@color/w_white"
+                android:textSize="16sp" >
+        </Button>
+    </RelativeLayout>
+
+</LinearLayout>
