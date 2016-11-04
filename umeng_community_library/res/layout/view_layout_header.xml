@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
-        android:text="社区"
+        android:text="健康圈"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
     <ImageButton
@@ -37,8 +37,8 @@
         android:layout_width="@dimen/umeng_comm_dimen_12px"
         android:layout_height="@dimen/umeng_comm_dimen_12px"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/umeng_comm_dimen_20px"
-        android:layout_marginTop="@dimen/umeng_comm_dimen_16px"
+        android:layout_marginRight="@dimen/umeng_comm_dimen_10px"
+        android:layout_marginTop="@dimen/umeng_comm_dimen_10px"
         android:background="@drawable/umeng_comm_circle_shape"
         android:visibility="invisible" />
 

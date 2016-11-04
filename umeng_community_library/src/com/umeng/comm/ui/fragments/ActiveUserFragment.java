@@ -88,7 +88,7 @@ public class ActiveUserFragment extends BaseFragment<List<CommUser>, ActiveUserF
             @Override
             public void onClickListener(CommUser user) {
                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, user);
                 getActivity().startActivity(intent);
             }

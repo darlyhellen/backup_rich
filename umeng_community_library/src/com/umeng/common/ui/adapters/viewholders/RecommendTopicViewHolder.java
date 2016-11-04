@@ -25,45 +25,45 @@
 package com.umeng.common.ui.adapters.viewholders;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.ResFinder;
-import com.umeng.common.ui.widgets.RoundCornerImageView;
-
 
 /**
  * 活跃用户ViewHolder
  */
 public class RecommendTopicViewHolder extends ViewHolder {
 
-    public RoundCornerImageView mImageView;
-    public TextView mUserNameTextView;
-    public ToggleButton mToggleButton;
-//    public ImageView mGenderImageView;
-    public TextView mMsgFansTextView;
-    public View mView;
+	public ImageView mImageView;
+	public TextView mUserNameTextView;
+	public ToggleButton mToggleButton;
+	// public ImageView mGenderImageView;
+	public TextView mMsgFansTextView;
+	public View mView;
 
-    @Override
-    protected int getItemLayout() {
-        return ResFinder.getLayout("umeng_comm_recommendtopic_item");
-    }
+	@Override
+	protected int getItemLayout() {
+		return ResFinder.getLayout("umeng_comm_recommendtopic_item");
+	}
 
-    @Override
-    protected void initWidgets() {
-        mImageView = findViewById(ResFinder.getId("umeng_comm_active_user_icon"));
-        mUserNameTextView = findViewById(ResFinder
-                .getId("umeng_comm_active_user_name"));
-        mToggleButton = findViewById(ResFinder
-                .getId("umeng_comm_active_user_togglebutton"));
-//        mGenderImageView = findViewById(ResFinder
-//                .getId("umeng_comm_active_user_gender"));
-        mMsgFansTextView = findViewById(ResFinder
-                .getId("umeng_comm_active_user_msg"));
-        mView = findViewById(ResFinder
-                .getId("umeng_commm_active_user_layout"));
-        // 在代码里面设置CORNER RADIUS
-        mImageView.setmCornerRaduis(DeviceUtils.dp2px(DeviceUtils.getContext(), 5));
-    }
+	@Override
+	protected void initWidgets() {
+		mImageView = findViewById(ResFinder
+				.getId("umeng_comm_active_user_icon"));
+		mUserNameTextView = findViewById(ResFinder
+				.getId("umeng_comm_active_user_name"));
+		mToggleButton = findViewById(ResFinder
+				.getId("umeng_comm_active_user_togglebutton"));
+		// mGenderImageView = findViewById(ResFinder
+		// .getId("umeng_comm_active_user_gender"));
+		mMsgFansTextView = findViewById(ResFinder
+				.getId("umeng_comm_active_user_msg"));
+		mView = findViewById(ResFinder.getId("umeng_commm_active_user_layout"));
+		// 在代码里面设置CORNER RADIUS
+//		mImageView.setmCornerRaduis(DeviceUtils.dp2px(DeviceUtils.getContext(),
+//				5));
+	}
 }

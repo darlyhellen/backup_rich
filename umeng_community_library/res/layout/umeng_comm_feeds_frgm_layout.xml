@@ -48,11 +48,11 @@
         <com.umeng.common.ui.widgets.RefreshLvLayout
             android:id="@+id/umeng_comm_swipe_layout"
             android:layout_width="fill_parent"
-            android:layout_height="800dp">
-            <com.umeng.common.ui.widgets.NestedListView
+            android:layout_height="fill_parent">
+            <ListView
                 android:id="@+id/umeng_comm_feed_listview"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
                 android:divider="@color/umeng_comm_feed_list_bg"
                 android:dividerHeight="@dimen/umeng_comm_dimen_1px"

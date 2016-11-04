@@ -66,6 +66,7 @@ public class PostNotifycation {
                         .setTicker(title);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, PostFeedActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         boolean postResult = title.equals(sendFailString);
         resultIntent.putExtra(Constants.POST_FAILED, postResult);
 

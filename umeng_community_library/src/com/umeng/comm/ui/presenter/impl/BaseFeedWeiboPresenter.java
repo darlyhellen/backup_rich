@@ -21,6 +21,7 @@ public class BaseFeedWeiboPresenter  extends BaseFragmentPresenter<List<FeedItem
     public void gotoForwardActivity(FeedItem item) {
         Intent intent = new Intent(mContext,
                 ForwardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.FEED, item);
         mContext.startActivity(intent);
     }

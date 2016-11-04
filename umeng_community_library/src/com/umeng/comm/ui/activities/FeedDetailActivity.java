@@ -107,6 +107,8 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
 
     private BaseView mBaseView;
     private View mFavoriteImg;
+    private boolean BACK_TO_COMMUNITY_FRAGMENT=false;
+    
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -160,6 +162,10 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
             if (extraBundle.containsKey(Constants.TAG_IS_COMMENT)){
                 mFeedFrgm.mIsShowComment = true;
             }
+        }
+        if(extraBundle.containsKey("BACK_TO_COMMUNITY"))
+        {
+        	BACK_TO_COMMUNITY_FRAGMENT=true;
         }
         fetchFeedInfo(mRootView);
         checkFeedItem();
@@ -287,7 +293,12 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == ResFinder.getId("umeng_comm_title_back_btn")) {
-            this.finish();
+        	if(BACK_TO_COMMUNITY_FRAGMENT)
+        	{
+        		setResult(1005,getIntent());
+        		this.finish();
+        	}else
+        		this.finish();
         }
     }
 
@@ -390,6 +401,8 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
 
     @Override
     public void onBackPressed() {
+    	if(BACK_TO_COMMUNITY_FRAGMENT)
+    		setResult(1005,getIntent());
         super.onBackPressed();
         Log.d("", "onBackPressed:" + this.getClass().getSimpleName());
         finish();

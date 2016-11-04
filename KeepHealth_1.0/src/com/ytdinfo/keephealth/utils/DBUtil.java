@@ -84,11 +84,11 @@ public class DBUtil {
 			String dateCreated=cursor.getString(cursor.getColumnIndex("createDate"));
 			// 存放到TBNews对象中
 			tbnews.setId(id);
-			tbnews.setTitle(title);
-			tbnews.setDesc(desc);
-			tbnews.setIcon(icon);
-			tbnews.setUrl(url);
-			tbnews.setDateCreate(dateCreated);
+			tbnews.setTitle(title==null?"":title);
+			tbnews.setDesc(desc==null?"":desc);
+			tbnews.setIcon(icon==null?"":icon);
+			tbnews.setUrl(url==null?"":url);
+			tbnews.setDateCreate(dateCreated==null?"":dateCreated);
 		}
 		if (cursor != null) {
 			cursor.close();

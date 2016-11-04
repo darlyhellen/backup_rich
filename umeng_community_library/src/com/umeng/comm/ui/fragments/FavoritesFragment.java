@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.fragments;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,6 +72,7 @@ public class FavoritesFragment extends FriendsFragment {
                 .getId("umeng_comm_title_tv"));
         titleTextView.setText(ResFinder.getString("umeng_comm_favoriets_list"));
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        titleTextView.setTextColor(Color.WHITE);
         mBaseView.setEmptyViewText(ResFinder.getString("umeng_comm_no_feed"));
     }
 

@@ -11,17 +11,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -31,9 +24,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -57,11 +47,13 @@ import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.impl.CommunityFactory;
 import com.umeng.comm.core.sdkmanager.LocationSDKManager;
 import com.umeng.comm.core.sdkmanager.LoginSDKManager;
+import com.umeng.comm.core.sdkmanager.ShareSDKManager;
 import com.umeng.comm.ui.fragments.CommunityMainFragment;
+import com.umeng.community.CustomShare;
 import com.umeng.community.NickNameCheckImpl;
+import com.umeng.community.NickNameCheckImpl.HomeJump;
 import com.umeng.community.UmengNickNameUtils;
 import com.umeng.community.UserLogin;
-import com.umeng.community.NickNameCheckImpl.HomeJump;
 import com.umeng.community.location.DefaultLocationImpl;
 import com.umeng.message.PushAgent;
 import com.ytdinfo.keephealth.R;
@@ -72,7 +64,6 @@ import com.ytdinfo.keephealth.jpush.ExampleUtil;
 import com.ytdinfo.keephealth.model.DocInfoBean;
 import com.ytdinfo.keephealth.model.DocOnline;
 import com.ytdinfo.keephealth.model.TBNews;
-import com.ytdinfo.keephealth.service.UpdateService;
 import com.ytdinfo.keephealth.ui.login.LoginActivity;
 import com.ytdinfo.keephealth.utils.DBUtil;
 import com.ytdinfo.keephealth.utils.ImageLoaderUtils;
@@ -91,10 +82,9 @@ import com.yuntongxun.kitsdk.utils.DateUtil;
 
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Base2Activity implements
-		OnUpdateMsgUnreadCountsListener,HomeJump {
+		OnUpdateMsgUnreadCountsListener, HomeJump {
 
 	private String TAG = "MainActivity";
-	private AlertDialog alertDialog;
 	private RadioGroup radioGroup;
 	private FragmentManager fragmentManager;
 	private HomeFragmentV21 homeFragment;
@@ -119,6 +109,13 @@ public class MainActivity extends Base2Activity implements
 		this.radioButton0 = radioButton0;
 	}
 
+	public boolean isCommunityCurrent() {
+		if (community == null || !community.isVisible())
+			return false;
+		else
+			return true;
+	}
+
 	private ImageView newsPoint;
 
 	public static List<DocOnline> onlines;
@@ -132,10 +129,11 @@ public class MainActivity extends Base2Activity implements
 		// 设置地理位置SDK
 		LocationSDKManager.getInstance().addAndUse(new DefaultLocationImpl());
 		LoginSDKManager.getInstance().addAndUse(new UserLogin());
-
+		ShareSDKManager.getInstance().addAndUse(new CustomShare());
 		// 公司服务端接口提供的更新检测
-		if (Calendar.getInstance().get(Calendar.DAY_OF_YEAR) >= SharedPrefsUtil
-				.getValue(Constants.NOTUPDATE, 0)) {
+		if (!VersionUpdatePresenter.isAutoShowed
+				&& Calendar.getInstance().get(Calendar.DAY_OF_YEAR) >= SharedPrefsUtil
+						.getValue(Constants.NOTUPDATE, 0)) {
 			checkISupdate();
 		}
 		// 统计活跃用户
@@ -186,6 +184,8 @@ public class MainActivity extends Base2Activity implements
 	 * 下午3:01:16
 	 * 
 	 * @author zhangyh2 TODO 版本更新
+	 * @param version
+	 * @param type
 	 */
 	/*
 	 * protected void startCheck() { UmengUpdateAgent.setUpdateOnlyWifi(false);
@@ -212,103 +212,13 @@ public class MainActivity extends Base2Activity implements
 	 * } else { UmengUpdateAgent.update(this); } }
 	 */
 
-	public void showUpdateDialog(final String lastestUrl) {
-		if (alertDialog != null && alertDialog.isShowing()) {
-			return;
-		}
-		alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setOnKeyListener(new OnKeyListener() {
-
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode,
-					KeyEvent event) {
-				// TODO Auto-generated method stub
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					if (isQZupdate) {
-						SharedPrefsUtil
-								.putValue(Constants.CHECKEDID_RADIOBT, 0);
-						SharedPrefsUtil.putValue(Constants.CHECKISUPDATE, true);
-						System.exit(0);
-					} else {
-						// 计算间隔几天进行重新检验更新。
-						Calendar calendar = Calendar.getInstance();
-						calendar.set(Calendar.DAY_OF_YEAR,
-								calendar.get(Calendar.DAY_OF_YEAR) + 3);
-						SharedPrefsUtil.putValue(Constants.NOTUPDATE,
-								calendar.get(Calendar.DAY_OF_YEAR));
-					}
-				}
-				return false;
-			}
-		});
-		alertDialog.show();
-		alertDialog.setCanceledOnTouchOutside(false);
-		Window window = alertDialog.getWindow();
-		window.setContentView(R.layout.update);// 设置对话框的布局
-
-		TextView descriptiontv = (TextView) window
-				.findViewById(R.id.description);
-		if (description != null) {
-			descriptiontv.setText(description);
-		}
-		Button sure = (Button) window.findViewById(R.id.sure);
-		sure.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				alertDialog.dismiss();
-				// checkISupdate();
-				// update(lastestUrl);
-				Intent intent = new Intent(MainActivity.this,
-						UpdateService.class);
-				intent.putExtra("url", lastestUrl);
-				MainActivity.this.startService(intent);
-				if (isQZupdate) {
-					finish();
-				}
-			}
-		});
-
-		Button notsure = (Button) window.findViewById(R.id.notsure);
-		if (isQZupdate) {
-			alertDialog.setCancelable(false);
-			notsure.setVisibility(View.GONE);
-		} else {
-			alertDialog.setCancelable(true);
-			notsure.setVisibility(View.VISIBLE);
-			notsure.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					alertDialog.dismiss();
-					// 计算间隔几天进行重新检验更新。
-					Calendar calendar = Calendar.getInstance();
-					calendar.set(Calendar.DAY_OF_YEAR,
-							calendar.get(Calendar.DAY_OF_YEAR) + 3);
-					SharedPrefsUtil.putValue(Constants.NOTUPDATE,
-							calendar.get(Calendar.DAY_OF_YEAR));
-				}
-			});
-		}
-	}
-
 	/**
 	 * 检查更新
 	 */
 	private void checkISupdate() {
-		int versionCode = getVersionCode();
+		int versionCode = MyApp.getInstance().getVersionCode();
 
-		String channel = "";
-		try {
-			ApplicationInfo appInfo = this.getPackageManager()
-					.getApplicationInfo(getPackageName(),
-							PackageManager.GET_META_DATA);
-			channel = appInfo.metaData.getString("UMENG_CHANNEL");
-		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String channel = MyApp.getInstance().getChannelName();
 
 		String url = Constants.ROOT_URl + "/api/SoftwareUpdate/List?version="
 				+ versionCode + "&type=0&channel=" + channel;
@@ -333,57 +243,36 @@ public class MainActivity extends Base2Activity implements
 
 	}
 
-	/**
-	 * Retrieves application's version code from the manifest
-	 * 
-	 * @return versionCode
-	 */
-	public int getVersionCode() {
-		int code = 1;
-		try {
-			PackageInfo packageInfo = getPackageManager().getPackageInfo(
-					getPackageName(), 0);
-			code = packageInfo.versionCode;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		return code;
-	}
-
-	private boolean isQZupdate;
-	private String description;
-
 	private void parseJson(String jsonStr) {
 		try {
 			JSONObject jsonObject = new JSONObject(jsonStr);
+			if (!jsonObject.has("Data")) {
+				return;
+			}
 			JSONObject jsonData = jsonObject.getJSONObject("Data");
-			String lastestUrl = jsonData.getString("LastestUrl");
-			isQZupdate = jsonData.getBoolean("Force");
-			description = jsonData.getString("Description");
+			String lastestUrl = jsonData.optString("LastestUrl", null);
+			boolean isQZupdate = jsonData.optBoolean("Force");
+			String description = jsonData.optString("Description", null);
+			String desMd5 = jsonData.optString("compareStr", null);
+			int type = jsonData.optInt("downloadType");
+			int version = jsonData.optInt("Version");
 			LogUtil.i("paul", lastestUrl);
 
-			if (!lastestUrl.equals("null") && lastestUrl != null
+			// 对象的非空判断一定要放在最前面，然后才可以调用它的方法，否则会空指针
+			if (lastestUrl != null && !lastestUrl.equals("null")
 					&& !lastestUrl.equals("")) {
-				int lastIndex_Backslash = lastestUrl.lastIndexOf("/");
-				int index_apk = lastestUrl.lastIndexOf(".apk");
-				String lastesVersion = lastestUrl.substring(
-						lastIndex_Backslash + 1, index_apk);
-
-				// String versionName = getAppVersionName(this);
-				int versionCode = getVersionCode();
-
-				LogUtil.i("paul", "服务器上版本： " + lastesVersion + "====="
-						+ "本地版本： " + versionCode);
-				if (Integer.parseInt(lastesVersion) - versionCode > 0) {
+				int versionCode = MyApp.getInstance().getVersionCode();
+				LogUtil.i("paul", "服务器上版本： " + version + "=====" + "本地版本： "
+						+ versionCode);
+				if (version/* Integer.parseInt(lastesVersion) */- versionCode > 0) {
 					// 需要更新
-					showUpdateDialog(lastestUrl);
-					// update(lastestUrl);
+					new VersionUpdatePresenter(this).showUpdateDialog(this,
+							lastestUrl, desMd5, version, type, description,
+							isQZupdate);
 				}
 			}
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -601,12 +490,14 @@ public class MainActivity extends Base2Activity implements
 			DBUtil dbUtil = new DBUtil(MyApp.getInstance());
 			TBNews news = dbUtil.queryFirst();
 			if (news != null) {
-				Log.e("mGetPersonInfoListener-news", news.getDesc());
-				Log.e("mGetPersonInfoListener-news", news.getTitle());
 				arg1.setText(news.getTitle());
-				arg2.setText(DateUtil.getDateString(
-						Long.parseLong(news.getDateCreate()),
-						DateUtil.SHOW_TYPE_CALL_LOG).trim());
+				if("".equalsIgnoreCase(news.getDateCreate())){
+					arg2.setText("");
+				}else {
+					arg2.setText(DateUtil.getDateString(
+							Long.parseLong(news.getDateCreate()),
+							DateUtil.SHOW_TYPE_CALL_LOG).trim());
+				}
 			} else {
 				Log.e("mGetPersonInfoListener-news", "110-kong");
 				arg1.setText("");
@@ -786,7 +677,7 @@ public class MainActivity extends Base2Activity implements
 				startActivity(mIntent);
 				break;
 			case 1:
-				NickNameCheckImpl.instanceHomeJump=this;
+				NickNameCheckImpl.instanceHomeJump = this;
 				UmengNickNameUtils.showModifyNickNameDialog(MainActivity.this);
 				break;
 			default:
@@ -937,7 +828,7 @@ public class MainActivity extends Base2Activity implements
 
 	/**
 	 * 程序退出
-	 * */
+	 */
 	private long firstime = 0;
 
 	@Override

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -38,6 +39,7 @@ import com.rayelink.eckit.AppUserAccount;
 import com.rayelink.eckit.MainChatControllerListener;
 import com.rayelink.eckit.SDKCoreHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.sdkmanager.ShareSDKManager;
 import com.umeng.comm.custom.AppAdd;
 import com.umeng.community.NickNameCheckImpl;
 import com.umeng.message.PushAgent;
@@ -57,7 +59,7 @@ import com.yuntongxun.kitsdk.ui.chatting.model.IMChattingHelper;
 //import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 
 public class MyApp extends Application {
-	
+
 	public static final String TAG = MyApp.class.getName();
 	private static MyApp instance;
 
@@ -98,14 +100,16 @@ public class MyApp extends Application {
 		MobclickAgent.openActivityDurationTrack(false);
 		initImageLoader();
 		initYunTongXunConfig();
+		// ConnectYunTongXun();
+		InitChatController();
 		// 分享初始化
 		PlatformConfig.setWeixin("wxe9dfaf997a35d828",
 				"e98b52d02f8112bcc93181490b980aab");
 		// 豆瓣RENREN平台目前只能在服务器端配置
 		// 新浪微博
-		PlatformConfig.setSinaWeibo("275392174",
-				"d96fb6b323c60a42ed9f74bfab1b4f7a");
-		PlatformConfig.setQQZone("1104513231", "VFVBeqWa7Rv2ZeDf");
+		// PlatformConfig.setSinaWeibo("275392174",
+		// "d96fb6b323c60a42ed9f74bfab1b4f7a");
+		// PlatformConfig.setQQZone("1104513231", "VFVBeqWa7Rv2ZeDf");
 		// 初始化微社区
 
 		// 推送通知
@@ -194,7 +198,7 @@ public class MyApp extends Application {
 								// AppUserAccount.changeToZYAppConfig();
 								// 新通道
 								Log.i("MyApp_ConnectYunTongXun", "链接云云通讯");
-								Log.i("MyApp_ConnectYunTongXun", xml);
+								// Log.i("MyApp_ConnectYunTongXun", xml);
 								ECDevice.initServer(instance, xml);
 							}
 						} catch (JSONException e) {
@@ -218,7 +222,7 @@ public class MyApp extends Application {
 							if ("true".equals(change)) {
 								// AppUserAccount.changeToZYAppConfig();
 								Log.i("MyApp_ConnectYunTongXun", "链接云云通讯");
-								Log.i("MyApp_ConnectYunTongXun", xml);
+								// Log.i("MyApp_ConnectYunTongXun", xml);
 								ECDevice.initServer(instance, xml);
 							}
 						} catch (JSONException e) {
@@ -239,10 +243,19 @@ public class MyApp extends Application {
 	}
 
 	public static void ConnectYunTongXun() {
-		if (AppUserAccount.getCurUserAccount() != null) {
-			ECDeviceKit.init(AppUserAccount.getCurUserAccount()
-					.getVoipAccount(), MyApp.getInstance(), SDKCoreHelper
-					.getInstance());// 初始化kit sdk
+		try {
+			if (AppUserAccount.getCurUserAccount() != null) {
+				synchronized (AppUserAccount.getCurUserAccount()) {
+					if (!ECDevice.isInitialized()) {
+						Log.e("ConnectYunTongxun", "isInitialized");
+						ECDeviceKit.init(AppUserAccount.getCurUserAccount()
+								.getVoipAccount(), MyApp.getInstance(),
+								SDKCoreHelper.getInstance());// 初始化kit sdk
+					}
+				}
+			}
+		} catch (Exception e) {
+			Log.e("MyAPP-ConnectYunTongXun", e.getMessage());
 		}
 	}
 
@@ -262,6 +275,25 @@ public class MyApp extends Application {
 		}
 
 		return code;
+	}
+
+	/**
+	 * 上午9:49:43
+	 * 
+	 * @author zhangyh2 TODO
+	 */
+	public String getChannelName() {
+		// TODO Auto-generated method stub
+		String channel = "Default";
+		try {
+			ApplicationInfo appInfo = getPackageManager().getApplicationInfo(
+					getPackageName(), PackageManager.GET_META_DATA);
+			channel = appInfo.metaData.getString("UMENG_CHANNEL");
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return channel;
 	}
 
 	ChatInfoBean chatInfoBean;
@@ -439,10 +471,10 @@ public class MyApp extends Application {
 		super.onLowMemory();
 
 	}
-/*
-	static {
-		System.loadLibrary("jpegbither");
-		System.loadLibrary("bitherjni");
-
-	}*/
+	/*
+	 * static { System.loadLibrary("jpegbither");
+	 * System.loadLibrary("bitherjni");
+	 * 
+	 * }
+	 */
 }

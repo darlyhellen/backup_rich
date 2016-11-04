@@ -41,10 +41,10 @@ import com.ytdinfo.keephealth.app.HttpClient;
 import com.ytdinfo.keephealth.app.MyApp;
 import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.clinic.ClinicWebView;
+import com.ytdinfo.keephealth.ui.clinic.NativeClinicWebView;
 import com.ytdinfo.keephealth.ui.login.LoginActivity;
 import com.ytdinfo.keephealth.ui.report.ChooseReportActivity;
 import com.ytdinfo.keephealth.ui.uzanstore.WebActivity;
-import com.ytdinfo.keephealth.ui.view.HomeItem_View_V21;
 import com.ytdinfo.keephealth.ui.view.HomeV21Title;
 import com.ytdinfo.keephealth.ui.view.MyAdGallery;
 import com.ytdinfo.keephealth.ui.view.MyAdGallery.MyOnItemClickListener;
@@ -78,6 +78,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	private List<String> listImagePath;
 	private List<String> listImageUrl;
 	private List<String> listUrl;
+	private List<String> types;
 	private MyAdGallery gallery;
 	private int[] imageId = new int[] { R.drawable.banner, R.drawable.banner };
 	LinearLayout ovalLayout;
@@ -101,15 +102,15 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	/**
 	 * 上午11:08:24 TODO 体检预约
 	 */
-	private HomeItem_View_V21 subscribe;
+	private ImageView subscribe;
 	/**
 	 * 上午11:08:24 TODO 报告查询
 	 */
-	private HomeItem_View_V21 inquire;
+	private ImageView inquire;
 	/**
 	 * 上午11:08:24 TODO 报告解读
 	 */
-	private HomeItem_View_V21 reportunscramble;
+	private ImageView reportunscramble;
 	private LinearLayout show2;
 
 	/**
@@ -119,11 +120,11 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	/**
 	 * 上午11:08:24 TODO 预约挂号
 	 */
-	private HomeItem_View_V21 registration;
+	private ImageView registration;
 	/**
 	 * 上午11:08:24 TODO 专家排班
 	 */
-	private HomeItem_View_V21 scheduling;
+	private ImageView scheduling;
 
 	// 综合服务
 	/**
@@ -152,6 +153,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.home_fragment_v21, container,
 				false);// 关联布局文件
+		LogUtil.i("wpc--", "onCreateView");
 		// 获取屏幕宽高
 		WindowManager wm = (WindowManager) getActivity().getSystemService(
 				Context.WINDOW_SERVICE);
@@ -163,6 +165,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		listImagePath = new ArrayList<String>();
 		listImageUrl = new ArrayList<String>();
 		listUrl = new ArrayList<String>();
+		types = new ArrayList<String>();
 		if (!SharedPrefsUtil.getValue(Constants.ISLOADED, false)) {
 			initViewPagerData();
 			SharedPrefsUtil.putValue(Constants.ISLOADED, true);
@@ -170,12 +173,14 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			// 加载本地的
 			loadNative();
 		}
+		scroll.smoothScrollTo(0, 0);
 		return rootView;
 
 	}
 
 	private void initView(View v) {
 		mainTitle = (HomeV21Title) v.findViewById(R.id.v21_home_title);
+		mainTitle.showBack(false);
 		mainTitle.tv_title.setText("帮忙医");
 		mainTitle.setback(25);
 		// mainTitle.backGround.setAlpha(0.1f);
@@ -184,19 +189,15 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		scroll = (ScrollHeaderView) v.findViewById(R.id.v21_home_scroll);
 		ovalLayout = (LinearLayout) v.findViewById(R.id.v21_ovalLayout);
 		gallery = (MyAdGallery) v.findViewById(R.id.id_v21_adv);
-
 		show1 = (LinearLayout) v.findViewById(R.id.v21_home_banner_1);
 		store = (ImageView) v.findViewById(R.id.v21_home_item_store);
-		subscribe = (HomeItem_View_V21) v.findViewById(R.id.v21_home_item_tjyy);
-		inquire = (HomeItem_View_V21) v.findViewById(R.id.v21_home_item_bgcx);
-		reportunscramble = (HomeItem_View_V21) v
-				.findViewById(R.id.v21_home_item_bgjd);
+		subscribe = (ImageView) v.findViewById(R.id.v21_home_item_tjyy);
+		inquire = (ImageView) v.findViewById(R.id.v21_home_item_bgcx);
+		reportunscramble = (ImageView) v.findViewById(R.id.v21_home_item_bgjd);
 		show2 = (LinearLayout) v.findViewById(R.id.v21_home_banner_2);
 		clinic = (ImageView) v.findViewById(R.id.v21_home_item_zhensuo);
-		registration = (HomeItem_View_V21) v
-				.findViewById(R.id.v21_home_item_yygh);
-		scheduling = (HomeItem_View_V21) v
-				.findViewById(R.id.v21_home_item_zjpb);
+		registration = (ImageView) v.findViewById(R.id.v21_home_item_yygh);
+		scheduling = (ImageView) v.findViewById(R.id.v21_home_item_zjpb);
 		// 初始化以前样式控件
 		// 综合服务
 		gastroscope = (ImageView) v.findViewById(R.id.v21_zh_wjjn);
@@ -204,38 +205,39 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		dentistry = (ImageView) v.findViewById(R.id.v21_zh_ck);
 		physiotherapy = (ImageView) v.findViewById(R.id.v21_zh_kfll);
 		// 商城初始化
-		show1.setLayoutParams(new LayoutParams(width, width / 2));
-		store.setLayoutParams(new LayoutParams(width / 2, width / 2));
-		// 体检预约初始化
-		subscribe.iv_icon.setImageResource(R.drawable.ic_v21_tijianyuyue);
-		subscribe.tv_title.setText("体检预约");
-		subscribe.tv_desc.setText("在线预约方便快捷");
-		// subscribe.setLayoutParams(new LayoutParams(width, width / 6));
-		// 报告查询初始化
-		inquire.iv_icon.setImageResource(R.drawable.ic_v21_baogaochaxun);
-		inquire.tv_title.setText("报告查询");
-		inquire.tv_desc.setText("体检报告快速查询");
-		// inquire.setLayoutParams(new LayoutParams(width, width / 6));
-		// 报告解读初始化
-		reportunscramble.iv_icon
-				.setImageResource(R.drawable.ic_v21_baogaojiedu);
-		reportunscramble.tv_title.setText("报告解读");
-		reportunscramble.tv_desc.setText("医生在线免费解读");
+		show1.setLayoutParams(new LayoutParams(width, width * 363 / 750));
+		store.setLayoutParams(new LayoutParams(width * 366 / 750,
+				width * 363 / 750));
+		// // 体检预约初始化
+		// subscribe.iv_icon.setImageResource(R.drawable.ic_v21_tijianyuyue);
+		// subscribe.tv_title.setText("体检预约");
+		// subscribe.tv_desc.setText("在线预约方便快捷");
+		// // subscribe.setLayoutParams(new LayoutParams(width, width / 6));
+		// // 报告查询初始化
+		// inquire.iv_icon.setImageResource(R.drawable.ic_v21_baogaochaxun);
+		// inquire.tv_title.setText("报告查询");
+		// inquire.tv_desc.setText("体检报告快速查询");
+		// // inquire.setLayoutParams(new LayoutParams(width, width / 6));
+		// // 报告解读初始化
+		// reportunscramble.iv_icon
+		// .setImageResource(R.drawable.ic_v21_baogaojiedu);
+		// reportunscramble.tv_title.setText("报告解读");
+		// reportunscramble.tv_desc.setText("医生在线免费解读");
 		// reportunscramble.setLayoutParams(new LayoutParams(width, width / 6));
 		// 帮忙医诊所初始化
-		show2.setLayoutParams(new LayoutParams(width, (int) (width / (2 * 1.5))));
-		clinic.setLayoutParams(new LayoutParams(width / 2,
-				(int) (width / (2 * 1.5))));
-		// 预约挂号初始化
-		registration.iv_icon.setImageResource(R.drawable.ic_v21_yuyueguahao);
-		registration.tv_title.setText("预约挂号");
-		registration.tv_desc.setText("三甲名医免费预约");
-		// registration.setLayoutParams(new LayoutParams(width, (int) (width
-		// / (2 * 1.5) * 0.5)));
-		// 专家排班初始化
-		scheduling.iv_icon.setImageResource(R.drawable.ic_v21_zhuanjiapaiban);
-		scheduling.tv_title.setText("专家排班");
-		scheduling.tv_desc.setText("出诊时间一手掌握");
+		show2.setLayoutParams(new LayoutParams(width, width * 242 / 750));
+		clinic.setLayoutParams(new LayoutParams(width * 366 / 750,
+				width * 242 / 750));
+		// // 预约挂号初始化
+		// registration.iv_icon.setImageResource(R.drawable.ic_v21_yuyueguahao);
+		// registration.tv_title.setText("预约挂号");
+		// registration.tv_desc.setText("三甲名医免费预约");
+		// // registration.setLayoutParams(new LayoutParams(width, (int) (width
+		// // / (2 * 1.5) * 0.5)));
+		// // 专家排班初始化
+		// scheduling.iv_icon.setImageResource(R.drawable.ic_v21_zhuanjiapaiban);
+		// scheduling.tv_title.setText("专家排班");
+		// scheduling.tv_desc.setText("出诊时间一手掌握");
 		// scheduling.setLayoutParams(new LayoutParams(width, (int) (width
 		// / (2 * 1.5) * 0.5)));
 		// 综合服务
@@ -294,12 +296,16 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 				// 6.27又修改会可渐变状态
 
 				if (mainTitle != null && mainTitle.getHeight() > 0) {
-					int height = mainTitle.getHeight();
+					int height = mainTitle.getHeight() * 2;
 
 					if (y < height) {
-						mainTitle.setback(y * 230 / height + 25);
+						mainTitle.backGround
+								.setBackgroundResource(R.color.black);
+						mainTitle.setback(/* y * 230 / height + */25);
 					} else {
 						mainTitle.setback(255);
+						mainTitle.backGround
+								.setBackgroundResource(R.drawable.top_bg_v211);
 					}
 				}
 
@@ -314,7 +320,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		case R.id.v21_home_item_store:
 			// v21 点击进入商城首页（正确）
 			if (checkUser()) {
-				registerYouzanUserForWeb();
+				registerYouzanUserForWeb(R.id.v21_home_item_store);
 			}
 			break;
 		case R.id.v21_home_item_tjyy:
@@ -374,33 +380,25 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		case R.id.v21_zh_wjjn:
 			// 胶囊胃镜
 			if (checkUser()) {
-				Intent intent = new Intent(getActivity(), WebViewActivity.class);
-				intent.putExtra("loadUrl", Constants.WEIJING);
-				startActivity(intent);
+				registerYouzanUserForWeb(R.id.v21_zh_wjjn);
 			}
 			break;
 		case R.id.v21_zh_aha:
 			// AHA
 			if (checkUser()) {
-				Intent intent = new Intent(getActivity(), WebViewActivity.class);
-				intent.putExtra("loadUrl", Constants.AHA);
-				startActivity(intent);
+				registerYouzanUserForWeb(R.id.v21_zh_aha);
 			}
 			break;
 		case R.id.v21_zh_ck:
 			// 齿科
 			if (checkUser()) {
-				Intent intent = new Intent(getActivity(), WebViewActivity.class);
-				intent.putExtra("loadUrl", Constants.KOUQIANG);
-				startActivity(intent);
+				registerYouzanUserForWeb(R.id.v21_zh_ck);
 			}
 			break;
 		case R.id.v21_zh_kfll:
 			// 康复理疗
 			if (checkUser()) {
-				Intent intent = new Intent(getActivity(), WebViewActivity.class);
-				intent.putExtra("loadUrl", Constants.KANGFULILIAO);
-				startActivity(intent);
+				registerYouzanUserForWeb(R.id.v21_zh_kfll);
 			}
 			break;
 		default:
@@ -425,8 +423,9 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	 * 上午10:46:12
 	 * 
 	 * @author zhangyh2 TODO 有赞直接注册窗口
+	 * @param id
 	 */
-	private void registerYouzanUserForWeb() {
+	private void registerYouzanUserForWeb(final int id) {
 		// TODO Auto-generated method stub
 		synuser = new MyProgressDialog(getActivity());
 		synuser.setMessage("加载中...");
@@ -458,11 +457,42 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			@Override
 			public void onCallback() {
 				synuser.dismiss();
-				Intent intent = new Intent(getActivity(), WebActivity.class);
-				// 传入链接, 请修改成你们店铺的链接
-				intent.putExtra("loadUrl",
-						"https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl");
-				startActivity(intent);
+
+				switch (id) {
+				case R.id.v21_home_item_store:
+					Intent intent = new Intent(getActivity(), WebActivity.class);
+					// 传入链接, 请修改成你们店铺的链接
+					intent.putExtra("loadUrl",
+							"https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl");
+					startActivity(intent);
+					break;
+				case R.id.v21_zh_wjjn:
+					// 胶囊胃镜
+					Intent wj = new Intent(getActivity(), WebActivity.class);
+					wj.putExtra("loadUrl", Constants.WEIJING);
+					startActivity(wj);
+					break;
+				case R.id.v21_zh_aha:
+					// AHA
+					Intent ah = new Intent(getActivity(), WebActivity.class);
+					ah.putExtra("loadUrl", Constants.AHA);
+					startActivity(ah);
+					break;
+				case R.id.v21_zh_ck:
+					// 齿科
+					Intent ck = new Intent(getActivity(), WebActivity.class);
+					ck.putExtra("loadUrl", Constants.KOUQIANG);
+					startActivity(ck);
+					break;
+
+				case R.id.v21_zh_kfll:
+					Intent kfll = new Intent(getActivity(), WebActivity.class);
+					kfll.putExtra("loadUrl", Constants.KANGFULILIAO);
+					startActivity(kfll);
+					break;
+				default:
+					break;
+				}
 
 			}
 		});
@@ -518,8 +548,10 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		ImageTools.savePhotoToSDCard(bit, path, photoName);
 		listImagePath = new ArrayList<String>();
 		listUrl = new ArrayList<String>();
+		types = new ArrayList<String>();
 		listImagePath.add(path + photoName + ".png");
 		listUrl.add(Constants.PRIVATEDOCTOR);
+		types.add("normal");
 		gallery.start(getActivity(), new ArrayList<String>(), listImagePath,
 				3000, ovalLayout, R.drawable.point_bright,
 				R.drawable.point_light);
@@ -527,6 +559,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 
 	private void requestBanner() {
 		RequestParams requestParams = new RequestParams();
+		requestParams.addQueryStringParameter("typeNo", "0");
 		HttpClient.get(MyApp.getInstance(), Constants.BANNER, requestParams,
 				new RequestCallBack<String>() {
 
@@ -574,14 +607,17 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		try {
 			listImageUrl.clear();
 			listUrl.clear();
+			types.clear();
 			JSONArray jsonArray = new JSONArray(jsonStr);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				String ImgUrl = jsonObject.getString("ImgUrl");
 				String Url = jsonObject.getString("Url");
+				String Type = jsonObject.getString("TypeNumber");
 				LogUtil.i("wpc", "ImgUrl==" + ImgUrl + "\nUrl==" + Url);
 				listImageUrl.add(ImgUrl);
 				listUrl.add(Url);
+				types.add(Type);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -626,14 +662,64 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 
 	// 滚动画面的点击事件
 	@Override
-	public void onItemClick(int curIndex) {
+	public void onItemClick(final int curIndex) {
 		// 私人医生
+
+		// 根据bannar返回值，进行修改跳转页面
 		LogUtil.i("wpc", "onItemClick---3");
 		if (checkUser()) {
-			Intent i = new Intent();
-			i.setClass(getActivity(), WebViewActivity.class);
-			i.putExtra("loadUrl", listUrl.get(curIndex));
-			startActivity(i);
+			String type = types.get(curIndex);
+			if ("shop".endsWith(type)) {
+				synuser = new MyProgressDialog(getActivity());
+				synuser.setMessage("加载中...");
+				synuser.show();
+				String jsonUserModel = SharedPrefsUtil.getValue(
+						Constants.USERMODEL, "");
+				UserModel userModel = new Gson().fromJson(jsonUserModel,
+						UserModel.class);
+				YouzanUser user = new YouzanUser();
+				user.setUserId(userModel.getPid() + "");
+				int sex = 0;
+				if ("Man".endsWith(userModel.getUserSex())) {
+					sex = 1;
+				}
+				user.setGender(sex);
+				user.setNickName(userModel.getAddition1());
+				user.setTelephone(userModel.getMobilephone());
+				user.setUserName(userModel.getUserName());
+				YouzanSDK.asyncRegisterUser(user, new Callback() {
+					@Override
+					public void onCallback() {
+						synuser.dismiss();
+						Intent i = new Intent();
+						i.setClass(getActivity(), WebActivity.class);
+						i.putExtra("loadUrl", listUrl.get(curIndex));
+						startActivity(i);
+					}
+				});
+
+			} else if ("clinic".endsWith(type)) {
+				Intent i = new Intent();
+				i.setClass(getActivity(), ClinicWebView.class);
+				i.putExtra("loadUrl", listUrl.get(curIndex));
+				startActivity(i);
+			} else if ("server".endsWith(type)) {
+				Intent i = new Intent();
+				i.setClass(getActivity(), ZHWebViewActivity.class);
+				i.putExtra("loadUrl", listUrl.get(curIndex));
+				startActivity(i);
+			} else if ("normal".endsWith(type)) {
+				Intent i = new Intent();
+				i.setClass(getActivity(), WebViewActivity.class);
+				i.putExtra("loadUrl", listUrl.get(curIndex));
+				startActivity(i);
+			} else if ("iosnative".endsWith(type)) {
+				Intent i = new Intent();
+				i.setClass(getActivity(), NativeClinicWebView.class);
+				i.putExtra("loadUrl", listUrl.get(curIndex));
+				startActivity(i);
+			}
+
 		}
 	}
 

@@ -75,6 +75,7 @@ public class FindActivity extends FindBaseActivity implements OnClickListener {
     @Override
     protected void gotoMyFollowActivity() {
         Intent intent = new Intent(FindActivity.this, FollowedTopicActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.USER_ID_KEY, mUser.id);
         startActivity(intent);
     }
@@ -82,6 +83,7 @@ public class FindActivity extends FindBaseActivity implements OnClickListener {
     @Override
     protected void gotoMyPicActivity() {
         Intent intent = new Intent(FindActivity.this, AlbumActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.USER_ID_KEY, mUser.id);
         startActivity(intent);
     }
@@ -90,12 +92,14 @@ public class FindActivity extends FindBaseActivity implements OnClickListener {
 
     protected void gotoNotificationActivity() {
         Intent intent = new Intent(FindActivity.this, NotificationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.USER, mUser);
         startActivity(intent);
     }
 
     protected void gotoFeedNewMsgActivity() {
         Intent intent = new Intent(FindActivity.this, NewMsgActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.USER, mUser);
         startActivity(intent);
     }
@@ -105,6 +109,7 @@ public class FindActivity extends FindBaseActivity implements OnClickListener {
      */
     protected void gotoUserInfoActivity() {
         Intent intent = new Intent(FindActivity.this, UserInfoActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //        if (mUser == null || TextUtils.isEmpty(mUser.id)) {// 来自开发者外部调用的情况
             intent.putExtra(Constants.TAG_USER, CommConfig.getConfig().loginedUser);
 //        } else {

@@ -117,6 +117,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends Feed
 
                     //先进入feed详情页面，再弹出评论编辑键盘
                     Intent intent = new Intent(getActivity(), FeedDetailActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     intent.putExtra(Constants.TAG_FEED, item);
                     intent.putExtra(Constants.TAG_IS_COMMENT, true);
                     intent.putExtra(Constants.TAG_IS_SCROLL, true);
@@ -157,6 +158,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends Feed
                     return;
                 }
                 Intent intent = new Intent(getActivity(), FeedDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_FEED, feedItem);
                 startActivity(intent);
             }

@@ -52,7 +52,9 @@ public class UserTypeUtil {
 //          {
 //        	  level.setImageDrawable(ResFinder.getDrawable("level7"));
 //          }
-        	if(!"Foreground".equalsIgnoreCase(user.customField)){
+        	if("Admin".equalsIgnoreCase(user.customField)
+        			||"Doctor".equalsIgnoreCase(user.customField)
+        			  ||"Assistant".equalsIgnoreCase(user.customField)){
         		 ImageView expert=new ImageView(context);
         		 expert.setImageDrawable(ResFinder.getDrawable("official_cert"));
                  int height = CommonUtils.dip2px(context,15);

@@ -168,6 +168,7 @@ public class HotFeedFragment extends PostBtnAnimFragment<FeedListPresenter>{
      */
     private void gotoPostFeedActivity() {
         Intent postIntent = new Intent(getActivity(), PostFeedActivity.class);
+        postIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(postIntent);
     }
 
@@ -186,6 +187,7 @@ public class HotFeedFragment extends PostBtnAnimFragment<FeedListPresenter>{
                 if(CommonUtils.visitNum == 0){
                     if (CommonUtils.isLogin(getActivity())){
                         Intent intent = new Intent(getActivity(), SearchActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         getActivity().startActivity(intent);
                     }
                     else {
@@ -204,6 +206,7 @@ public class HotFeedFragment extends PostBtnAnimFragment<FeedListPresenter>{
                                 }
                                 if (stCode == 0) {
                                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     getActivity().startActivity(intent);
                                 }
                             }
@@ -211,6 +214,7 @@ public class HotFeedFragment extends PostBtnAnimFragment<FeedListPresenter>{
                     }
                 }else {
                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getActivity().startActivity(intent);
                 }
             }

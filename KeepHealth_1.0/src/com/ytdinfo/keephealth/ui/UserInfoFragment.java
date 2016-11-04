@@ -38,14 +38,17 @@ public class UserInfoFragment extends BaseFragment {
 	// ----------V3添加关于我们
 	private UserInfoItem_2View userInfoItem_2View_5;
 	// ----------V4添加有赞商城入口
+	private UserInfoItem_2View update;
 	private UserInfoItem_2View userInfoItem_2View_6;
 
 	private UserInfoItem_1View userInfoItem_1View;
-	
+
 	private DisplayImageOptions options;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
 	private MyProgressDialog synuser;
+
+	private VersionUpdatePresenter presenter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +59,7 @@ public class UserInfoFragment extends BaseFragment {
 		// BitmapUtils bitmapUtils = new BitmapUtils(getActivity());
 		// BitmapHelp.getBitmapUtils(getActivity()).display(ysj,
 		// "http://img4.duitang.com/uploads/item/201506/05/20150605140911_uNhQY.jpeg");
+		presenter = new VersionUpdatePresenter(getActivity());
 		initView(rootView);
 		initListener();
 		return rootView;
@@ -73,6 +77,8 @@ public class UserInfoFragment extends BaseFragment {
 				.findViewById(R.id.id_UserInfoItem_2View_4);
 		userInfoItem_2View_5 = (UserInfoItem_2View) rootView
 				.findViewById(R.id.id_UserInfoItem_2View_5);
+		update = (UserInfoItem_2View) rootView
+				.findViewById(R.id.id_UserInfoItem_update);
 
 		userInfoItem_2View_6 = (UserInfoItem_2View) rootView
 				.findViewById(R.id.id_UserInfoItem_2View_6);
@@ -91,6 +97,8 @@ public class UserInfoFragment extends BaseFragment {
 				R.drawable.setting));
 		userInfoItem_2View_5.setIcon(getResources().getDrawable(
 				R.drawable.about_us_icon));
+		update.setIcon(getResources()
+				.getDrawable(R.drawable.ic_userinfo_update));
 
 		userInfoItem_2View_6.setIcon(getResources().getDrawable(
 				R.drawable.about_us_icon));
@@ -99,6 +107,7 @@ public class UserInfoFragment extends BaseFragment {
 		userInfoItem_2View_2.setTitle("我的预约");
 		userInfoItem_2View_3.setTitle("意见反馈");
 		userInfoItem_2View_4.setTitle("设置");
+		update.setTitle("检查更新");
 		userInfoItem_2View_5.setTitle("关于我们");
 		userInfoItem_2View_6.setTitle("帮忙医商城");
 
@@ -176,6 +185,15 @@ public class UserInfoFragment extends BaseFragment {
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), SettingActivity.class);
 				startActivity(intent);
+			}
+		});
+
+		update.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				presenter.showUpdateInfo(getActivity());
 			}
 		});
 

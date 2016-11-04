@@ -137,6 +137,7 @@ public class RecommendFeedFragment extends PostBtnAnimFragment<RecommendFeedPres
                 if(CommonUtils.visitNum == 0){
                     if (CommonUtils.isLogin(getActivity())){
                         Intent intent = new Intent(getActivity(), SearchActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         getActivity().startActivity(intent);
                     }
                     else {
@@ -155,6 +156,7 @@ public class RecommendFeedFragment extends PostBtnAnimFragment<RecommendFeedPres
                                 }
                                 if (stCode == 0) {
                                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     getActivity().startActivity(intent);
                                 }
                             }
@@ -162,6 +164,7 @@ public class RecommendFeedFragment extends PostBtnAnimFragment<RecommendFeedPres
                     }
                 }else {
                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getActivity().startActivity(intent);
                 }
             }
@@ -198,6 +201,7 @@ public class RecommendFeedFragment extends PostBtnAnimFragment<RecommendFeedPres
      */
     private void gotoPostFeedActivity() {
         Intent postIntent = new Intent(getActivity(), PostFeedActivity.class);
+        postIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(postIntent);
     }
 

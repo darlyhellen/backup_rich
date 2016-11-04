@@ -200,16 +200,30 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				if (AppAdd.getAppInterface()
-						.appAddCheckNameIsUserName(mContext) == 1) {
+				int flag=AppAdd.getAppInterface()
+						.appAddCheckNameIsUserName(mContext);
+				if ( flag== 1) {
 					AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 							mContext);
-				} else {
+				}
+				else if (flag== 0) {
+					Intent intent = new Intent();
+					intent.setClassName("com.ytdinfo.keephealth",
+							"com.ytdinfo.keephealth.ui.login.LoginActivity");
+					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					mContext.startActivity(intent);
+				} 
+				else if(flag==3)
+				{
+					mPresenter.clickFeedItemV2();
+				}
+				else {
 					mPresenter.jumpToImageBrowser(mFeedItem.getImages(), pos);
 				}
 			}
 		});
 	}
+	
 
 	private void hideImageGridView() {
 		if (mImageGv != null) {
@@ -285,11 +299,17 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 			@Override
 			protected void doAfterLogin(View v) {
 				// 已经登录了
-				if (AppAdd.getAppInterface()
-						.appAddCheckNameIsUserName(mContext) == 1) {
+				int flag=AppAdd.getAppInterface()
+				.appAddCheckNameIsUserName(mContext);
+				if (flag == 1) {
 					AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 							mContext);
-				} else {
+				} 
+				else if(flag==3)
+				{
+					mPresenter.clickFeedItemV2();
+				}
+				else{
 					clickAnima(mLikeCountTextView);
 					mLikePresenter.setFeedItem(mFeedItem);
 					if (mFeedItem.isLiked) {
@@ -306,14 +326,20 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 				.setOnClickListener(new LoginOnViewClickListener() {
 					@Override
 					protected void doAfterLogin(View v) {
-						if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-								mContext) == 1) {
-							AppAdd.getAppInterface()
-									.appAddShowModifyNickNameDialog(mContext);
-						} else {
-							clickAnima(mForwardCountTextView);
-							mPresenter.gotoForwardActivity(mFeedItem);
-						}
+								int flag=AppAdd.getAppInterface().appAddCheckNameIsUserName(
+										mContext);
+								if (flag == 1) {
+									AppAdd.getAppInterface()
+											.appAddShowModifyNickNameDialog(mContext);
+								}
+								else if(flag==3)
+								{
+									mPresenter.clickFeedItemV2();
+								}
+								else {
+									clickAnima(mForwardCountTextView);
+									mPresenter.gotoForwardActivity(mFeedItem);
+								}
 					}
 				});
 
@@ -321,6 +347,8 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 		mLocationTv.setOnClickListener(mLocationClickListener);
 
 	}
+	
+	private boolean btnFlag=true;
 
 	/**
 	 * 点击地理位置的回调，跳转至LocationFeedActivity页面
@@ -329,11 +357,18 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 
 		@Override
 		protected void doAfterLogin(View v) {
-			if (AppAdd.getAppInterface().appAddCheckNameIsUserName(mContext) == 1) {
+			int flag=AppAdd.getAppInterface().appAddCheckNameIsUserName(mContext);
+			if (flag == 1) {
 				AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 						mContext);
-			} else {
+			}
+			else if(flag==3)
+			{
+				mPresenter.clickFeedItemV2();
+			}
+			else {
 				Intent intent = new Intent(mContext, LocationFeedActivity.class);
+			       intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra(Constants.FEED, mFeedItem);
 				mContext.startActivity(intent);
 			}
@@ -353,18 +388,23 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 			@Override
 			public void onClick(View v) {
 				// shareToSns(activity);
-				if (AppAdd.getAppInterface()
-						.appAddCheckNameIsUserName(mContext) == 1) {
+				int flag=AppAdd.getAppInterface()
+						.appAddCheckNameIsUserName(mContext);
+				if ( flag== 1) {
 					AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 							mContext);
-				} else if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-						mContext) == 0) {
+				} else if (flag== 0) {
 					Intent intent = new Intent();
 					intent.setClassName("com.ytdinfo.keephealth",
 							"com.ytdinfo.keephealth.ui.login.LoginActivity");
 					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					mContext.startActivity(intent);
-				} else {
+				} 
+				else if(flag==3)
+				{
+					mPresenter.clickFeedItemV2();
+				}
+				else {
 					mActionDialog.show();
 				}
 			}
@@ -499,22 +539,26 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 					atFriends, item.topics, new TopicClickSpanListener() {
 						@Override
 						public void onClick(Topic topic) {
-
-							if (AppAdd.getAppInterface()
-									.appAddCheckNameIsUserName(mContext) == 1) {
+							int flag=AppAdd.getAppInterface()
+							.appAddCheckNameIsUserName(mContext);
+							if ( flag== 1) {
 								AppAdd.getAppInterface()
 										.appAddShowModifyNickNameDialog(
 												mContext);
-							} else if (AppAdd.getAppInterface()
-									.appAddCheckNameIsUserName(mContext) == 0) {
+							} else if (flag == 0) {
 								Intent intent = new Intent();
 								intent.setClassName("com.ytdinfo.keephealth",
 										"com.ytdinfo.keephealth.ui.login.LoginActivity");
 								intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								mContext.startActivity(intent);
-							} else {
+							}else if(flag==3)
+							{
+								mPresenter.clickFeedItemV2();
+							} 
+							else {
 								Intent intent = new Intent(mContext,
 										TopicDetailActivity.class);
+							    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								intent.putExtra(Constants.TAG_TOPIC, topic);
 								mContext.startActivity(intent);
 							}
@@ -522,21 +566,27 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 					}, new FrinendClickSpanListener() {
 						@Override
 						public void onClick(CommUser user) {
-							if (AppAdd.getAppInterface()
-									.appAddCheckNameIsUserName(mContext) == 1) {
+							int flag=AppAdd.getAppInterface()
+									.appAddCheckNameIsUserName(mContext);
+							if ( flag== 1) {
 								AppAdd.getAppInterface()
 										.appAddShowModifyNickNameDialog(
 												mContext);
-							} else if (AppAdd.getAppInterface()
-									.appAddCheckNameIsUserName(mContext) == 0) {
+							} else if (flag== 0) {
 								Intent intent = new Intent();
 								intent.setClassName("com.ytdinfo.keephealth",
 										"com.ytdinfo.keephealth.ui.login.LoginActivity");
 								intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								mContext.startActivity(intent);
-							} else {
+							}
+							else if(flag==3)
+							{
+								mPresenter.clickFeedItemV2();
+							}
+							else {
 								Intent intent = new Intent(mContext,
 										UserInfoActivity.class);
+							    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								intent.putExtra(Constants.TAG_USER, user);
 								mContext.startActivity(intent);
 							}
@@ -643,20 +693,26 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 					@Override
 					public void onClick(Topic topic) {
 						synchronized (topic) {
-							if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-									mContext) == 1) {
+							int flag=AppAdd.getAppInterface().appAddCheckNameIsUserName(
+									mContext);
+							if ( flag== 1) {
 								AppAdd.getAppInterface()
 										.appAddShowModifyNickNameDialog(mContext);
-							} else if (AppAdd.getAppInterface()
-									.appAddCheckNameIsUserName(mContext) == 0) {
+							} else if (flag== 0) {
 								Intent intent = new Intent();
 								intent.setClassName("com.ytdinfo.keephealth",
 										"com.ytdinfo.keephealth.ui.login.LoginActivity");
 								intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								mContext.startActivity(intent);
-							} else {
+							}
+							else if(flag==3)
+							{
+								mPresenter.clickFeedItemV2();
+							}
+							else {
 								Intent intent = new Intent(mContext,
 										TopicDetailActivity.class);
+							       intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								intent.putExtra(Constants.TAG_TOPIC, topic);
 								mContext.startActivity(intent);
 							}
@@ -665,20 +721,25 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 				}, new FrinendClickSpanListener() {
 					@Override
 					public void onClick(CommUser user) {
-						if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-								mContext) == 1) {
+						int flag=AppAdd.getAppInterface().appAddCheckNameIsUserName(
+								mContext);
+						if (flag== 1) {
 							AppAdd.getAppInterface()
 									.appAddShowModifyNickNameDialog(mContext);
-						} else if (AppAdd.getAppInterface()
-								.appAddCheckNameIsUserName(mContext) == 0) {
+						} else if (flag == 0) {
 							Intent intent = new Intent();
 							intent.setClassName("com.ytdinfo.keephealth",
 									"com.ytdinfo.keephealth.ui.login.LoginActivity");
 							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 							mContext.startActivity(intent);
-						} else {
+						} else if(flag==3)
+						{
+							mPresenter.clickFeedItemV2();
+						}
+						else {
 							Intent intent = new Intent(mContext,
 									UserInfoActivity.class);
+						       intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 							intent.putExtra(Constants.TAG_USER, user);
 							mContext.startActivity(intent);
 						}
@@ -705,18 +766,23 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 
 			@Override
 			public void onClick(View v) {
-				if (AppAdd.getAppInterface()
-						.appAddCheckNameIsUserName(mContext) == 1) {
+				int flag=AppAdd.getAppInterface().appAddCheckNameIsUserName(
+						mContext);
+				if (flag == 1) {
 					AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 							mContext);
-				} else if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-						mContext) == 0) {
+				} else if (flag== 0) {
 					Intent intent = new Intent();
 					intent.setClassName("com.ytdinfo.keephealth",
 							"com.ytdinfo.keephealth.ui.login.LoginActivity");
 					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					mContext.startActivity(intent);
-				} else {
+				} 
+				else if(flag==3)
+				{
+					mPresenter.clickFeedItemV2();
+				}
+				else {
 					mPresenter.clickFeedItem();
 				}
 			}
@@ -793,18 +859,22 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 			@Override
 			public void onClick(View v) {
 				// 跳转用户中心前检查是否登录
-				if (AppAdd.getAppInterface()
-						.appAddCheckNameIsUserName(mContext) == 1) {
+				int flag=AppAdd.getAppInterface()
+						.appAddCheckNameIsUserName(mContext);
+				if (flag == 1) {
 					AppAdd.getAppInterface().appAddShowModifyNickNameDialog(
 							mContext);
-				} else if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-						mContext) == 0) {
+				} else if (flag == 0) {
 					Intent intent = new Intent();
 					intent.setClassName("com.ytdinfo.keephealth",
 							"com.ytdinfo.keephealth.ui.login.LoginActivity");
 					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					mContext.startActivity(intent);
-				} else {
+				}else if(flag==3)
+				{
+					mPresenter.clickFeedItemV2();
+				}
+				else {
 					mPresenter.gotoUserInfoActivity(user, mContainerClzName);
 				}
 			}
@@ -844,11 +914,17 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView,
 
 					@Override
 					protected void doAfterLogin(View v) {
-						if (AppAdd.getAppInterface().appAddCheckNameIsUserName(
-								mContext) == 1) {
+						int flag=AppAdd.getAppInterface()
+								.appAddCheckNameIsUserName(mContext);
+						if (flag == 1) {
 							AppAdd.getAppInterface()
 									.appAddShowModifyNickNameDialog(mContext);
-						} else {
+						} 
+						else if(flag==3)
+						{
+							mPresenter.clickFeedItemV2();
+						}
+						else {
 							clickAnima(mCommentCountTextView);
 							if (mItemViewClickListener != null) {
 								mItemViewClickListener.onItemClick(position,

@@ -146,6 +146,12 @@ public class MainChatControllerListener implements ChatControllerListener {
 	@Override
 	public void retryChat(final Context context, String subjectID,
 			String contactid, final RetryComplete retryCompleteInstance) {
+		if(SDKCoreHelper.getInstance().mConnect!= ECDevice.ECConnectState.CONNECT_SUCCESS ){
+			ToastUtil.showMessage("用户网络异常，通讯服务器连接不成功！", 1000);
+			// 连接云通讯
+			MyApp.ConnectYunTongXun();
+			return ;
+		}
 		MobclickAgent.onEvent(context, Constants.UMENG_EVENT_14);
 		if (contactid != null && !contactid.toUpperCase().contains("G")) {
 			// TODO Auto-generated method stub
@@ -166,137 +172,148 @@ public class MainChatControllerListener implements ChatControllerListener {
 							Log.i("再次咨询", arg0.result);
 
 							try {
-								JSONObject jsonObject = new JSONObject(
-										arg0.result);
-								JSONObject data = jsonObject
-										.getJSONObject("Data");
-								String subjectID = data.getString("SubjectID");
-								if (!subjectID.equals("-1")) {
-									String docInfoBeanStr = data
-											.getString("responser");
-									if (null == docInfoBeanStr
-											|| docInfoBeanStr.equals("")
-											|| docInfoBeanStr.equals("null")) {
-										if (!Chat_Dialog.timeCurl()) {
-											final AlertDialog dialog = new AlertDialog.Builder(
-													context).create();
-											dialog.show();
-											dialog.setCanceledOnTouchOutside(false);
-											Window window = dialog.getWindow();
-											window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
-											TextView msg = (TextView) window
-													.findViewById(R.id.chat_dialog_msg);
-											String desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
-											msg.setText(desString);
-											Button sure = (Button) window
-													.findViewById(R.id.chat_dialog_sure);
-											sure.setOnClickListener(new OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													// TODO Auto-generated
-													// method stub
-													dialog.dismiss();
-												}
-											});
-											return;
-										} else {
-											final AlertDialog dialog = new AlertDialog.Builder(
-													context).create();
-											dialog.show();
-											dialog.setCanceledOnTouchOutside(false);
-											Window window = dialog.getWindow();
-											window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
-											TextView msg = (TextView) window
-													.findViewById(R.id.chat_dialog_msg);
-											String desString = "亲，该医生在忙碌，点击确定后返回首页，点击报告解读，为您安排其它医生~";
-											msg.setText(desString);
-											Button sure = (Button) window
-													.findViewById(R.id.chat_dialog_sure);
-											sure.setOnClickListener(new OnClickListener() {
+								if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
+									JSONObject jsonObject = new JSONObject(
+											arg0.result);
+									JSONObject data = jsonObject
+											.getJSONObject("Data");
+									String subjectID = data
+											.getString("SubjectID");
+									if (!subjectID.equals("-1")) {
+										String docInfoBeanStr = data
+												.getString("responser");
+										if (null == docInfoBeanStr
+												|| docInfoBeanStr.equals("")
+												|| docInfoBeanStr
+														.equals("null")) {
+											if (!Chat_Dialog.timeCurl()) {
+												final AlertDialog dialog = new AlertDialog.Builder(
+														context).create();
+												dialog.show();
+												dialog.setCanceledOnTouchOutside(false);
+												Window window = dialog
+														.getWindow();
+												window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
+												TextView msg = (TextView) window
+														.findViewById(R.id.chat_dialog_msg);
+												String desString = "亲，非常抱歉，我们的服务时间是每天9：00－20：00，欢迎下次来咨询，祝您身体健康！";
+												msg.setText(desString);
+												Button sure = (Button) window
+														.findViewById(R.id.chat_dialog_sure);
+												sure.setOnClickListener(new OnClickListener() {
+													@Override
+													public void onClick(View v) {
+														// TODO Auto-generated
+														// method stub
+														dialog.dismiss();
+													}
+												});
+												return;
+											} else {
+												final AlertDialog dialog = new AlertDialog.Builder(
+														context).create();
+												dialog.show();
+												dialog.setCanceledOnTouchOutside(false);
+												Window window = dialog
+														.getWindow();
+												window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
+												TextView msg = (TextView) window
+														.findViewById(R.id.chat_dialog_msg);
+												String desString = "亲，该医生在忙碌，点击确定后返回首页，点击报告解读，为您安排其它医生~";
+												msg.setText(desString);
+												Button sure = (Button) window
+														.findViewById(R.id.chat_dialog_sure);
+												sure.setOnClickListener(new OnClickListener() {
 
-												@Override
-												public void onClick(View v) {
-													// TODO Auto-generated
-													// method
-													Intent i = new Intent(
-															context,
-															MainActivity.class);
-													i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-													context.startActivity(i);
-													dialog.dismiss();
-												}
-											});
-											return;
+													@Override
+													public void onClick(View v) {
+														// TODO Auto-generated
+														// method
+														Intent i = new Intent(
+																context,
+																MainActivity.class);
+														i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+														context.startActivity(i);
+														dialog.dismiss();
+													}
+												});
+												return;
+											}
+
 										}
+										DocInfoBean docInfoBean = new Gson()
+												.fromJson(docInfoBeanStr,
+														DocInfoBean.class);
+										try {
+											// 查看是否有这个医生的会话信息
+											ChatInfoBean chatInfoBean = DBUtilsHelper
+													.getInstance()
+													.getDb()
+													.findFirst(
+															Selector.from(
+																	ChatInfoBean.class)
+																	.where("docInfoBeanId",
+																			"=",
+																			docInfoBean
+																					.getVoipAccount()));
+											if (null == chatInfoBean) {
+												chatInfoBean = new ChatInfoBean();
+											}
+											chatInfoBean
+													.setDocInfoBeanId(docInfoBean
+															.getVoipAccount());
+											chatInfoBean.setComment(false);
+											chatInfoBean.setTimeout(false);
+											chatInfoBean
+													.setSubjectID(subjectID);
+											chatInfoBean.setStatus(false);
+											DBUtilsHelper.getInstance()
+													.saveChatinfo(chatInfoBean);
+											// ((Activity) context).finish();
 
-									}
-									DocInfoBean docInfoBean = new Gson()
-											.fromJson(docInfoBeanStr,
-													DocInfoBean.class);
-									try {
-										// 查看是否有这个医生的会话信息
-										ChatInfoBean chatInfoBean = DBUtilsHelper
-												.getInstance()
-												.getDb()
-												.findFirst(
-														Selector.from(
-																ChatInfoBean.class)
-																.where("docInfoBeanId",
-																		"=",
-																		docInfoBean
-																				.getVoipAccount()));
-										if (null == chatInfoBean) {
-											chatInfoBean = new ChatInfoBean();
+											((ECChattingActivity) context)
+													.restart();
+											// ECDeviceKit
+											// .getIMKitManager()
+											// .startConversationActivity(context,
+											// chatInfoBean
+											// .getDocInfoBeanId());
+											retryCompleteInstance.onComplete();
+										} catch (DbException e) {
+											// TODO Auto-generated
+											// catch
+											// block
+											e.printStackTrace();
 										}
-										chatInfoBean
-												.setDocInfoBeanId(docInfoBean
-														.getVoipAccount());
-										chatInfoBean.setComment(false);
-										chatInfoBean.setTimeout(false);
-										chatInfoBean.setSubjectID(subjectID);
-										chatInfoBean.setStatus(false);
-										DBUtilsHelper.getInstance()
-												.saveChatinfo(chatInfoBean);
-										// ((Activity) context).finish();
+									} else {
+										final AlertDialog dialog = new AlertDialog.Builder(
+												context).create();
+										dialog.show();
+										dialog.setCanceledOnTouchOutside(false);
+										Window window = dialog.getWindow();
+										window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
+										TextView msg = (TextView) window
+												.findViewById(R.id.chat_dialog_msg);
+										msg.setText(/* data.getString("Message") */"亲，该医生不在线哦，点击确定后返回首页，点击报告解读，为您安排其它医生~");
+										Button sure = (Button) window
+												.findViewById(R.id.chat_dialog_sure);
+										sure.setOnClickListener(new OnClickListener() {
 
-										((ECChattingActivity) context)
-												.restart();
-										// ECDeviceKit
-										// .getIMKitManager()
-										// .startConversationActivity(context,
-										// chatInfoBean
-										// .getDocInfoBeanId());
-										retryCompleteInstance.onComplete();
-									} catch (DbException e) {
-										// TODO Auto-generated
-										// catch
-										// block
-										e.printStackTrace();
+											@Override
+											public void onClick(View v) {
+												// TODO Auto-generated method
+												// stub
+												Intent i = new Intent(context,
+														MainActivity.class);
+												i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+												context.startActivity(i);
+												dialog.dismiss();
+											}
+										});
 									}
 								} else {
-									final AlertDialog dialog = new AlertDialog.Builder(
-											context).create();
-									dialog.show();
-									dialog.setCanceledOnTouchOutside(false);
-									Window window = dialog.getWindow();
-									window.setContentView(R.layout.chat_dialog);// 设置对话框的布局
-									TextView msg = (TextView) window
-											.findViewById(R.id.chat_dialog_msg);
-									msg.setText(/* data.getString("Message") */"亲，该医生不在线哦，点击确定后返回首页，点击报告解读，为您安排其它医生~");
-									Button sure = (Button) window
-											.findViewById(R.id.chat_dialog_sure);
-									sure.setOnClickListener(new OnClickListener() {
-
-										@Override
-										public void onClick(View v) {
-											// TODO Auto-generated method stub
-											Intent i = new Intent(context,
-													MainActivity.class);
-											i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-											context.startActivity(i);
-											dialog.dismiss();
-										}
-									});
+									ToastUtil.showMessage("用户网络异常，通讯服务器连接不成功！",
+											1000);
 								}
 							} catch (Exception e) {
 
@@ -830,81 +847,22 @@ public class MainChatControllerListener implements ChatControllerListener {
 				});
 	}
 
-	// 获取会话信息
-	private void getSubjectInfo(String subjectId, final String from) {
-		// TODO Auto-generated method stub
-		try {
-			final DbUtils dbUtils = DBUtilsHelper.getInstance().getDb();
-			RequestParams requestParams = new RequestParams();
-			requestParams.addQueryStringParameter("id", subjectId);
-			HttpClient.get(MyApp.getInstance(), Constants.SUBJECTINFO,
-					requestParams, new RequestCallBack<String>() {
-						@Override
-						public void onSuccess(ResponseInfo<String> arg0) {
-							try {
-								JSONObject jsonObject = new JSONObject(
-										arg0.result);
-								JSONObject data = jsonObject
-										.getJSONObject("Data");
-								if (data != null) {
-									Log.e("getSubjectInfo", data.toString());
-									JSONObject subject = data
-											.getJSONObject("Sub  ject");
-									if (subject != null) {
-										Log.e("getSubjectInfo-subject",
-												subject.toString());
-										// 是否有此医生的会话
-										ChatInfoBean chatinfoBean = dbUtils
-												.findFirst(Selector.from(
-														ChatInfoBean.class)
-														.where("docInfoBeanId",
-																"=", from));
-										// 如果有医生在线
-										if (chatinfoBean == null) {
-											chatinfoBean = new ChatInfoBean();
-										}
-										chatinfoBean.setSubjectType(subject
-												.getInt("SubjectType") + "");
-										chatinfoBean.setSubjectID(subject
-												.getInt("ID") + "");
-										chatinfoBean.setStatus("1"
-												.equals(subject
-														.getString("Status")));
-										chatinfoBean.setComment(false);
-										chatinfoBean.setTimeout(false);
-										JSONObject userJsonObject = data
-												.getJSONObject("User");
-										if (userJsonObject != null) {
-											chatinfoBean.setDocInfoBeanId(from);
-										}
-										Log.e("getSubjectInfo-subject", "4");
-										dbUtils.saveOrUpdate(chatinfoBean);
-
-									}
-								}
-
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (DbException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						}
-
-						@Override
-						public void onFailure(HttpException arg0, String arg1) {
-							// TODO Auto-generated method stub
-
-						}
-					});
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+//	// 获取会话信息
+//	@Override
+//	public void getSubjectInfo(String subjectId, final String from,RequestCallBack<String> callBack) {
+//		// TODO Auto-generated method stub
+//		try {
+//			
+//			RequestParams requestParams = new RequestParams();
+//			requestParams.addQueryStringParameter("id", subjectId);
+//			HttpClient.get(MyApp.getInstance(), Constants.SUBJECTINFO,
+//					requestParams, callBack);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	private ChatInfoBean getChatInfo(String voipId) {
 		try {
@@ -1005,7 +963,7 @@ public class MainChatControllerListener implements ChatControllerListener {
 					mchatInfoBean.setTimeout(true);
 					DBUtilsHelper.getInstance().saveChatinfo(mchatInfoBean);
 				}
-				if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS){
+				if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
 					ECDeviceKit.unInitial();
 				}
 				DBUtilsHelper.instance = null;
@@ -1058,7 +1016,13 @@ public class MainChatControllerListener implements ChatControllerListener {
 											ECTextMessageBody msgBody = new ECTextMessageBody(
 													Constants.CLOSESUBJECT);
 											msg.setBody(msgBody);
+											if(ECChattingActivity.USER_DATA==null)
+											{
+												ECChattingActivity.USER_DATA = UserDataUtils
+														.getUserData(mchatInfoBean.getSubjectID());
+											}
 											IMChattingHelper.sendECMessage(msg);
+											ECChattingActivity.USER_DATA =null;
 											mchatInfoBean.setStatus(false);
 											mchatInfoBean.setTimeout(true);
 											DBUtilsHelper
@@ -1069,7 +1033,7 @@ public class MainChatControllerListener implements ChatControllerListener {
 													.timeStop(
 															mchatInfoBean
 																	.getDocInfoBeanId());
-											if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS){
+											if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
 												ECDeviceKit.unInitial();
 											}
 											DBUtilsHelper.instance = null;
@@ -1096,7 +1060,7 @@ public class MainChatControllerListener implements ChatControllerListener {
 									mchatInfoBean.setTimeout(true);
 									DBUtilsHelper.getInstance().saveChatinfo(
 											mchatInfoBean);
-									if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS){
+									if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
 										ECDeviceKit.unInitial();
 									}
 									DBUtilsHelper.instance = null;
@@ -1105,7 +1069,7 @@ public class MainChatControllerListener implements ChatControllerListener {
 								}
 							});
 				} else {
-					if(SDKCoreHelper.getInstance().mConnect== ECDevice.ECConnectState.CONNECT_SUCCESS){
+					if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
 						ECDeviceKit.unInitial();
 					}
 					DBUtilsHelper.instance = null;

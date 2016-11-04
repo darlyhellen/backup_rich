@@ -103,6 +103,7 @@ public class MessageSessionFragment extends BaseFragment<List<MessageSession>, M
 
     private void jumpToChatPage(MessageSession session){
         Intent i = new Intent(getActivity(),MessageChatActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("uid", session.user.id);
         i.putExtra("userName", session.user.name);
         getActivity().startActivity(i);

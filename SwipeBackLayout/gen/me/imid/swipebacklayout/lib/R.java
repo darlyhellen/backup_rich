@@ -56,8 +56,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static int activity_horizontal_margin=0x7f070000;
-        public static int activity_vertical_margin=0x7f070001;
+        public static int activity_horizontal_margin=0x7f060000;
+        public static int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
         public static int ic_launcher=0x7f020000;
@@ -66,19 +66,19 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static int shadow_right=0x7f020003;
     }
     public static final class id {
-        public static int action_settings=0x7f060005;
-        public static int all=0x7f060003;
-        public static int bottom=0x7f060002;
-        public static int left=0x7f060000;
-        public static int right=0x7f060001;
-        public static int swipe=0x7f060004;
+        public static int action_settings=0x7f080005;
+        public static int all=0x7f080000;
+        public static int bottom=0x7f080001;
+        public static int left=0x7f080002;
+        public static int right=0x7f080003;
+        public static int swipe=0x7f080004;
     }
     public static final class layout {
         public static int activity_main=0x7f030000;
         public static int swipeback_layout=0x7f030001;
     }
     public static final class menu {
-        public static int main=0x7f080000;
+        public static int main=0x7f070000;
     }
     public static final class string {
         public static int action_settings=0x7f040001;
@@ -166,7 +166,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 </table>
           @attr name me.imid.swipebacklayout.lib:edge_flag
         */
-        public static final int SwipeBackLayout_edge_flag = 1;
+        public static int SwipeBackLayout_edge_flag = 1;
         /**
           <p>This symbol is the offset where the {@link me.imid.swipebacklayout.lib.R.attr#edge_size}
           attribute's value can be found in the {@link #SwipeBackLayout} array.
@@ -182,7 +182,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name me.imid.swipebacklayout.lib:edge_size
         */
-        public static final int SwipeBackLayout_edge_size = 0;
+        public static int SwipeBackLayout_edge_size = 0;
         /**
           <p>This symbol is the offset where the {@link me.imid.swipebacklayout.lib.R.attr#shadow_bottom}
           attribute's value can be found in the {@link #SwipeBackLayout} array.
@@ -192,7 +192,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name me.imid.swipebacklayout.lib:shadow_bottom
         */
-        public static final int SwipeBackLayout_shadow_bottom = 4;
+        public static int SwipeBackLayout_shadow_bottom = 4;
         /**
           <p>This symbol is the offset where the {@link me.imid.swipebacklayout.lib.R.attr#shadow_left}
           attribute's value can be found in the {@link #SwipeBackLayout} array.
@@ -202,7 +202,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name me.imid.swipebacklayout.lib:shadow_left
         */
-        public static final int SwipeBackLayout_shadow_left = 2;
+        public static int SwipeBackLayout_shadow_left = 2;
         /**
           <p>This symbol is the offset where the {@link me.imid.swipebacklayout.lib.R.attr#shadow_right}
           attribute's value can be found in the {@link #SwipeBackLayout} array.
@@ -212,6 +212,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name me.imid.swipebacklayout.lib:shadow_right
         */
-        public static final int SwipeBackLayout_shadow_right = 3;
+        public static int SwipeBackLayout_shadow_right = 3;
     };
 }

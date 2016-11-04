@@ -190,6 +190,7 @@ public class SettingActivity extends BaseFragmentActivity implements OnClickList
     private void selectProfile() {
         Intent pickImageIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickImageIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         pickImageIntent.setType("image/png;image/jpeg");
         startActivityForResult(pickImageIntent, Constants.PIC_SELECT);
     }

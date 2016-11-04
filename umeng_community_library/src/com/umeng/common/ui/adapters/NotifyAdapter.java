@@ -62,6 +62,7 @@ public class NotifyAdapter extends CommonAdapter<Notification, NotifyMsgViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, mUserInfoClass);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, item.from);
                 mContext.startActivity(intent);
             }

@@ -124,6 +124,7 @@ public class TopicFeedFragment extends PostBtnAnimFragment<TopicFeedPresenter> {
                                     if (stCode == 0) {
                                         Intent postFeedIntent = new Intent(getActivity(),
                        PostFeedActivity.class);
+                                        postFeedIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 postFeedIntent.putExtra(Constants.TAG_TOPIC, mTopic);
                 getActivity().startActivity(postFeedIntent);
                                     }
@@ -132,6 +133,7 @@ public class TopicFeedFragment extends PostBtnAnimFragment<TopicFeedPresenter> {
                         } else {
                             Intent postFeedIntent = new Intent(getActivity(),
                                     PostFeedActivity.class);
+                            postFeedIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             postFeedIntent.putExtra(Constants.TAG_TOPIC, mTopic);
                             getActivity().startActivity(postFeedIntent);
                         }

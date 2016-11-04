@@ -18,6 +18,7 @@ import cn.jpush.android.api.JPushInterface;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.comm.core.CommunitySDK;
 import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.impl.CommunityFactory;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.adapter.ImageAdapter;
@@ -182,11 +183,12 @@ public class GuideActivity extends BaseActivity implements
 	}
 
 	public void intoMainActivity() {
+		finish();
 		Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 
-		finish();
+
 
 	}
 

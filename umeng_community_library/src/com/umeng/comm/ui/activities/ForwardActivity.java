@@ -145,6 +145,7 @@ public class ForwardActivity extends PostFeedActivity {
                 public void onClick(Topic topic) {
                     Intent intent = new Intent(ForwardActivity.this,
                             TopicDetailActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     intent.putExtra(Constants.TAG_TOPIC, topic);
                     ForwardActivity.this.startActivity(intent);
                 }
@@ -153,6 +154,7 @@ public class ForwardActivity extends PostFeedActivity {
                 public void onClick(CommUser user) {
                     Intent intent = new Intent(ForwardActivity.this,
                             UserInfoActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     intent.putExtra(Constants.TAG_USER, user);
                     ForwardActivity.this.startActivity(intent);
 
@@ -170,6 +172,7 @@ public class ForwardActivity extends PostFeedActivity {
                     public void onClick(Topic topic) {
                         Intent intent = new Intent(ForwardActivity.this,
                                 TopicDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_TOPIC, topic);
                         ForwardActivity.this.startActivity(intent);
                     }
@@ -178,6 +181,7 @@ public class ForwardActivity extends PostFeedActivity {
                     public void onClick(CommUser user) {
                         Intent intent = new Intent(ForwardActivity.this,
                                 UserInfoActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_USER, user);
                         ForwardActivity.this.startActivity(intent);
                     }
@@ -194,6 +198,7 @@ public class ForwardActivity extends PostFeedActivity {
                     public void onClick(Topic topic) {
                         Intent intent = new Intent(ForwardActivity.this,
                                 TopicDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_TOPIC, topic);
                         ForwardActivity.this.startActivity(intent);
                     }
@@ -202,6 +207,7 @@ public class ForwardActivity extends PostFeedActivity {
                     public void onClick(CommUser user) {
                         Intent intent = new Intent(ForwardActivity.this,
                                 UserInfoActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_USER, user);
                         ForwardActivity.this.startActivity(intent);
                     }

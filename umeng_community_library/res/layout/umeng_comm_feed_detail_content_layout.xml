@@ -86,7 +86,7 @@
         <LinearLayout
             android:id="@+id/user_type_icon_container"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/umeng_comm_dimen_28px"
+            android:layout_height="18dp"
             android:layout_alignBottom="@id/umeng_comm_msg_user_name"
             android:layout_marginBottom="@dimen/umeng_comm_dimen_4px"
             android:layout_marginLeft="@dimen/umeng_comm_dimen_10px"

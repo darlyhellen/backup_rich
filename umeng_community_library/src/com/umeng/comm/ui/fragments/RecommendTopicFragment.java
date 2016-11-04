@@ -56,6 +56,7 @@ public class RecommendTopicFragment extends RecommendTopicBaseFragment {
             @Override
             public void gotoTopicDetail(Topic topic) {
                 Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 ComponentName componentName = new ComponentName(getActivity(), TopicDetailActivity.class);
                 intent.setComponent(componentName);
                 intent.putExtra(Constants.TAG_TOPIC, topic);

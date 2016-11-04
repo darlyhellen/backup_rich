@@ -5,12 +5,10 @@
     android:background="@color/bgwhite"
     tools:context=".IAintelligentguidance" >
 
-
-
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1dp"
         android:layout_above="@+id/radiogroup"
         android:background="@color/divider" />
 
@@ -19,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/w_white"
+        android:background="@color/main_white"
         android:orientation="horizontal"
         android:padding="5dp" >
 
@@ -28,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/w_white"
+            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/home__selector"
             android:gravity="center"
@@ -41,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/w_white"
+            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/clinic__selector"
             android:gravity="center"
@@ -54,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/w_white"
+            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/healty__selector"
             android:gravity="center"
@@ -67,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/w_white"
+            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/news_selector"
             android:gravity="center"
@@ -80,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/w_white"
+            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/user_selector"
             android:gravity="center"
@@ -88,9 +86,6 @@
             android:textColor="@color/w_gray"
             android:textSize="@dimen/textview_radioButton" />
     </RadioGroup>
-    
-    
-
 
     <TableRow
         android:layout_width="match_parent"
@@ -116,12 +111,12 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
     </TableRow>
-    
-        <FrameLayout
+
+    <FrameLayout
         android:id="@+id/framelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/radiogroup" >
+        android:layout_above="@+id/line1" >
     </FrameLayout>
 
 </RelativeLayout>

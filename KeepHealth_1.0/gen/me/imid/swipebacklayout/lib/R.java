@@ -16,26 +16,26 @@ public final class R {
 		public static final int shadow_right = 0x7f010003;
 	}
 	public static final class dimen {
-		public static final int activity_horizontal_margin = 0x7f0a0000;
-		public static final int activity_vertical_margin = 0x7f0a0001;
+		public static final int activity_horizontal_margin = 0x7f090000;
+		public static final int activity_vertical_margin = 0x7f090001;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f02042c;
-		public static final int shadow_bottom = 0x7f020554;
-		public static final int shadow_left = 0x7f020555;
-		public static final int shadow_right = 0x7f020556;
+		public static final int ic_launcher = 0x7f02042f;
+		public static final int shadow_bottom = 0x7f02055b;
+		public static final int shadow_left = 0x7f02055c;
+		public static final int shadow_right = 0x7f02055d;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f090655;
-		public static final int all = 0x7f090003;
-		public static final int bottom = 0x7f090002;
-		public static final int left = 0x7f090000;
-		public static final int right = 0x7f090001;
-		public static final int swipe = 0x7f090348;
+		public static final int action_settings = 0x7f0c0656;
+		public static final int all = 0x7f0c000b;
+		public static final int bottom = 0x7f0c000c;
+		public static final int left = 0x7f0c000d;
+		public static final int right = 0x7f0c000e;
+		public static final int swipe = 0x7f0c0348;
 	}
 	public static final class layout {
 		public static final int activity_main = 0x7f03000c;
-		public static final int swipeback_layout = 0x7f0300db;
+		public static final int swipeback_layout = 0x7f0300dc;
 	}
 	public static final class menu {
 		public static final int main = 0x7f0f0006;

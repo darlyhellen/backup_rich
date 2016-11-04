@@ -24,6 +24,7 @@
 
 package com.umeng.common.ui.activities;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ import com.umeng.common.ui.util.ViewFinder;
 /**
  * 继承自FragmentActivity的Activity类型, 封装了FragmentManager和去除了title
  */
-@SuppressLint("NewApi") public class BaseFragmentActivity extends FragmentActivity {
+@SuppressLint("NewApi") public class BaseFragmentActivity extends SwipeBackActivity {
     /**
      * Fragment管理器
      */

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/umeng_comm_white_color"
+        android:background="@drawable/home_top_background"
         android:gravity="left"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
@@ -21,11 +21,11 @@
             android:layout_height="37dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
+            android:background="@drawable/back_selector"
             android:contentDescription="@string/umeng_comm_new_post"
             android:padding="@dimen/umeng_comm_dimen_20px"
             android:scaleType="centerInside"
-            android:src="@drawable/umeng_comm_title_back" />
+            />
 
         <TextView
             android:id="@+id/umeng_comm_title_tv"

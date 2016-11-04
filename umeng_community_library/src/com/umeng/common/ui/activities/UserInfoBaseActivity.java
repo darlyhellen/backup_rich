@@ -240,6 +240,7 @@ public abstract  class UserInfoBaseActivity extends BaseFragmentActivity impleme
                 @Override
                 protected void doAfterLogin(View v) {
                     Intent i = new Intent(UserInfoBaseActivity.this, MessageChatActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     i.putExtra("uid", mUser.id);
                     i.putExtra("userName", mUser.name);
                     UserInfoBaseActivity.this.startActivity(i);
@@ -405,6 +406,7 @@ public abstract  class UserInfoBaseActivity extends BaseFragmentActivity impleme
 
     protected void jumpToActivityWithUid(Class<?> activityClass) {
         Intent intent = new Intent(getApplicationContext(), activityClass);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.USER_ID_KEY, mUser.id);
         startActivity(intent);
     }

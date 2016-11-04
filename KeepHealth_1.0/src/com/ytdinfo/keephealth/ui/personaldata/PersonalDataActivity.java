@@ -33,7 +33,9 @@ import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.impl.CommunitySDKImpl;
 import com.umeng.comm.core.listeners.Listeners.CommListener;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.Response;
+import com.umeng.comm.core.nets.responses.PortraitUploadResponse;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
@@ -53,16 +55,6 @@ import com.ytdinfo.keephealth.utils.ToastUtil;
 public class PersonalDataActivity extends BaseActivity implements
 		OnClickListener {
 	private String TAG = "PersonalDataActivity";
-	// /* 用来标识请求照相功能的activity */
-	// private static final int CAMERA_WITH_DATA = 3021;
-	// /* 用来标识请求gallery的activity */
-	// private static final int PHOTO_PICKED_WITH_DATA = 3022;
-	// /* 用来标识请求裁剪图片的activity */
-	// private static final int CROP_PICKED_WITH_DATA = 3023;
-	// /* 拍照的照片存储位置 */
-	// private String head_path;
-	// /* 拍照的照片的名字及格式 */
-	// private String head_picture = "head.jif";
 	private Bitmap head;// 头像Bitmap
 
 	private CommonActivityTopView commonActivityTopView;
@@ -95,22 +87,13 @@ public class PersonalDataActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_data);
-
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 2);
-
-		LogUtil.i("wpc", "onCreate");
-		// userModel = new Gson().fromJson(
-		// SharedPrefsUtil.getValue(Constants.USERMODEL, null),
-		// UserModel.class);
-		// initView();
-		// initListener();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
-
 		LogUtil.i("wpc", "onSaveInstanceState");
 	}
 
@@ -118,17 +101,14 @@ public class PersonalDataActivity extends BaseActivity implements
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onRestoreInstanceState(savedInstanceState);
-
 		LogUtil.i("wpc", "onRestoreInstanceState");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		MobclickAgent.onPageStart("PersonalDataActivity");
 		MobclickAgent.onResume(this);
-
 		initView();
 		initData();
 		initListener();
@@ -136,67 +116,21 @@ public class PersonalDataActivity extends BaseActivity implements
 	}
 
 	private void initView() {
-		// String jsonUserModel = SharedPrefsUtil
-		// .getValue(Constants.USERMODEL, "");
-		// LogUtil.i("======", jsonUserModel);
-		// UserModel userModel = new Gson().fromJson(jsonUserModel,
-		// UserModel.class);
-		// LogUtil.i("======", userModel.toString());
-
 		commonActivityTopView = (CommonActivityTopView) findViewById(R.id.id_CommonActivityTopView);
 		commonActivityTopView.setTitle("个人资料");
-
 		personalDataItem_2View = (PersonalDataItem_2View) findViewById(R.id.id_PersonalDataItem_2View);
 		personalDataItem_2View.tv_title.setText("头像");
-
-		// imageLoader.displayImage(userModel.getHeadPicture(),
-		// personalDataItem_2View.iv_touxiang,
-		// ImageLoaderUtils.getOptions());
-
-		// head = BitmapFactory.decodeFile(Constants.HEAD_PICTURE_PATH);
-		// if (head == null) {
-		// personalDataItem_2View.iv_touxiang
-		// .setImageResource(R.drawable.userinfo_touxiang);
-		// } else {
-		// personalDataItem_2View.iv_touxiang.setImageBitmap(head);
-		// }
-
-		// if (userModel.isPhotoIsEdit()) {
-		// // 头像可修改
-		// personalDataItem_2View.setClickable(true);
-		// } else {
-		// // 头像不可修改
-		// personalDataItem_2View.setClickable(false);
-		// }
-
 		personalDataItem_1View_2 = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_1View_2);
 		personalDataItem_1View_2.tv_title.setText("姓名");
-		// personalDataItem_1View_2.tv_desc.setText(userModel.getUserName());
-
 		// V21 调整用户昵称
 		addtion = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_V21_Addition1);
 		addtion.tv_title.setText("昵称");
-
 		personalDataItem_1View_3 = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_1View_3);
 		personalDataItem_1View_3.tv_title.setText("手机号码");
-		// personalDataItem_1View_3.tv_desc.setText(userModel.getMobilephone());
-		// personalDataItem_1View_3.tv_desc.setBackgroundColor(Color
-		// .parseColor("#FFEBEBEB"));
-
 		personalDataItem_1View_4 = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_1View_4);
 		personalDataItem_1View_4.tv_title.setText("性别");
-		// if (userModel.getUserSex().equals("Man")) {
-		// personalDataItem_1View_4.tv_desc.setText("男");
-		// } else if (userModel.getUserSex().equals("Woman")) {
-		// personalDataItem_1View_4.tv_desc.setText("女");
-		// } else {
-		// personalDataItem_1View_4.tv_desc.setText("");
-		// }
-
 		personalDataItem_1View_5 = (CommonModifyView) findViewById(R.id.id_PersonalDataItem_1View_5);
 		personalDataItem_1View_5.tv_title.setText("身份证号");
-		// personalDataItem_1View_5.tv_desc.setText(userModel.getIDcard());
-
 		ll_parent = (LinearLayout) findViewById(R.id.id_ll_parent);
 	}
 
@@ -225,28 +159,11 @@ public class PersonalDataActivity extends BaseActivity implements
 					personalDataItem_2View.iv_touxiang,
 					ImageLoaderUtils.getOptions2());
 		}
-
-		// LogUtil.i(TAG,userModel.isPhotoIsEdit()+"" );
-
-		// if (userModel.isPhotoIsEdit()) {
-		// // 头像可修改
-		// personalDataItem_2View.setClickable(true);
-		// personalDataItem_2View.setEnabled(true);
-		//
-		// } else {
-		// // 头像不可修改
-		// personalDataItem_2View.setClickable(false);
-		// personalDataItem_2View.setEnabled(false);
-		// }
-
 		personalDataItem_1View_2.tv_desc.setText(userModel.getUserName());
-
 		addtion.tv_desc.setText(userModel.getAddition1());
-
 		personalDataItem_1View_3.tv_desc.setText(transformMobile(userModel
 				.getMobilephone()));
 		mobilePhone = userModel.getMobilephone();
-
 		if (userModel.getUserSex().equals("Man")) {
 			personalDataItem_1View_4.tv_desc.setText("男");
 		} else if (userModel.getUserSex().equals("Woman")) {
@@ -284,7 +201,6 @@ public class PersonalDataActivity extends BaseActivity implements
 	public void initPop() {
 		mypop = new MyPopWindow(this);
 		pop = mypop.getPop();
-
 	}
 
 	private void initListener() {
@@ -298,23 +214,9 @@ public class PersonalDataActivity extends BaseActivity implements
 		addtion.setOnClickListener(this);
 		// 手机号码不可修改
 		personalDataItem_1View_3.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				// if(!mobilePhone.equals("")){
 				ToastUtil.showMessage("手机号不能修改");
-				// }else {
-				// // 手机号
-				// Intent i = new Intent();
-				// i.setClass(PersonalDataActivity.this,
-				// CommonModifyInfoActivity.class);
-				// // 将“姓名”传过去
-				// i.putExtra("title",
-				// personalDataItem_1View_3.tv_title.getText()
-				// .toString());
-				// i.putExtra("desc", mobilePhone);
-				// startActivity(i);
-				// }
 			}
 		});
 		// 性别
@@ -343,11 +245,6 @@ public class PersonalDataActivity extends BaseActivity implements
 		case R.id.id_PersonalDataItem_2View:
 			// 头像
 			pop.showAtLocation(ll_parent, Gravity.BOTTOM, 0, 0);
-
-			// Intent intent = new Intent(this, MyPopWindow.class);
-			// intent.putExtra("needCrop", true);
-			// startActivityForResult(intent, 0x123);
-			// showPopWindow();
 			break;
 		case R.id.id_PersonalDataItem_1View_2:
 			// 姓名
@@ -429,40 +326,29 @@ public class PersonalDataActivity extends BaseActivity implements
 		if (bm != null) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			bm.compress(CompressFormat.PNG, 100, bos);
-
+			
 			String uploadBuffer = new String(Base64.encodeBase64(bos
 					.toByteArray()));
 			bos.close();
 			return uploadBuffer;
 		}
 		return "";
-
 	}
 
 	/**
 	 * 单项选择对话框
 	 */
 	private void showSinChosDia() {
-
-		// final String[] mList = { "男", "女" };
-		// final String[] temp = { "Man", "Woman" };
 		int chosed = personalDataItem_1View_4.tv_desc.getText().toString()
 				.equals("女") ? 1 : 0;
 		AlertDialog.Builder sinChosDia = new AlertDialog.Builder(
 				PersonalDataActivity.this);
-		// sinChosDia.setTitle("性别");
-
 		sinChosDia.setSingleChoiceItems(sex_china, chosed,
 				new DialogInterface.OnClickListener() {
-
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						alertDialog.dismiss();
-
-						// sex_china = mList[which];
-
 						sex_position = which;
-
 						// 上传到服务器
 						requestModifyInfo();
 
@@ -472,125 +358,9 @@ public class PersonalDataActivity extends BaseActivity implements
 		alertDialog.show();
 	}
 
-	// private void showPopWindow() {
-	// View popView = LayoutInflater.from(this).inflate(R.layout.popwindow,
-	// null);
-	//
-	// popwindow = new PopupWindow(popView, LayoutParams.MATCH_PARENT,
-	// LayoutParams.WRAP_CONTENT);
-	// // popwindow的显示位置，parent的正下方
-	// popwindow.showAtLocation(ll_parent, Gravity.BOTTOM, 0, 0);
-	// // 必须设置
-	// popwindow.setBackgroundDrawable(new ColorDrawable());
-	// // popwindow获取焦点
-	// popwindow.setFocusable(true);
-	//
-	// // popwindow显示后背景变暗
-	// changeAlpha(0.5f);
-	// // 其余功能不能用
-	// setClickable(false);
-	//
-	// popwindowListener(popView);
-	//
-	// }
-
-	/**
-	 * popwindow中的点击事件
-	 */
-	// private void popwindowListener(View popView) {
-	// TextView pop_takepicture = (TextView) popView
-	// .findViewById(R.id.id_pop_takepicture);
-	// TextView pop_photoes = (TextView) popView
-	// .findViewById(R.id.id_pop_photoes);
-	// TextView pop_cancle = (TextView) popView
-	// .findViewById(R.id.id_pop_cancle);
-	// // 拍照
-	// pop_takepicture.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	// i.putExtra(MediaStore.EXTRA_OUTPUT,
-	// Uri.fromFile(new File(head_path)));
-	// startActivityForResult(i, CAMERA_WITH_DATA);// 采用ForResult打开
-	//
-	// }
-	// });
-	// // 从相册中选择
-	// pop_photoes.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// Intent i = new Intent(Intent.ACTION_PICK, null);
-	// i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-	// "image/*");
-	// startActivityForResult(i, PHOTO_PICKED_WITH_DATA);
-	// }
-	// });
-	// // 取消popwindow
-	// pop_cancle.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dismissPopWindow();
-	// }
-	// });
-	// }
-
-	/**
-	 * 改变背景透明度
-	 */
-	// public void changeAlpha(float alpha) {
-	//
-	// WindowManager.LayoutParams lp = getWindow().getAttributes();
-	// lp.alpha = alpha; // 0.0-1.0
-	// getWindow().setAttributes(lp);
-	// }
-
-	/**
-	 * 取消popwindow,,这个onTonchEvent属于Activity，与popwindow无关
-	 */
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event) {
-	//
-	// dismissPopWindow();
-	// return super.onTouchEvent(event);
-	// }
-
-	/**
-	 * 取消popwindow
-	 */
-	// public void dismissPopWindow() {
-	// if (popwindow != null && popwindow.isShowing()) {
-	// popwindow.dismiss();
-	// popwindow = null;
-	// }
-	// // 还原背景透明度
-	// changeAlpha(1f);
-	// // 还原其余5个功能可点击
-	// setClickable(true);
-	// }
-
-	/**
-	 * 设置5个功能模块能否点击
-	 */
-	// private void setClickable(boolean isClick) {
-	// // personalDataItem_2View.setClickable(isClick);
-	// personalDataItem_1View_2.setClickable(isClick);
-	// personalDataItem_1View_3.setClickable(isClick);
-	// personalDataItem_1View_4.setClickable(isClick);
-	// personalDataItem_1View_5.setClickable(isClick);
-	// }
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		// if (resultCode == 1001) {
-		// Uri uri= data.getData();
-		// head = (Bitmap)data.getExtras().get("data");
-		// requestModifyInfo();
-		// }
 		LogUtil.i(TAG, "onActivityResult");
 		if (requestCode == Constants.CROP_PICKED_WITH_DATA) {
 			// 裁剪
@@ -601,7 +371,10 @@ public class PersonalDataActivity extends BaseActivity implements
 					/**
 					 * 上传服务器代码
 					 */
-					requestModifyInfo();
+					
+					//保存带
+					modifyCommunityHeadPic(head);
+				
 
 				}
 			}
@@ -614,35 +387,6 @@ public class PersonalDataActivity extends BaseActivity implements
 			File temp = new File(head_path);
 			cropPhoto(Uri.fromFile(temp));// 裁剪图片
 		}
-
-		// switch (requestCode) {
-		// // 照相机程序返回的,再次调用图片剪辑程序去修剪图片
-		// case CAMERA_WITH_DATA: {
-		// cropPhoto(Uri.fromFile(temp));// 裁剪图片
-		// break;
-		// }
-		// // 调用Gallery返回的
-		// case PHOTO_PICKED_WITH_DATA: {
-		// cropPhoto(data.getData());// 裁剪图片
-		// break;
-		// }
-		// case CROP_PICKED_WITH_DATA:
-		// if (data != null) {
-		// Bundle extras = data.getExtras();
-		// head = extras.getParcelable("data");
-		// if (head != null) {
-		// /**
-		// * 上传服务器代码
-		// */
-		// requestModifyInfo();
-		//
-		// }
-		// }
-		//
-		// }
-
-		// dismissPopWindow();
-
 	}
 
 	private MyProgressDialog progressDialog;
@@ -706,9 +450,7 @@ public class PersonalDataActivity extends BaseActivity implements
 								if (jsonObject.has("photopath")) {
 									userModel.setHeadPicture(jsonObject
 											.getString("photopath"));
-									//保存带
-									modifyCommunityHeadPic(jsonObject
-											.getString("photopath"));
+									
 
 								}
 							} catch (JSONException e) {
@@ -750,22 +492,23 @@ public class PersonalDataActivity extends BaseActivity implements
 	}
 
 
-	private  void modifyCommunityHeadPic(final String pic)
+	private  void modifyCommunityHeadPic(final Bitmap pic)
 	{
-		 final CommUser user = CommConfig.getConfig().loginedUser;
-	     user.iconUrl=pic;
-		CommunitySDKImpl.getInstance().updateUserProfile(user, new CommListener() {
+	 
+		CommunitySDKImpl.getInstance().updateUserProtrait(pic,
+				new SimpleFetchListener<PortraitUploadResponse>() {
 			
 			@Override
-			public void onStart() {
+			public void onComplete(PortraitUploadResponse response) {
 				// TODO Auto-generated method stub
-			}
-			
-			@Override
-			public void onComplete(Response arg0) {
-				// TODO Auto-generated method stub
-				user.saveEntity();	
-				LogUtil.d("修改用户头像成功");
+			 if(response.errCode==Response.NO_ERROR)
+			 {
+				 CommUser usr=CommConfig.getConfig().loginedUser;
+				 usr.iconUrl=response.mIconUrl;
+				 usr.save();
+				 requestModifyInfo();
+			 }
+				
 			}
 		});
 	}
@@ -788,38 +531,6 @@ public class PersonalDataActivity extends BaseActivity implements
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, Constants.CROP_PICKED_WITH_DATA);
 	}
-
-	/**
-	 * 将图片保存到手机本地
-	 * 
-	 * @param mBitmap
-	 */
-	// private void savePicToSD(Bitmap mBitmap) {
-	// String sdStatus = Environment.getExternalStorageState();
-	// if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-	// return;
-	// }
-	// FileOutputStream b = null;
-	// File file = new File(Constants.IMAGES_DIR);
-	// file.mkdirs();// 创建文件夹
-	// String fileName = Constants.HEAD_PICTURE_PATH;// 图片的绝对路径
-	// try {
-	// b = new FileOutputStream(fileName);
-	// mBitmap.compress(Bitmap.CompressFormat.PNG, 100, b);// 把数据写入文件
-	//
-	// } catch (FileNotFoundException e) {
-	// e.printStackTrace();
-	// } finally {
-	// try {
-	// // 关闭流
-	// b.flush();
-	// b.close();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	// }
 
 	@Override
 	public void onPause() {

@@ -48,7 +48,7 @@ public class Utils {
      * with the {@link android.R.attr#windowIsFloating} attribute.
      */
     public static void convertActivityToTranslucent(Activity activity) {
-        if (Build.VERSION.SDK_INT >Build.VERSION_CODES.KITKAT_WATCH) {
+        if (Build.VERSION.SDK_INT >Build.VERSION_CODES.KITKAT) {
             convertActivityToTranslucentAfterL(activity);
         } else {
             convertActivityToTranslucentBeforeL(activity);

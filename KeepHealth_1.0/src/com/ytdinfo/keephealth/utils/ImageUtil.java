@@ -77,12 +77,7 @@ public class ImageUtil {
 			if(image_path==null){
 				return null;
 			}
-			
 			File file = new File(image_path);
-			LogUtil.i("wpc", "-----"+file.length());
-			if(file==null||!file.exists()||file.length()==0){
-				return null;
-			}
 			int degree = getBitmapDegree(image_path);
 			if(degree == 0){
 				return image_path;

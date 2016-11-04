@@ -24,6 +24,7 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -59,12 +60,30 @@ public class FeedContentPresenter extends BaseFeedWeiboPresenter {
     private void gotoFeedDetailActivity(FeedItem feedItem) {
         Intent intent = new Intent(mContext, FeedDetailActivity.class);
         feedItem.extraData.clear();
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.FEED, feedItem);
         mContext.startActivity(intent);
     }
+    
+    
+    private void gotoFeedDetailActivityV2(FeedItem feedItem)
+    {
+        Intent intent = new Intent(mContext, FeedDetailActivity.class);
+        feedItem.extraData.clear();
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(Constants.FEED, feedItem);
+        intent.putExtra("BACK_TO_COMMUNITY", true);
+        ((Activity)mContext).startActivityForResult(intent, 1005);
+    }
+    
 
     public void clickFeedItem() {
         gotoFeedDetailActivity(mFeedItem);
+    }
+    
+    public void clickFeedItemV2()
+    {
+        gotoFeedDetailActivityV2(mFeedItem);
     }
 
     public void clickOriginFeedItem(FeedItem feedItem) {
@@ -123,6 +142,7 @@ public class FeedContentPresenter extends BaseFeedWeiboPresenter {
                         }
                         intent.putExtra(Constants.TYPE_CLASS,
                                 containerClassName);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         mContext.startActivity(intent);
 //        CommonUtils.checkLoginAndFireCallback(mContext,
 //                new SimpleFetchListener<LoginResponse>() {

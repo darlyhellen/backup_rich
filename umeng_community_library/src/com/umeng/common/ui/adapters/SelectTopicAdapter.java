@@ -30,6 +30,7 @@ import android.view.View;
 
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.imageloader.ImgDisplayOption;
+import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.common.ui.adapters.viewholders.RecommendTopicViewHolder;
 
@@ -72,7 +73,8 @@ public class SelectTopicAdapter extends CommonAdapter<Topic, RecommendTopicViewH
         viewHolder.mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         viewHolder.mUserNameTextView.setTextColor(ResFinder.getColor("umeng_comm_title"));
         viewHolder.mImageView.setImageResource(mTopicIcon);
-        viewHolder.mImageView.setImageUrl(topic.icon, ImgDisplayOption.getTopicIconOption());
+        ImageLoaderManager.getInstance().getCurrentSDK().displayImage(topic.icon,viewHolder.mImageView,ImgDisplayOption.getTopicIconOption());
+//        viewHolder.mImageView.setImageUrl(topic.icon, ImgDisplayOption.getTopicIconOption());
         viewHolder.mMsgFansTextView.setText(buildMsgFansStr(topic));
         viewHolder.mUserNameTextView.setTextColor(ResFinder.getColor("umeng_comm_title"));
         viewHolder.mToggleButton.setVisibility(View.GONE);

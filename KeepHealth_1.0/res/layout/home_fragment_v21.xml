@@ -34,7 +34,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:background="@color/back_line" />
 
             <!-- 上面为标题和广告栏，下面为内容状态栏 -->
@@ -43,7 +43,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="0.2dp"
                 android:background="@color/back_line" />
 
             <!-- 添加综合服务 -->
@@ -61,7 +61,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="0.2dp"
                 android:background="@color/back_line" />
 
             <!-- 综合服务内容 -->
@@ -85,7 +85,7 @@
                         android:src="@drawable/ic_zh_wjjn" />
 
                     <View
-                        android:layout_width="0.5dp"
+                        android:layout_width="0.2dp"
                         android:layout_height="match_parent"
                         android:background="@color/back_line" />
 
@@ -100,7 +100,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.2dp"
                     android:background="@color/back_line" />
 
                 <LinearLayout
@@ -117,7 +117,7 @@
                         android:src="@drawable/ic_zh_ck" />
 
                     <View
-                        android:layout_width="0.5dp"
+                        android:layout_width="0.2dp"
                         android:layout_height="match_parent"
                         android:background="@color/back_line" />
 
@@ -204,7 +204,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:background="@color/back_line" />
             <!-- </LinearLayout> -->
 
@@ -219,7 +219,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:background="@color/back_line" />
             <!-- 添加精彩社区 -->
 

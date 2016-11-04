@@ -113,9 +113,11 @@ public class TopicFragment extends RecommendTopicFragment {
                 if(CommonUtils.visitNum == 0){
                     if (CommonUtils.isLogin(getActivity())){
                         Intent intent = new Intent(getActivity(), SearchTopicActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         getActivity().startActivity(intent);
                     } else {
                      	Intent intent=new Intent();
+                     	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
     					intent.setClassName("com.ytdinfo.keephealth", "com.ytdinfo.keephealth.ui.login.LoginActivity");
     					startActivity(intent);
 //                        CommunitySDKImpl.getInstance().login(getActivity(), new LoginListener() {
@@ -140,6 +142,7 @@ public class TopicFragment extends RecommendTopicFragment {
                     }
                 }else {
                     Intent intent = new Intent(getActivity(), SearchTopicActivity.class);
+                  	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getActivity().startActivity(intent);
                 }
             }
@@ -159,6 +162,7 @@ public class TopicFragment extends RecommendTopicFragment {
                     public void onComplete(LoginResponse response) {
                         if (CommonUtils.isLogin(getActivity())) {
                             Intent intent = new Intent(getActivity(), SearchTopicActivity.class);
+                          	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             getActivity().startActivity(intent);
                         }
                     }
@@ -174,6 +178,7 @@ public class TopicFragment extends RecommendTopicFragment {
             @Override
             public void gotoTopicDetail(Topic topic) {
                 Intent intent = new Intent();
+              	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 ComponentName componentName = new ComponentName(getActivity(), TopicDetailActivity.class);
                 intent.setComponent(componentName);
                 intent.putExtra(Constants.TAG_TOPIC, topic);
@@ -193,6 +198,7 @@ public class TopicFragment extends RecommendTopicFragment {
             		mPresenter.checkLoginAndExecuteOp(topic, toggleButton, isFollow);
             	}else {
             		Intent intent=new Intent();
+                  	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					intent.setClassName("com.ytdinfo.keephealth", "com.ytdinfo.keephealth.ui.login.LoginActivity");
 					startActivity(intent);
 				}

@@ -276,6 +276,7 @@ public class SearchFragment extends FeedListFragment<SearchPresenter> implements
         } else if (id == mMoreView.getId()) {// 点击更多按钮
             // 跳转到相关用户页面
             Intent intent = new Intent(getActivity(), RelativeUserActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             Bundle bundle = new Bundle();
             ArrayList<CommUser> users = new ArrayList<CommUser>(mAdapter.getDataSource());
             bundle.putParcelableArrayList(Constants.TAG_USERS, users);

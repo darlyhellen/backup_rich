@@ -74,6 +74,7 @@ public class CommentMeAdapter extends LikeMeFeedAdapter {
                     return;
                 }
                 Intent intent = new Intent(mContext, FeedDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setExtrasClassLoader(ImageItem.class.getClassLoader());
                 intent.putExtra(Constants.FEED, feedItem);
                 String commentId = feedItem.extraData.getString(HttpProtocol.COMMENT_ID_KEY);

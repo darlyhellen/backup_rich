@@ -8,15 +8,13 @@
     <Button
         android:id="@+id/startbutton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
-        android:background="@drawable/login_bt_bg"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:background="@android:color/transparent"
         android:padding="10dp"
-        android:text="立即体验"
-        android:textColor="@color/w_white"
-        android:textSize="@dimen/textview_large" />
+        />
 
 </RelativeLayout>

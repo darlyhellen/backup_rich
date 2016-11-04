@@ -32,6 +32,7 @@ public class FeedLikeAdapter extends CommonAdapter<Like, FeedLikeViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
                 intent.putExtra(Constants.TAG_USER, like.creator);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 mContext.startActivity(intent);
             }
         });
@@ -40,6 +41,7 @@ public class FeedLikeAdapter extends CommonAdapter<Like, FeedLikeViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
                 intent.putExtra(Constants.TAG_USER, like.creator);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 mContext.startActivity(intent);
             }
         });
@@ -47,6 +49,7 @@ public class FeedLikeAdapter extends CommonAdapter<Like, FeedLikeViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, like.creator);
                 mContext.startActivity(intent);
             }

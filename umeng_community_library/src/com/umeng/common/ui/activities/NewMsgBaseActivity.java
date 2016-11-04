@@ -24,6 +24,8 @@
 
 package com.umeng.common.ui.activities;
 
+import android.R.color;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -82,7 +84,7 @@ public abstract class NewMsgBaseActivity extends BaseFragmentActivity implements
         int titleResId = ResFinder.getId("umeng_comm_title_tv");
         mTitleView = (TextView)findViewById(titleResId);
         mTitleView.setText("消息");
-
+        mTitleView.setTextColor(Color.WHITE);
         mFragmentContainerView = findViewById(ResFinder.getId("umeng_comm_my_msg_fragment"));
         mFragmentContainerView.setVisibility(View.GONE);
         mBtnContainerView = findViewById(ResFinder.getId("umeng_comm_my_msg_item_content"));

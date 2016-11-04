@@ -1,15 +1,20 @@
 package com.ytdinfo.keephealth.ui;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import cn.jpush.android.api.JPushInterface;
 
 import com.rayelink.eckit.BroadCastAction;
 import com.rayelink.eckit.MainChatControllerListener;
+import com.umeng.comm.core.CommunitySDK;
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.impl.CommunityFactory;
 import com.umeng.common.ui.util.FontUtils;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.MyApp;
@@ -52,6 +57,17 @@ public class Base2Activity extends FragmentActivity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		JPushInterface.clearAllNotifications(MyApp.getInstance());
+		NotificationManager nm = (NotificationManager) MyApp.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+		if(nm!=null)
+			nm.cancel(100);
+		if(CommConfig.getConfig()==null)
+		{
+			Typeface face = Typeface.createFromAsset(getAssets(),
+					"fonts/lantinghei-font.TTF");
+			CommunitySDK mCommSDK = CommunityFactory.getCommSDK(this);
+			mCommSDK.initSDK(this.getApplicationContext());
+			CommConfig.getConfig().setTypeface(face);
+		}
 		 FontUtils.changeTypeface(getWindow().getDecorView());
 	}
 
@@ -77,7 +93,6 @@ public class Base2Activity extends FragmentActivity{
 	}
 
 	private void cancelUser() {
-		SharedPrefsUtil.remove(Constants.TOKEN);
 		SharedPrefsUtil.remove(Constants.USERID);
 		SharedPrefsUtil.remove(Constants.USERMODEL);
 		SharedPrefsUtil.remove(Constants.ONLINE_QUES_USERMODEL);
@@ -85,6 +100,7 @@ public class Base2Activity extends FragmentActivity{
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
+		SharedPrefsUtil.remove(Constants.TOKEN);
 	}
 
 

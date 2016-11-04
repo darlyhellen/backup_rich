@@ -27,6 +27,7 @@ package com.umeng.comm.ui.activities;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.utils.ResFinder;
@@ -74,6 +75,7 @@ public class TopicDetailActivity extends TopicDetailBaseActivity {
     @Override
     protected void gotoPostFeedActivity() {
         Intent postIntent = new Intent(TopicDetailActivity.this, PostFeedActivity.class);
+        postIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         postIntent.putExtra(Constants.TAG_TOPIC, mTopic);
         startActivity(postIntent);
     }

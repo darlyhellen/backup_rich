@@ -38,98 +38,122 @@
         </com.ytdinfo.keephealth.ui.UserInfoItem_1View>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bgwhite"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" >
 
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="50dp"
-            android:background="@color/divider" />
-
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/divider" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/bgwhite"
-        android:orientation="vertical" >
-
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="50dp"
-            android:background="@color/divider" />
-
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/divider" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/bgwhite"
-        android:orientation="vertical" >
-
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="50dp"
-            android:background="@color/divider"
-            android:visibility="gone" />
-
-        <com.ytdinfo.keephealth.ui.UserInfoItem_2View
-            android:id="@+id/id_UserInfoItem_2View_6"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" >
-        </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+            android:orientation="vertical" >
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/divider" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bgwhite"
+                android:orientation="vertical" >
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@color/divider" />
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/bgwhite"
+                android:orientation="vertical" >
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@color/divider" />
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/bgwhite"
+                android:orientation="vertical" >
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@color/divider" />
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@color/divider"
+                    android:visibility="gone" />
+
+                <com.ytdinfo.keephealth.ui.UserInfoItem_2View
+                    android:id="@+id/id_UserInfoItem_2View_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" >
+                </com.ytdinfo.keephealth.ui.UserInfoItem_2View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

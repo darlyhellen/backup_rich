@@ -73,7 +73,7 @@ public class RecommendUserFragment extends ActiveUserFragment implements OnClick
         mTitleTextView = (TextView) mRootView.findViewById(ResFinder
                 .getId("umeng_comm_setting_title"));
         mTitleTextView.setText(ResFinder.getString("umeng_comm_recommend_user"));
-        mTitleTextView.setTextColor(Color.BLACK);
+        mTitleTextView.setTextColor(Color.WHITE);
         mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
         mRootView.findViewById(ResFinder.getId("umeng_comm_title_bar_root"))

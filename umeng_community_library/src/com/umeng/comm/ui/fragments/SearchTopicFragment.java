@@ -28,6 +28,7 @@ public class SearchTopicFragment extends SearchTopicBaseFragment {
             @Override
             public void gotoTopicDetail(Topic topic) {
                                 Intent intent = new Intent(getActivity(), TopicDetailActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_TOPIC,topic);
                 getActivity().startActivity(intent);
             }

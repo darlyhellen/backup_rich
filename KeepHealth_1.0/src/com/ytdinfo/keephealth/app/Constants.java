@@ -12,7 +12,7 @@ public class Constants {
 	public static String DESCRIPTOR = "com.umeng.share";
 
 	/** 是否第一次使用 */
-	public static final String ISFIRSTCOME = "isfirstcome_new";
+	public static final String ISFIRSTCOME = "isfirstcome_new_3";
 	/** 新消息提醒 */
 	public static final String ALERT = "MessageObrive";
 	/** viewPager的本地图片路径 */
@@ -24,7 +24,7 @@ public class Constants {
 	/** 加载banner判断 */
 	public static final String ISLOADED = "isloaded";
 	/** 用户token标示 */
-	public static final String TOKEN = "token_new_v2";
+	public static final String TOKEN = "token_new_v3";
 	public static final String CHECKEDID_RADIOBT = "checkedid_radiobt";
 	public static final String CHECKISUPDATE = "checkisupdate";
 
@@ -57,19 +57,20 @@ public class Constants {
 	/** 服务器地址 */
 	// 开发环境
 //	public static final String ROOT_URl = "http://172.3.207.15";
- 
-	//测试环境
+
+	// 测试环境
 	 public static final String ROOT_URl = "http://172.3.207.26";
- 
+
 	// 正式环境
 	// public static final String ROOT_URl = "http://api.bmyi.cn";
 
-	// public static final String ROOT_URl = "http://test.rayelink.com";
-	// public static final String ROOT_URl = "http://192.168.0.148:818";
-	// public static final String ROOT_URl = "http://192.168.0.155";
-	// public static final String ROOT_URl = "http://api.bmyi.cn";
-
+	// 生产环境
+	// public static final String ROOT_WEB = "http://clinics.bmyi.cn";
+	// 测试环境
 	public static final String ROOT_WEB = "http://test.bmyi.cn:8080";
+
+	public static final String UZANSTORE = "https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl";
+
 	/*** get the main page 3 point information */
 	public static final String INFORMATIONS = ROOT_WEB + "/Home/GetNewsLists";
 	/**
@@ -102,27 +103,28 @@ public class Constants {
 	/** WebView 问诊图片 地址 */
 	public static final String APIUPLOADPICFORCLINIC = ROOT_WEB
 			+ "/Order/ApiUploadPicforClinic";
-	
+
 	/**
 	 * 上午11:43:55 TODO洁牙
 	 */
-	public static final String KOUQIANG = ROOT_URl
-			+ "/Go/?url=/html/add_server/kouqiang/List.html ";
+	public static final String KOUQIANG = "https://wap.koudaitong.com/v2/showcase/goods?alias=2fvc0gkduuj5h&reft=1468403487771&spm=f43318615"
+	/* ROOT_URl+ "/Go/?url=/html/add_server/kouqiang/List.html " */;
 	/**
 	 * 上午11:43:55 TODO康复医疗
 	 */
-	public static final String KANGFULILIAO = ROOT_URl
-			+ "/html/add_server/kangfuliliao/List.html";
+	public static final String KANGFULILIAO = "https://wap.koudaitong.com/v2/showcase/goods?alias=2xk5zb5hsns5x&reft=1468994572716&spm=f43318615";
+	// ROOT_URl+ "/Go/?url=/Html/add_server/newkangfuliliao/List.html";
 	/**
 	 * 上午11:43:55 TODOAHA
 	 */
-	public static final String AHA = ROOT_URl
-			+ "/Go/?url=/html/add_server/aha/homePage.html";
+	public static final String AHA = "https://wap.koudaitong.com/v2/showcase/goods?alias=2octwjhuwgsyd&reft=1468403467016&spm=f43318615"
+	/* ROOT_URl+ "/Go/?url=/html/add_server/aha/homePage.html" */;
 	/**
 	 * 上午11:43:55 TODO胶囊胃镜
+	 * 
 	 */
-	public static final String WEIJING = ROOT_URl
-			+ "/Go/?url=/html/add_server/weijing/List.html";
+	public static final String WEIJING = "https://wap.koudaitong.com/v2/showcase/tag?alias=by2cl198&reft=1468403432890&spm=f43318615";
+	// ROOT_URl + "/Go/?url=/html/add_server/weijing/List.html";
 
 	public static final String SERVICE_URl = ROOT_URl + "/APIAccount/";
 	/** 登录地址 */

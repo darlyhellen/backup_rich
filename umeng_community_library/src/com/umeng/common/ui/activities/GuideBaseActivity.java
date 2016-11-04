@@ -24,9 +24,9 @@
 
 package com.umeng.common.ui.activities;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
@@ -37,7 +37,7 @@ import com.umeng.comm.core.utils.ResFinder;
 /**
  * 用户首次注册成功并修改用户信息后，将进行话题跟活跃用户的引导
  */
-public abstract class GuideBaseActivity extends FragmentActivity {
+public abstract class GuideBaseActivity extends SwipeBackActivity {
     protected FragmentManager mFragmentManager = null;
     protected int mContainer = 0;
     /**

@@ -1,12 +1,14 @@
 package com.ytdinfo.keephealth.ui.clinic;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R.bool;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,8 +16,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,8 +31,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.GeolocationPermissions.Callback;
@@ -48,12 +53,18 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgentJSInterface;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
+import com.umeng.comm.core.sdkmanager.LocationSDKManager;
 import com.umeng.socialize.UMShareAPI;
+import com.youzan.sdk.YouzanSDK;
+import com.youzan.sdk.YouzanUser;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
+import com.ytdinfo.keephealth.app.MyApp;
 import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.BaseActivity;
+import com.ytdinfo.keephealth.ui.uzanstore.WebActivity;
 import com.ytdinfo.keephealth.ui.view.CommonActivityTopView;
 import com.ytdinfo.keephealth.ui.view.MyPopWindow;
 import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
@@ -61,12 +72,16 @@ import com.ytdinfo.keephealth.ui.view.MyWebView;
 import com.ytdinfo.keephealth.utils.ImageTools;
 import com.ytdinfo.keephealth.utils.JsonUtil;
 import com.ytdinfo.keephealth.utils.LogUtil;
+import com.ytdinfo.keephealth.utils.NetworkReachabilityUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 import com.ytdinfo.keephealth.utils.ToastUtil;
 import com.ytdinfo.keephealth.wxapi.CustomShareBoard;
 import com.ytdinfo.keephealth.wxapi.WXCallBack;
 
-@SuppressLint("JavascriptInterface")
+/**
+ * @author zhangyh2 ClinicWebView 上午9:58:30 TODO 门诊页面
+ */
+@SuppressLint({ "JavascriptInterface", "NewApi" })
 public class ClinicWebView extends BaseActivity implements WXCallBack {
 	private final String TAG = "WebViewActivity";
 	// private CommonActivityTopView commonActivityTopView;
@@ -86,7 +101,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 	private boolean isPageLoaded = false;
 	private boolean isback = false;
 
-	private MyProgressDialog myProgressDialog2;
+	private MyProgressDialog syzeloading, myProgressDialog2;
 
 	public CustomShareBoard shareBoard;
 
@@ -94,7 +109,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 
 	private MyPopWindow mypop;
 	private PopupWindow pop;
-	private MyProgressDialog myProgressDialog;
+	private MyProgressDialog myProgressDialog, synuser;
 	private String image_path;
 	private Bitmap feedback;// 需要上传的Bitmap
 
@@ -124,7 +139,13 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 		if (loadUrl != null && !loadUrl.contains(Constants.NEWSLISTS)
 				&& !loadUrl.contains(Constants.NEWSPAGE)
 				&& loadUrl.contains(Constants.ROOT_WEB)) {
-			SYZUser(loadUrl);
+			if (!NetworkReachabilityUtil
+					.isNetworkConnected(MyApp.getInstance())) {
+				ToastUtil.showMessage("网络未连接...");
+				finish();
+			} else {
+				SYZUser(loadUrl);
+			}
 		} else {
 			LogUtil.i(TAG, SharedPrefsUtil.getValue(Constants.TOKEN, null));
 			HashMap<String, String> hashmap = new HashMap<String, String>();
@@ -138,7 +159,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 
 	/**
 	 * 上午11:07:12
-	 * 
+	 *
 	 * @author zhangyh2 TODO
 	 */
 	private void initPOP() {
@@ -149,11 +170,16 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 
 	/**
 	 * 下午3:25:00
-	 * 
+	 *
 	 * @author zhangyh2 TODO 同步用户有
 	 */
+	private boolean islogin = false;
+
 	private void SYZUser(final String url) {
 		// TODO Auto-generated method stub
+		syzeloading = new MyProgressDialog(this);
+		syzeloading.setMessage("加载中...");
+		syzeloading.show();
 		LogUtils.i(TAG + "开始用户微官网数据同步" + url);
 		String jsonUserModel = SharedPrefsUtil
 				.getValue(Constants.USERMODEL, "");
@@ -167,7 +193,8 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 			return;
 		}
 		try {
-			jsonParam.put("UserName", ""/* userModel.getUserName() */);
+			// 测试数据
+			jsonParam.put("UserName", userModel.getUserName());
 			jsonParam.put("Telphone", userModel.getMobilephone());
 			jsonParam.put("pID", userModel.getPid());
 			jsonParam.put("HeadPicture", userModel.getHeadPicture());
@@ -179,52 +206,71 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				new RequestCallBack<String>() {
 					@Override
 					public void onSuccess(ResponseInfo<String> arg0) {
-						String cookieString = "";
-						Header[] headers = arg0.getHeaders("Set-Cookie");
-						for (int i = 0; i < headers.length; i++) {
-							cookieString = headers[i].getValue() + ";";
-						}
-						cookieString = cookieString + "domain:test.bmyi.cn";
-						CookieSyncManager
-								.createInstance(getApplicationContext());
-						CookieManager cookieManager = CookieManager
-								.getInstance();
-						cookieManager.setAcceptCookie(true);
-						cookieManager.removeSessionCookie();// 移除
-						cookieManager.removeAllCookie();
-						cookieManager.setCookie(url, cookieString);
-						LogUtils.i(cookieManager.getCookie(url));
-						CookieSyncManager.getInstance().sync();
-
-						LogUtils.i(arg0.result.toString());
 						try {
+							syzeloading.dismiss();
 							JSONObject object = new JSONObject(arg0.result
 									.toString());
 							String stat = object.getString("Status");
 							if ("Success".equals(stat)) {
-								isUserAsy = true;
-								webview.loadUrl(url);
+								String cookieString = "";
+								Header[] headers = arg0
+										.getHeaders("Set-Cookie");
+								for (int i = 0; i < headers.length; i++) {
+									cookieString = headers[i].getValue() + ";";
+								}
+								cookieString = cookieString
+										+ "domain:test.bmyi.cn";
+
+								if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) { // 2.3及以下
+									CookieSyncManager
+											.createInstance(getApplicationContext());
+								}
+								CookieManager cookieManager = CookieManager
+										.getInstance();
+								cookieManager.setAcceptCookie(true);
+								cookieManager.removeAllCookie();
+								cookieManager.removeSessionCookie();// 移除
+								cookieManager.acceptCookie();
+								String cookies = cookieString.replace(" ", "");
+								// 三星手机不识别cookie字符串。故而进行调整变更，修改字符串中的空格。
+								LogUtils.i("旧cookie"
+										+ cookieManager.getCookie(url));
+								cookieManager.setCookie(url, cookies);
+								LogUtils.i("新cookie"
+										+ cookieManager.getCookie(url));
+								if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+									CookieSyncManager.getInstance().sync();
+								}
+								String coo = cookieManager.getCookie(url);
+								if (TextUtils.isEmpty(coo)) {
+									ToastUtil.showMessage("网络请求失败，请重试!");
+									finish();
+								} else {
+									isUserAsy = true;
+									webview.loadUrl(url);
+								}
 							} else {
 								isUserAsy = false;
-								webview.loadUrl("file:///android_asset/uzan_error.html#"
-										+ url);
+								ToastUtil.showMessage("网络请求失败，请重试!");
+								finish();
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							isUserAsy = false;
 							e.printStackTrace();
-							webview.loadUrl("file:///android_asset/uzan_error.html#"
-									+ url);
+							ToastUtil.showMessage("网络请求失败，请重试!");
+							finish();
 						}
+
 					}
 
 					@Override
 					public void onFailure(HttpException arg0, String arg1) {
 						// TODO Auto-generated method stub
-						LogUtils.i(arg1);
+						syzeloading.dismiss();
 						isUserAsy = false;
-						webview.loadUrl("file:///android_asset/uzan_error.html#"
-								+ url);
+						ToastUtil.showMessage("网络请求失败，请重试!");
+						finish();
 					}
 				});
 	}
@@ -281,7 +327,8 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 		webSettings.setAllowFileAccess(true);
 		webSettings.setPluginState(PluginState.ON);
 		// 设置WebView属性，能够执行Javascript脚本
-		webSettings.setBuiltInZoomControls(true);
+		// 广播没有加载注册完成引起崩溃
+		// webSettings.setBuiltInZoomControls(true);
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSettings.setUseWideViewPort(true);// 关键点
@@ -304,7 +351,6 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 		webSettings.setGeolocationEnabled(true);
 
 		webSettings.setCacheMode(WebSettings.LOAD_NORMAL);
-		webSettings.setDefaultTextEncodingName("UTF-8");
 
 		// js调用安卓方法
 		webview.addJavascriptInterface(this, "RedirectListner");
@@ -326,20 +372,21 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				// TODO Auto-generated method stub
 				super.onReceivedTitle(view, title);
 				LogUtils.i("onReceivedTitle--->" + title);
-				mainTitle.tv_title.setText(title);
-
+				if (title != null && title.length() < 30) {
+					mainTitle.tv_title.setText(title);
+				}
 			}
 
 			@Override
 			public void onGeolocationPermissionsShowPrompt(String origin,
 					Callback callback) {
 				// TODO Auto-generated method stub
-				if (isGpsEnable()) {
-					callback.invoke(origin, true, false);
-				} else {
-					// 打开GPS
-					isOpenGps();
-				}
+				// if (isGpsEnable()) {
+				callback.invoke(origin, true, false);
+				// } else {
+				// // 打开GPS
+				// isOpenGps();
+				// }
 				super.onGeolocationPermissionsShowPrompt(origin, callback);
 			}
 
@@ -382,23 +429,16 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				/*
 				 * Toast.makeText(getApplicationContext(),
 				 * "WebViewClient.shouldOverrideUrlLoading",
-				 * Toast.LENGTH_SHORT);
+				 * Toast.LENGTH_SHORT); //
 				 */
-				LogUtil.i(TAG, "拦截url---shouldOverrideUrlLoading-->" + url);
 				if (url.startsWith("tel:")) {
 					Intent intent = new Intent(Intent.ACTION_DIAL, Uri
 							.parse(url));
 					startActivity(intent);
-				} else {
-					HashMap<String, String> hashmap = new HashMap<String, String>();
-					if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
-						hashmap.put("token",
-								SharedPrefsUtil.getValue(Constants.TOKEN, null));
-					}
-					webview.loadUrl(url, hashmap);
+					view.reload();
+					return true;
 				}
-
-				return true;
+				return false;
 			}
 
 			@Override
@@ -408,9 +448,9 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 			}
 
 			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			public void onPageStarted(WebView view, final String url,
+					Bitmap favicon) {
 				CookieManager cookieManager = CookieManager.getInstance();
-				LogUtils.i("onPageStarted" + cookieManager.getCookie(url));
 				cookieManager.acceptCookie();
 				if (url.contains("ryclinic://yuyuechenggong")) {
 					// 预约成功跳转首页
@@ -440,8 +480,51 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 					 * i11.setClass(ClinicWebView.this, LoginActivity.class);
 					 * startActivity(i11);
 					 */
-					SYZUser(url);
+					if (!islogin) {
+						islogin = true;
+						SYZUser(url);
+					} else {
+						ToastUtil.showMessage("网络请求失败，请重试!");
+						finish();
+					}
+
 				}
+				if (url.contains("wap.koudaitong.com")) {
+					synuser = new MyProgressDialog(ClinicWebView.this);
+					synuser.setMessage("加载中...");
+					synuser.show();
+					String jsonUserModel = SharedPrefsUtil.getValue(
+							Constants.USERMODEL, "");
+					UserModel userModel = new Gson().fromJson(jsonUserModel,
+							UserModel.class);
+					YouzanUser user = new YouzanUser();
+					user.setUserId(userModel.getPid() + "");
+					int sex = 0;
+					if ("Man".endsWith(userModel.getUserSex())) {
+						sex = 1;
+					}
+					user.setGender(sex);
+					user.setNickName(userModel.getAddition1());
+					user.setTelephone(userModel.getMobilephone());
+					user.setUserName(userModel.getUserName());
+					YouzanSDK.asyncRegisterUser(user,
+							new com.youzan.sdk.Callback() {
+								@Override
+								public void onCallback() {
+									synuser.dismiss();
+									Intent i = new Intent();
+									i.setClass(ClinicWebView.this,
+											WebActivity.class);
+									i.putExtra("loadUrl", url);
+									startActivity(i);
+									webview.stopLoading();
+									return;
+								}
+							});
+					webview.stopLoading();
+					return;
+				}
+
 				super.onPageStarted(view, url, favicon);
 			}
 
@@ -450,6 +533,8 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				super.onPageFinished(view, url);
 				LogUtil.i(TAG, "页面加载完后==onPageFinished==" + url + "---");
 				myProgressDialog2.dismiss();
+				// 为V3.1提供一个单独接口兼容低版本页面，功能，展示有赞商城入口。
+				webview.loadUrl("javascript:ShowYZMallPort()");
 				if (view.getTitle() != null && view.getTitle().length() < 30) {
 					mainTitle.tv_title.setText(view.getTitle());
 				}
@@ -459,7 +544,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 
 	/**
 	 * 上午10:36:43
-	 * 
+	 *
 	 * @author zhangyh2 TODO 判断GPS是否打开
 	 */
 	private boolean isGpsEnable() {
@@ -708,6 +793,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 			}
 		}
 
+		LogUtils.i("调用图片上传" + pop);
 		if (pop != null) {
 			image_path = mypop.INonActivityResult(requestCode, data, 0);
 			if (image_path == null) {
@@ -738,7 +824,9 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				// 上传图片
 				requestImages();
 			}
-		};
+		}
+
+		;
 	};
 
 	private void requestImages() {
@@ -805,4 +893,165 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 		}
 
 	}
+
+	/**
+	 * 下午4:16:35
+	 *
+	 * @author zhangyh2 TODO 测试方案，后期无用
+	 */
+	@JavascriptInterface
+	public void findLocationByGD() {
+		// androidLoacal();
+		localForautoNav();
+	}
+
+	// ------高德定位前期使用版本过低，没有定位失败回调方案。无法正常使用故而替换为手机自身定位方案。
+
+	private void localForautoNav() {
+		new Thread(new Runnable() {
+			boolean tiel = false;
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				LogUtils.i("吊起定位方法localForautoNav");
+
+				LocationSDKManager
+						.getInstance()
+						.getCurrentSDK()
+						.requestLocation(ClinicWebView.this,
+								new SimpleFetchListener<Location>() {
+									@Override
+									public void onComplete(final Location arg0) {
+										tiel = true;
+										LogUtils.i(arg0.getLatitude()
+												+ "高德地图定位"
+												+ arg0.getLongitude());
+										// ？如何 判断定位失败
+										if (arg0.getLatitude() != 0
+												&& arg0.getLongitude() != 0) {
+											setLocation(arg0);
+											LocationSDKManager.getInstance()
+													.getCurrentSDK().onPause();
+										} else {
+											// 没有拿到数据调取胡接口
+											setNoLocation();
+										}
+
+									}
+
+								});
+				try {
+					Thread.sleep(5000);
+					if (!tiel) {
+						setNoLocation();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}).start();
+
+	}
+
+	// ------依靠手机自身定位方案进行解决，但公司要求精准定位，故而进行舍弃。替换为高德定位。
+
+	private String locationProvider;
+	private LocationManager locationManager;
+
+	private void androidLoacal() {
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		// 获取所有可用的位置提供器
+		List<String> providers = locationManager.getProviders(true);
+		if (providers.contains(LocationManager.GPS_PROVIDER)) {
+			// 如果是GPS
+			locationProvider = LocationManager.GPS_PROVIDER;
+		} else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+			// 如果是Network
+			locationProvider = LocationManager.NETWORK_PROVIDER;
+		} else {
+			setNoLocation();
+			return;
+		}
+
+		// 获取Location
+
+		Location location = locationManager
+				.getLastKnownLocation(locationProvider);
+		if (location != null) {
+			// 不为空,显示地理位置经纬度
+			LogUtils.i("获取" + location.getLatitude() + location.getLongitude());
+			setLocation(location);
+		} else {
+			setNoLocation();
+		}
+		// 监视地理位置变化
+		locationManager.requestLocationUpdates(locationProvider, 3000, 1,
+				locationListener);
+
+	}
+
+	/**
+	 * 下午2:56:12
+	 *
+	 * @author zhangyh2 TODO 获取经纬度，调取页面
+	 */
+	private void setLocation(final Location location) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				LogUtils.i("定位成功 setLocation");
+				webview.loadUrl("javascript:getLocationbyNative("
+						+ location.getLatitude() + ","
+						+ location.getLongitude() + ")");
+			}
+		});
+	}
+
+	private void setNoLocation() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				LogUtils.i("定位失败 setNoLocation");
+				webview.loadUrl("javascript:NativeNoGPS()");
+			}
+		});
+	}
+
+	/**
+	 * LocationListern监听器 参数：地理位置提供器、监听位置变化的时间间隔、位置变化的距离间隔、LocationListener监听器
+	 */
+
+	LocationListener locationListener = new LocationListener() {
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle arg2) {
+
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+
+		}
+
+		@Override
+		public void onLocationChanged(Location location) {
+			// 如果位置发生变化,重新显示
+			if (location != null) {
+				LogUtils.i("变化获取" + location.getLatitude()
+						+ location.getLongitude());
+				setLocation(location);
+			}
+			if (locationManager != null) {
+				locationManager.removeUpdates(locationListener);
+			}
+
+		}
+	};
+
 }

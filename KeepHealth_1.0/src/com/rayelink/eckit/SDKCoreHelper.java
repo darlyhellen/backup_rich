@@ -27,6 +27,7 @@ import com.ytdinfo.keephealth.utils.ToastUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECDevice.ECConnectState;
 import com.yuntongxun.ecsdk.ECDevice.ECDeviceState;
+import com.yuntongxun.ecsdk.ECDevice.InitListener;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECInitParams;
 import com.yuntongxun.ecsdk.ECMessage;
@@ -69,7 +70,6 @@ public class SDKCoreHelper implements OnInitSDKListener, OnConnectSDKListener,
 
 	@Override
 	public void onInitialized() {
-		LogUtil.d(TAG, "ECSDK is ready");
 		//云通讯SDK登录
 		ECAuthParameters parameters = new ECAuthParameters();
 		UserModel curUser=AppUserAccount.getCurUserAccount();
@@ -118,25 +118,28 @@ public class SDKCoreHelper implements OnInitSDKListener, OnConnectSDKListener,
 				"ECSDK couldn't start: " + exception.getLocalizedMessage());
 		
 		Log.e("SDKCoreHelper_onError", exception.getLocalizedMessage());
+		if(ECDevice.isInitialized())
+		{
 		 ECDevice.unInitial();
+		}
 	}
 
 	@Override
 	public void onConnect() {
 		// TODO Auto-generated method stub
 		Log.e("SDKCoreHelper_onConnect", "链接云云通讯");
+	
 	}
 
 	@Override
 	public void onDisconnect(ECError error) {
-		// TODO Auto-generated method stub
-		if(error.errorCode==175004)
-		{
-			ToastUtil.showMessage("您的账号在其他地方已经登录！");
-			SDKCoreHelper.getInstance().onLogout();
-		}
-		Log.e("SDKCoreHelper_onDisconnect", error.errorCode+"");
-		Log.e("SDKCoreHelper_onDisconnect", error.errorMsg);
+
+			if(error!=null&&error.errorCode==175004)
+			{
+				ToastUtil.showMessage("您的账号在其他地方已经登录！");
+				SDKCoreHelper.getInstance().onLogout();
+			}
+
 	}
 
 	@Override
@@ -144,6 +147,7 @@ public class SDKCoreHelper implements OnInitSDKListener, OnConnectSDKListener,
 		// TODO Auto-generated method stub
 		Log.e("SDKCoreHelper_onConnectState", state.name());
 		Log.e("SDKCoreHelper_onConnectState", error.errorMsg);
+		Log.e("SDKCoreHelper_onConnectState", error.errorCode+"");
 		mConnect=state;
 		if(state==ECConnectState.CONNECT_SUCCESS)
 		{
@@ -158,8 +162,6 @@ public class SDKCoreHelper implements OnInitSDKListener, OnConnectSDKListener,
 					}else {
 						ECContacts mContact=ContactSqlManager.getContact(message.getForm());
 						nameView.setText(mContact.getNickname());
-//						BitmapUtils bitmapUtils=new BitmapUtils(MyApp.getInstance());
-//						bitmapUtils.display(headView, mContact.getRemark());
 						ImageLoader.getInstance().displayImage(
 								mContact.getRemark(),headView,
 								ImageLoaderUtils.getOptions2());

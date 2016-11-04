@@ -22,6 +22,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
+import com.rayelink.eckit.SDKCoreHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.adapter.ReportAdapter;
@@ -40,6 +41,7 @@ import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.NetworkReachabilityUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 import com.ytdinfo.keephealth.utils.ToastUtil;
+import com.yuntongxun.ecsdk.ECDevice;
 
 public class ChooseReportActivity extends BaseActivity {
 	private static final String TAG = ChooseReportActivity.class.getName();
@@ -111,25 +113,32 @@ public class ChooseReportActivity extends BaseActivity {
 			// 添加体检报告照片
 			@Override
 			public void onClick(View v) {
-				MobclickAgent.onEvent(ChooseReportActivity.this,
-						Constants.UMENG_EVENT_8);
 
-				if (null == SharedPrefsUtil.getValue(Constants.SUBJECTID, null)) {
-					Intent intent = new Intent();
-					intent.setClass(ChooseReportActivity.this,
-							OnlineQuesActivityForV3.class);
-					startActivity(intent);
-					// new Intent(ChooseReportActivity.this,
-					// AddPicturesActivity.class)
+				if (SDKCoreHelper.getInstance().mConnect == ECDevice.ECConnectState.CONNECT_SUCCESS) {
+					MobclickAgent.onEvent(ChooseReportActivity.this,
+							Constants.UMENG_EVENT_8);
+
+					if (null == SharedPrefsUtil.getValue(Constants.SUBJECTID,
+							null)) {
+						Intent intent = new Intent();
+						intent.setClass(ChooseReportActivity.this,
+								OnlineQuesActivityForV3.class);
+						startActivity(intent);
+						// new Intent(ChooseReportActivity.this,
+						// AddPicturesActivity.class)
+					} else {
+						ToastUtil.showMessage("您当前正在进行在线咨询，结束后才能进行报告解读哦");
+						SharedPrefsUtil
+								.putValue(Constants.CHECKEDID_RADIOBT, 1);
+						Intent intent = new Intent(ChooseReportActivity.this,
+								MainActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.putExtra("news", "news");
+						startActivity(intent);
+						finish();
+					}
 				} else {
-					ToastUtil.showMessage("您当前正在进行在线咨询，结束后才能进行报告解读哦");
-					SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 1);
-					Intent intent = new Intent(ChooseReportActivity.this,
-							MainActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.putExtra("news", "news");
-					startActivity(intent);
-					finish();
+					ToastUtil.showMessage("用户网络异常，通讯服务器连接不成功！", 1000);
 				}
 
 			}

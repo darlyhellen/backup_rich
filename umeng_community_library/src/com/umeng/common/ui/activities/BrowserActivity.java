@@ -24,6 +24,7 @@
 
 package com.umeng.common.ui.activities;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ import android.widget.TextView;
 
 import com.umeng.comm.core.utils.ResFinder;
 
-@SuppressLint("NewApi") public class BrowserActivity extends Activity {
+@SuppressLint("NewApi") public class BrowserActivity extends SwipeBackActivity {
     String mUrl;
     public static final String URL = "url";
     ProgressBar mProgressBar;

@@ -9,8 +9,6 @@ package com.ytdinfo.keephealth;
 
 public final class Manifest {
     public static final class permission {
-        /**  Required 自定义用来收发消息的相关权限 
-         */
         public static final String JPUSH_MESSAGE="com.ytdinfo.keephealth.permission.JPUSH_MESSAGE";
     }
 }

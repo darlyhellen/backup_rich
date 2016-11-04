@@ -75,7 +75,7 @@
         android:layout_height="45dp"
         android:background="@drawable/btn_android_back_sel"
         android:text="取消"
-        android:textColor="@color/w_white"
+        android:textColor="#00abb0"
         android:textSize="@dimen/textview_large" />
         
     </LinearLayout>

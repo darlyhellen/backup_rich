@@ -2,6 +2,7 @@ package com.ytdinfo.keephealth.wxapi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
+import com.umeng.comm.core.beans.ShareContent;
+import com.umeng.comm.core.share.Shareable;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -76,6 +79,24 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.siteDesc = siteDesc;
 	}
 
+	
+	public void setShareContent(ShareContent mContent)
+	{
+		
+		this.titleName=mContent.mText;
+		if(mContent.mImageItem!=null){
+			this.thumbUrl=mContent.mImageItem.thumbnail;
+		}
+	    this.url=mContent.mTargetUrl;
+		this.siteDesc=mContent.mText;
+		 if(this.titleName==null||"".equalsIgnoreCase(this.titleName))
+			{
+				this.titleName="      ";
+				this.siteDesc="     \n";
+			}
+
+	}
+	
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -145,5 +166,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			ToastUtil.showMessage(" 分享取消了");
 		}
 	};
+
+ 
 
 }

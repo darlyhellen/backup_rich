@@ -94,10 +94,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    	Intent intent=new Intent();
-    					intent.setClassName("com.ytdinfo.keephealth", "com.ytdinfo.keephealth.ui.login.LoginActivity");
-    					startActivity(intent);
-                     /*   CommunitySDKImpl.getInstance().login(getActivity(), new LoginListener() {
+                      CommunitySDKImpl.getInstance().login(getActivity(), new LoginListener() {
                             @Override
                             public void onStart() {
                                 if (getActivity()!=null&&!getActivity().isFinishing()){
@@ -111,8 +108,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                                     mProcessDialog.dismiss();
                                 }
                             }
-                        });*/
-//                });
+                        }); 
                     }
                 }
         );
@@ -227,6 +223,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
      */
     private void gotoPostFeedActivity() {
         Intent postIntent = new Intent(getActivity(), PostFeedActivity.class);
+        postIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(postIntent);
     }
 
@@ -242,6 +239,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                 if(CommonUtils.visitNum == 0){
                     if (CommonUtils.isLogin(getActivity())){
                         Intent intent = new Intent(getActivity(), SearchActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         getActivity().startActivity(intent);
                     }
                     else {
@@ -260,6 +258,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                                 }
                                 if (stCode == 0) {
                                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     getActivity().startActivity(intent);
                                 }
                             }
@@ -267,6 +266,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                     }
                 }else {
                     Intent intent = new Intent(getActivity(), SearchActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getActivity().startActivity(intent);
                 }
             }

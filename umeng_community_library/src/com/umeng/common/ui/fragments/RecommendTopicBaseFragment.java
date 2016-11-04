@@ -76,7 +76,7 @@ public abstract class RecommendTopicBaseFragment extends BaseFragment<List<Topic
         TextView textView = (TextView) rootView.findViewById(ResFinder
                 .getId("umeng_comm_setting_title"));
         textView.setText(ResFinder.getString("umeng_comm_recommend_topic"));
-        textView.setTextColor(Color.BLACK);
+        textView.setTextColor(Color.WHITE);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         rootView.findViewById(ResFinder.getId("umeng_comm_title_bar_root"))
                  ;

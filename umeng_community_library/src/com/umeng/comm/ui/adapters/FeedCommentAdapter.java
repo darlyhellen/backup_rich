@@ -24,6 +24,7 @@
 
 package com.umeng.comm.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -58,7 +59,7 @@ import java.util.List;
 /**
  * Feed评论Adapter
  */
-public class FeedCommentAdapter extends CommonAdapter<Comment, FeedCommentViewHolder> {
+@SuppressLint("NewApi") public class FeedCommentAdapter extends CommonAdapter<Comment, FeedCommentViewHolder> {
     private static Object mLock = new Object();
     private String mColon;
     private String mReplyText;
@@ -88,6 +89,7 @@ public class FeedCommentAdapter extends CommonAdapter<Comment, FeedCommentViewHo
             public void onClick(CommUser user) {
                 Intent intent = new Intent(mContext,
                         UserInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, user);
                 mContext.startActivity(intent);
             }
@@ -152,6 +154,7 @@ public class FeedCommentAdapter extends CommonAdapter<Comment, FeedCommentViewHo
             @Override
             protected void doAfterLogin(View v) {
                 Intent intent = new Intent(mContext, UserInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, user);
                 mContext.startActivity(intent);
             }
@@ -176,7 +179,7 @@ public class FeedCommentAdapter extends CommonAdapter<Comment, FeedCommentViewHo
                             clickAnima(v);
                         }
 
-                        @Override
+                        @SuppressLint("NewApi") @Override
                         public void onComplete(SimpleResponse response) {
                             mIsInProgress = false;
                             if (response != null) {

@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.fragments;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.widget.TextView;
 
 import com.umeng.comm.core.utils.ResFinder;
@@ -50,6 +52,7 @@ public class NearbyFeedFragment extends FriendsFragment {
         TextView titleTextView = (TextView) mRootView.findViewById(ResFinder
                 .getId("umeng_comm_title_tv"));
         titleTextView.setText(ResFinder.getString("umeng_comm_recommend_nearby"));
+        titleTextView.setTextColor(Color.WHITE);
     }
 
     public static NearbyFeedFragment newNearbyFeedRecommend() {

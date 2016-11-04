@@ -67,7 +67,7 @@ import java.util.Date;
 /**
  *
  */
-public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
+@SuppressLint("NewApi") public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
 
     private CommunitySDK mCommunitySDK;
     public TextView mFavoritestButton;
@@ -242,7 +242,7 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
     @Override
     protected void setBaseFeeditemInfo() {
         super.setBaseFeeditemInfo();
-//        findViewById(ResFinder.getId("feed_type_img_btn")).setVisibility(View.INVISIBLE);
+        findViewById(ResFinder.getId("feed_type_img_btn")).setVisibility(View.INVISIBLE);
         if (isFromFeedDetailePage) {
             mFeedTextTv.setOnClickListener(null);
             if (mFeedItem.media_type == 1) {
@@ -252,6 +252,7 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
                     public void onClick(Topic topic) {
                         Intent intent = new Intent(mContext,
                                 TopicDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_TOPIC, topic);
                         mContext.startActivity(intent);
                     }
@@ -260,6 +261,7 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
                     public void onClick(CommUser user) {
                         Intent intent = new Intent(mContext,
                                 UserInfoActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(Constants.TAG_USER, user);
                         mContext.startActivity(intent);
                     }

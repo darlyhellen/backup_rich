@@ -68,7 +68,7 @@ public class ClinicFragment extends Fragment {
 		mainTitle.ibt_back.setVisibility(View.GONE);
 		bt_update = (Button) rootView.findViewById(R.id.id_bt_update);
 		webview = (MyWebView) rootView.findViewById(R.id.id_webview);
-		mainTitle.tv_title.setText("微官网");
+		mainTitle.tv_title.setText("帮忙医门诊");
 		loadUrl = Constants.HOMEINDEX;/* intent.getStringExtra("loadUrl"); */
 		loadWebView();
 		webViewListener();
@@ -151,6 +151,7 @@ public class ClinicFragment extends Fragment {
 
 				// super.onReceivedError(view, errorCode, description,
 				// failingUrl);
+
 			}
 
 			@Override
@@ -162,16 +163,19 @@ public class ClinicFragment extends Fragment {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				LogUtil.i(TAG, "拦截url---onPageStarted-->" + url);
-				if (!url.equals(Constants.HOMEINDEX)) {
+				if (!url.equals(Constants.HOMEINDEX) && !url.contains("#")) {
 					// 用户点击任何连接，都跳转到另一个Webview中
-					Intent intent = new Intent(getActivity(),
-							ClinicWebView.class);
-					intent.putExtra("loadUrl", url);
-					startActivityForResult(intent, 1001);
 					webview.stopLoading();
 					if (url.contains(Constants.ROOT_WEB + "/html")) {
 						webview.loadUrl(Constants.HOMEINDEX);
 					}
+					if (!url.contains("/login")) {
+						Intent intent = new Intent(getActivity(),
+								ClinicWebView.class);
+						intent.putExtra("loadUrl", url);
+						startActivityForResult(intent, 1001);
+					}
+					
 				}
 				super.onPageStarted(view, url, favicon);
 			}

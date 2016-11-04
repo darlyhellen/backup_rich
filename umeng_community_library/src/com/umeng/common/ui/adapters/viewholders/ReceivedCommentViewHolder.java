@@ -386,6 +386,7 @@ public class ReceivedCommentViewHolder extends ViewHolder {
     private void startUserInfoActivity(CommUser user) {
         if (mUserInfoClass != null) {
             Intent intent = new Intent(mContext, mUserInfoClass);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra(Constants.TAG_USER, user);
             mContext.startActivity(intent);
         }
@@ -394,6 +395,7 @@ public class ReceivedCommentViewHolder extends ViewHolder {
     private void startTopicDetailActivity(Topic topic) {
         if (mTopicDetailClassName != null) {
             Intent intent = new Intent(mContext, mTopicDetailClassName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra(Constants.TAG_TOPIC, topic);
             mContext.startActivity(intent);
         }
@@ -408,6 +410,7 @@ public class ReceivedCommentViewHolder extends ViewHolder {
         }
         if (mFeedDetailClassName != null) {
             Intent intent = new Intent(mContext, mFeedDetailClassName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             String commentId = mFeedItem.sourceFeed.extraData.getString(HttpProtocol.COMMENT_ID_KEY);
             mFeedItem.sourceFeed.extraData.clear();
             intent.putExtra(Constants.FEED, mFeedItem.sourceFeed);
@@ -423,6 +426,7 @@ public class ReceivedCommentViewHolder extends ViewHolder {
         }
         if (mFeedDetailClassName != null) {
             Intent intent = new Intent(mContext, mFeedDetailClassName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.setExtrasClassLoader(ImageItem.class.getClassLoader());
             intent.putExtra(Constants.FEED, feedItem);
             String commentId = feedItem.extraData.getString(HttpProtocol.COMMENT_ID_KEY);

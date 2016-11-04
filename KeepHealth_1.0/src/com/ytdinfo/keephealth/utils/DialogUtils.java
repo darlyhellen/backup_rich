@@ -23,7 +23,7 @@ public class DialogUtils {
 	
 	private   static DialogUtils instance;
 	
-	private Dialog dialog;
+	public Dialog dialog=null;
 	
 	public static   DialogUtils getInstance()
 	{

@@ -178,6 +178,7 @@ public class CommunityMainFragment extends BaseFragment<Void, NullPresenter>
 				if(!CommonUtils.isLogin(getActivity()))
 				{
 					Intent intent=new Intent();
+					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					intent.setClassName("com.ytdinfo.keephealth", "com.ytdinfo.keephealth.ui.login.LoginActivity");
 					startActivity(intent);
 				}else{
@@ -250,6 +251,7 @@ public class CommunityMainFragment extends BaseFragment<Void, NullPresenter>
 			return;
 		}
 		Intent intent = new Intent(getActivity(), FindActivity.class);
+		   intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		if (user == null) {// 来自开发者外部调用的情况
 			intent.putExtra(Constants.TAG_USER,
 					CommConfig.getConfig().loginedUser);

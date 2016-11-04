@@ -3,6 +3,8 @@
 
     <!-- 标题背景色_浅绿 -->
     <color name="main_green">#ff66cd99</color>
+    <!-- 标题背景色_浅蓝 -->
+    <color name="main_blue_2">#5EC8FF99</color>
     <!-- 标题背景色_深绿 -->
     <color name="main_h_green">#ff32a06A</color>
     <!-- 标题背景色 -->
@@ -25,6 +27,7 @@
     <color name="w_l_white">#77FFFFFF</color>
     <!-- 字体纯白色 -->
     <color name="w_white">#FFffffff</color>
+    <color name="main_white">#F9F9F9</color>
     <!-- 字体绿色 -->
     <color name="w_green">#FF009a42</color>
     <!-- 字体浅绿色 -->
@@ -85,7 +88,6 @@
     <color name="ccp_experience_normal">#55BC75</color>
     <!-- experience mode launcher normal color -->
     <color name="ccp_experience_pressed">#408D58</color>
-
     <color name="checked_text_name">#00abb0</color>
     <!-- Intelligent Guidance colors start -->
     <color name="has_been_checked">#909090</color>

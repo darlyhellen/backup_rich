@@ -26,6 +26,7 @@ import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
 import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.MainActivity;
+import com.ytdinfo.keephealth.ui.personaldata.CommonModifyInfoActivity;
 import com.ytdinfo.keephealth.utils.DialogCustomInterface;
 import com.ytdinfo.keephealth.utils.DialogUtils;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
@@ -38,21 +39,33 @@ public class NickNameCheckImpl implements AppInterface {
 	public interface HomeJump {
 		public void goToHealthQuan();
 	}
+	
+ 
+	
 
 	// 0 用户未登录 1用户登录,昵称就是用户名 ，且确定用户名做为昵称 2用户没有昵称
 	@Override
 	public int appAddCheckNameIsUserName(Context mContext) {
 		if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null))// 登录
 		{
-			UserModel userModel = new Gson().fromJson(
+			UserModel userModel =  new Gson().fromJson(
 					SharedPrefsUtil.getValue(Constants.USERMODEL, ""),
 					UserModel.class);
-			if (userModel.getUserName() != null
-					&& userModel.getUserName().equals(
-							CommConfig.getConfig().loginedUser.name)// 用户昵称为登录名
-					&& !SharedPrefsUtil.getValue(
-							Constants.IS_USER_NAME_AS_NICK_NAME, false))
+			//用户昵称为空,弹出修改昵称对话框
+			if(userModel.getAddition1()==null||userModel.getAddition1()=="")
 				return 1;
+			//用户昵称不为空，用户昵称和用户名相同，并且用户名可作为昵称
+//			else if (userModel.getAddition1().equals(userModel.getUserName())
+//					&&!SharedPrefsUtil.getValue(Constants.IS_USER_NAME_AS_NICK_NAME, false))
+//				return 1;
+			
+			else if(mContext instanceof MainActivity)
+			{
+				if(!((MainActivity)mContext).isCommunityCurrent())
+					return 3;
+				else 
+					return 2;
+			}
 			else
 				return 2;
 		} else
@@ -61,76 +74,78 @@ public class NickNameCheckImpl implements AppInterface {
 
 	@Override
 	public void appAddShowModifyNickNameDialog(final Context mContext) {
-		// TODO Auto-generated method stub
-		UserModel userModel = new Gson().fromJson(
-				SharedPrefsUtil.getValue(Constants.USERMODEL, ""),
-				UserModel.class);
-		String nameString=userModel.getUserName();
-		int len = nameString.length();
-		String message = "欢迎访问帮忙医社区，您正在使用的用户名 “"
-				+ nameString
-				+ "” 有可能是您的真实姓名，为保护您的隐私，您可以在下面设置昵称用于社区交流。";
-		SpannableString spanString = new SpannableString(message);
-		spanString.setSpan(new ForegroundColorSpan(mContext.getResources()
-				.getColor(R.color.checked_text_name)), 21, 21 + len,
-				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		DialogUtils.getInstance().setDialgoInterFace(
-				new DialogCustomInterface() {
-					@Override
-					public void sure(Dialog view) {
-						// TODO Auto-generated method stub
-						final String name = ((EditText) view.getWindow()
-								.findViewById(R.id.extra)).getText().toString();
-						if (name == null || "".equals(name)
-								|| name.length() <= 4 || name.length() > 15) {
-							ToastUtil.showMessage("名字长度不符合规则，长度大于3，小于15个。",
-									1000);
+	   if(DialogUtils.getInstance().dialog==null||!DialogUtils.getInstance().dialog.isShowing()){
+			UserModel userModel =  new Gson().fromJson(
+					SharedPrefsUtil.getValue(Constants.USERMODEL, ""),
+					UserModel.class);
+			String nameString=userModel.getUserName();
+			int len = nameString.length();
+			String message = "欢迎访问帮忙医社区，您正在使用的用户名 “"
+					+ nameString
+					+ "” 有可能是您的真实姓名，为保护您的隐私，您可以在下面设置昵称用于社区交流。";
+			SpannableString spanString = new SpannableString(message);
+			spanString.setSpan(new ForegroundColorSpan(mContext.getResources()
+					.getColor(R.color.checked_text_name)), 21, 21 + len,
+					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			DialogUtils.getInstance().setDialgoInterFace(
+					new DialogCustomInterface() {
+						@Override
+						public void sure(final Dialog view) {
+							// TODO Auto-generated method stub
+							final String name = ((EditText) view.getWindow()
+									.findViewById(R.id.extra)).getText().toString();
+							if (name == null || !CommonModifyInfoActivity.isNiChengLen(name)) {
+								ToastUtil.showMessage("昵称支持4-14位字母、汉字和数字");
+								return;
+							}
+							final CommUser user = CommConfig.getConfig().loginedUser;
+							user.name = name;
+							CommunitySDKImpl.getInstance().updateUserProfile(user,
+									new CommListener() {
+										@Override
+										public void onStart() {
+											// TODO
+											// Auto-generated
+											// method stub
+										}
+	
+										@Override
+										public void onComplete(Response arg0) {
+											// TODO
+											if (Response.NO_ERROR == arg0.errCode){
+												user.save();
+												requestModifyInfo(mContext, name,view);
+												}
+											else {
+												ToastUtil.showMessage("昵称已存在,请修改再提交");
+											}
+	
+										}
+									});
+						}
+	
+						@Override
+						public void cancel(Dialog view) {
+							// TODO Auto-generated method stub
+							view.dismiss();
+							((MainActivity) mContext)
+									.radioGroupCheckId(((MainActivity) mContext).oldCheckId);
 							return;
 						}
-						CommUser user = CommConfig.getConfig().loginedUser;
-						user.name = name;
-						CommunitySDKImpl.getInstance().updateUserProfile(user,
-								new CommListener() {
-									@Override
-									public void onStart() {
-										// TODO
-										// Auto-generated
-										// method stub
-									}
-
-									@Override
-									public void onComplete(Response arg0) {
-										// TODO
-										if (Response.NO_ERROR == arg0.errCode)
-											requestModifyInfo(mContext, name);
-
-									}
-								});
-						view.dismiss();
-					}
-
-					@Override
-					public void cancel(Dialog view) {
-						// TODO Auto-generated method stub
-						view.dismiss();
-						((MainActivity) mContext)
-								.radioGroupCheckId(((MainActivity) mContext).oldCheckId);
-						return;
-					}
-				});
-		DialogUtils.getInstance().showDialog(mContext,
-				R.layout.dialog_is_user_current, spanString);
-		DialogUtils.getInstance().setSureText("进入社区");
-		DialogUtils.getInstance().setCancelText("返回");
-		DialogUtils.getInstance().setExpertText(
-				nameString);
+					});
+			DialogUtils.getInstance().showDialog(mContext,
+					R.layout.dialog_is_user_current, spanString);
+			DialogUtils.getInstance().setSureText("进入社区");
+			DialogUtils.getInstance().setCancelText("返回");
+			DialogUtils.getInstance().setExpertText(nameString);
+	   }
 	}
 
 	/**
 	 * 将修改后的信息上传服务器
 	 */
 	public static void requestModifyInfo(final Context mContext,
-			final String nickName) {
+			final String nickName,final Dialog view) {
 
 		try {
 			JSONObject jsonParam = new JSONObject();
@@ -160,14 +175,6 @@ public class NickNameCheckImpl implements AppInterface {
 
 						@Override
 						public void onSuccess(ResponseInfo<String> responseInfo) {
-							// 存本地
-							SharedPrefsUtil.putValue(
-									Constants.IS_USER_NAME_AS_NICK_NAME, false);
-
-							if (instanceHomeJump != null) {
-								instanceHomeJump.goToHealthQuan();
-								instanceHomeJump = null;
-							}
 							UserModel userModel = new Gson().fromJson(
 									SharedPrefsUtil.getValue(
 											Constants.USERMODEL, ""),
@@ -175,9 +182,6 @@ public class NickNameCheckImpl implements AppInterface {
 							userModel.setAddition1(nickName);
 							SharedPrefsUtil.putValue(Constants.USERMODEL,
 									userModel.toString());
-							// 进入社区
-							((MainActivity) mContext)
-									.radioGroupCheckId(R.id.tab_rb_4);
 							if (userModel.getUserName()
 									.equals(nickName)) {
 								SharedPrefsUtil.putValue(
@@ -186,8 +190,16 @@ public class NickNameCheckImpl implements AppInterface {
 							} else {
 								SharedPrefsUtil.putValue(
 										Constants.IS_USER_NAME_AS_NICK_NAME,
-										true);
+										false);
 							}
+							// 进入社区
+							((MainActivity) mContext)
+									.radioGroupCheckId(R.id.tab_rb_4);
+							if (instanceHomeJump != null) {
+								instanceHomeJump.goToHealthQuan();
+								instanceHomeJump = null;
+							}
+							view.dismiss();
 
 						}
 

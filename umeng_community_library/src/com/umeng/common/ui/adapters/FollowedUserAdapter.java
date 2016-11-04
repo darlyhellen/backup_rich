@@ -113,6 +113,7 @@ public class FollowedUserAdapter extends CommonAdapter<CommUser, FollowedUserVie
 
     protected void startUserInfoActivity(CommUser user){
         Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if(TextUtils.isEmpty(mTargetClassName)){
             mTargetClassName = mContext.getClass().getName();
         }

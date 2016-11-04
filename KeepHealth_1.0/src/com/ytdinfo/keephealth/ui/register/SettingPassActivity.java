@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,11 +23,19 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.rayelink.eckit.MainChatControllerListener;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.comm.core.CommunitySDK;
+import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.beans.CommUser.Gender;
+import com.umeng.comm.core.constants.ErrorCode;
+import com.umeng.comm.core.impl.CommunityFactory;
+import com.umeng.comm.core.login.LoginListener;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
 import com.ytdinfo.keephealth.app.MyApp;
+import com.ytdinfo.keephealth.model.TBNews;
 import com.ytdinfo.keephealth.model.UserGroupBean;
 import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.BaseActivity;
@@ -36,6 +45,7 @@ import com.ytdinfo.keephealth.ui.personaldata.PersonalDataActivity;
 import com.ytdinfo.keephealth.ui.view.CommonActivityTopView;
 import com.ytdinfo.keephealth.ui.view.CommonButton;
 import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
+import com.ytdinfo.keephealth.utils.DBUtil;
 import com.ytdinfo.keephealth.utils.DBUtilsHelper;
 import com.ytdinfo.keephealth.utils.HandlerUtils;
 import com.ytdinfo.keephealth.utils.LogUtil;
@@ -49,6 +59,7 @@ import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 import com.yuntongxun.kitsdk.ECDeviceKit;
 import com.yuntongxun.kitsdk.db.ConversationSqlManager;
 import com.yuntongxun.kitsdk.db.GroupSqlManager;
+import com.yuntongxun.kitsdk.ui.chatting.model.IMChattingHelper;
 
 public class SettingPassActivity extends BaseActivity implements
 		OnClickListener {
@@ -294,32 +305,71 @@ public class SettingPassActivity extends BaseActivity implements
 				SharedPrefsUtil.putValue(Constants.USERMODEL, usermodel);
 				String s = SharedPrefsUtil.getValue(Constants.TOKEN, null);
 				//连接云通讯
-			    MyApp.ConnectYunTongXun();
+			  //  MyApp.ConnectYunTongXun();
 			 //   requestGetUserGroup();
 				// 跳到首页
-				UserModel userModel = new Gson().fromJson(usermodel,
+				final UserModel userModel = new Gson().fromJson(usermodel,
 						UserModel.class);
 				dbUtil = DBUtilsHelper.getInstance().getDb();
 
-				Intent i;
-				if (null == userModel.getIDcard()
-						|| "".equals(userModel.getIDcard())) {
-					i = new Intent(this, PersonalDataActivity.class);
+				CommunitySDK sdk = CommunityFactory.getCommSDK(this);
+				sdk.initSDK(this.getApplicationContext());
+				CommUser suser = new CommUser();
+				if (userModel.getAddition1()==null||userModel.getAddition1()=="") {
+					suser.name = "UM_"+userModel.getMobilephone();
 				} else {
-					i = new Intent(this, MainActivity.class);
-					SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);  
+					suser.name = userModel.getAddition1();
 				}
-				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-				finish();
-			
+				suser.id = "UM_"+userModel.getMobilephone();
+				suser.customField = userModel.getUserType();
+				if ("Man".equalsIgnoreCase(userModel.getUserSex())) {
+					suser.gender = Gender.MALE;
+				} else if ("Woman".equalsIgnoreCase(userModel.getUserSex())) {
+					suser.gender = Gender.FEMALE;
+				}
+				suser.age = userModel.getAge();
+				suser.iconUrl = userModel.getHeadPicture();
+				sdk.loginToUmengServerBySelfAccount(SettingPassActivity.this, suser,
+						new LoginListener() {
+							@Override
+							public void onStart() {
+								// TODO Auto-generated method stub
+								Log.e("UMNEG_Commnity", "login start3!");
+								Log.e("onStart", "start");
+							}
+
+							@Override
+							public void onComplete(int arg0, CommUser arg1) {
+								Log.e("UMNEG_Commnity", "login result is" + arg0);
+								// TODO Auto-generated method stub
+								if (ErrorCode.NO_ERROR == arg0) {
+									// 初始化帮忙医小助手
+									InitBMY();
+									// 初始化会话信息
+									InitConservationClosed();
+									// 连接云通讯
+									MyApp.ConnectYunTongXun();
+									Intent i;
+									if (null == userModel.getIDcard()
+											|| "".equals(userModel.getIDcard())) {
+										i = new Intent(SettingPassActivity.this, PersonalDataActivity.class);
+									} else {
+										i = new Intent(SettingPassActivity.this, MainActivity.class);
+										SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);
+									}
+									i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+									startActivity(i);
+									finish();
+								}
+							}
+						});	 
+				
+				
 			} else {
+				ToastUtil.showMessage(message);
 				handler.sendEmptyMessage(0x341);
-				Intent intent = new Intent(this, LoginActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				finish();
 			}
+		 
 		} catch (JSONException e) {
 			e.printStackTrace();
 			handler.sendEmptyMessage(0x341);
@@ -327,92 +377,83 @@ public class SettingPassActivity extends BaseActivity implements
 	}
 	 
 
-	private void requestGetUserGroup() {
-		// TODO Auto-generated method stub
-		HttpClient.get(SettingPassActivity.this, Constants.GETUSERGROUPS_URL,
-				new RequestParams(), new RequestCallBack<String>() {
-					@Override
-					public void onSuccess(ResponseInfo<String> arg0) {
-						// TODO Auto-generated method stub
-						try {
-							JSONObject jsonObject = new JSONObject(arg0.result);
-							JSONObject data = jsonObject.getJSONObject("Data");
-							String statusCode = data.getString("statusCode");
-							if (statusCode.equals("000000")) {
-								List<UserGroupBean> list = new Gson().fromJson(
-										data.getString("groups"),
-										new TypeToken<List<UserGroupBean>>() {
-										}.getType());
-								for (int i = 0; i < list.size(); i++) {
-									UserGroupBean userGroupBean = list.get(i);
-									if(!GroupSqlManager.isExitGroup(userGroupBean.getGroupId()))
-									{
-										ECGroup group =new ECGroup();
-										group.setGroupId(userGroupBean.getGroupId());
-										group.setName(userGroupBean.getName());
-										group.setDateCreated(userGroupBean.getDateCreated());
-										group.setGroupType(Integer.parseInt(userGroupBean.getType()));
-										group.setCount(Integer.parseInt(userGroupBean.getCount()));
-										group.setPermission(Permission.PRIVATE);
-									 
-										GroupSqlManager.insertGroup(group, true, false);
-										  ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-									        //设置消息的属性：发出者，接受者，发送时间等
-									        msg.setForm(ECDeviceKit.getInstance().getUserId());
-									        msg.setMsgTime(System.currentTimeMillis());
-									        // 设置消息接收者
-									        msg.setTo(userGroupBean.getGroupId());
-									        msg.setSessionId(userGroupBean.getGroupId());
-									        // 设置消息发送类型（发送或者接收）
-									        msg.setDirection(ECMessage.Direction.RECEIVE);
-									        // 创建一个文本消息体，并添加到消息对象中
-									        ECTextMessageBody msgBody = new ECTextMessageBody("");
-									    	// 调用接口发送IM消息
-											msg.setMsgTime(System.currentTimeMillis());
-										  msg.setBody(msgBody);
-										  msg.setMsgStatus(MessageStatus.SUCCESS);
-										 // IMChattingHelper.sendECMessage(msg);
- 									  ConversationSqlManager.insertSessionRecord(msg); 
-										
-									}
-								}
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-
-					@Override
-					public void onFailure(HttpException arg0, String arg1) {
-						// TODO Auto-generated method stub
-
-					}
-				});
-	} 
- 
-
-	/**
-	 * @param userGroupBean
-	 *            下午4:51:44
-	 * @author zhangyh2 SettingPassActivity.java TODO 保存用户族群信息
-	 */
-	private void saveGroupBean(UserGroupBean userGroupBean) {
-		// TODO Auto-generated method stub
-
-		try {
-			dbUtil.createTableIfNotExist(UserGroupBean.class);
-			dbUtil.save(userGroupBean);
-			// List<DocInfoBean> docInfoBeans = db.findAll(DocInfoBean.class);
-			// DocInfoBean docInfoBean2 =
-			// db.findFirst(Selector.from(DocInfoBean.class).where("voipAccount","=","89077100000003"));
-			// DocInfoBean docInfoBean2 = db.findById(DocInfoBean.class,
-			// docInfoBean.getVoipAccount());
-			// System.out.println("doc..........."+docInfoBean2.toString());
-		} catch (DbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+private void InitBMY() {
+	// 判断是否有帮忙医的消息
+	DBUtil dbUtil = new DBUtil(MyApp.getInstance());
+	TBNews mObject = dbUtil.queryFirst();
+	if (mObject != null) {
+		ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
+		// 设置消息的属性：发出者，接受者，发送时间等
+		msg.setForm("10000");
+		msg.setMsgTime(System.currentTimeMillis());
+		// 设置消息接收者
+		msg.setTo("10000");
+		msg.setSessionId("10000");
+		// 设置消息发送类型（发送或者接收）
+		msg.setDirection(ECMessage.Direction.RECEIVE);
+		// 创建一个文本消息体，并添加到消息对象中
+		ECTextMessageBody msgBody = new ECTextMessageBody(
+				mObject.getTitle());
+		// 调用接口发送IM消息
+		msg.setMsgTime(System.currentTimeMillis());
+		msg.setBody(msgBody);
+		msg.setMsgStatus(MessageStatus.SUCCESS);
+		if (ECDeviceKit.getInstance().getUserId() != null) {
+			long salId = ConversationSqlManager
+					.querySessionIdForBySessionId("10000");
+			if (salId == 0)// 没有
+				ConversationSqlManager.insertSessionRecordV2(msg, 1);
 		}
 	}
+
+}
+
+Handler mHandler;
+
+private void InitConservationClosed() {
+	mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x01) {
+				IMChattingHelper.sendECMessage((ECMessage) msg.obj);
+			}
+		}
+	};
+
+	HttpClient.get(SettingPassActivity.this, Constants.LOGIN_CLOSE_SUBJECT,
+			new RequestParams(), new RequestCallBack<String>() {
+				@Override
+				public void onSuccess(ResponseInfo<String> arg0) {
+					Log.e("String", arg0.result);
+					try {
+						JSONObject jsonObject = new JSONObject(arg0.result);
+						JSONObject data = jsonObject.getJSONObject("Data");
+						if (data != null) {
+							if (data.getBoolean("HasValue")) {
+								String subjectId = data.getJSONObject(
+										"SubjectInfo").getString("Id");
+								String docVoip = data
+										.getString("VoipAccount");
+								MainChatControllerListener.getInstance()
+										.closeSubject(subjectId, docVoip,
+												mHandler);
+							}
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+				@Override
+				public void onFailure(HttpException arg0, String arg1) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+}
+
 
 	@Override
 	public void onResume() {

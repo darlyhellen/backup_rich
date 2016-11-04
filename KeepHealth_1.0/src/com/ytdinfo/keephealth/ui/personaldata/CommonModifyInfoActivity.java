@@ -163,7 +163,7 @@ public class CommonModifyInfoActivity extends BaseActivity {
 						ToastUtil.showMessage("昵称支持4-14位字母、汉字和数字");
 					} else {
 						// 上传到服务器
-						 CommUser user = CommConfig.getConfig().loginedUser;
+						 final CommUser user = CommConfig.getConfig().loginedUser;
 					     user.name=et.getText().toString();
 						CommunitySDKImpl.getInstance().updateUserProfile(user, new CommListener() {
 							
@@ -176,6 +176,7 @@ public class CommonModifyInfoActivity extends BaseActivity {
 							public void onComplete(Response arg0) {
 								// TODO Auto-generated method stub
 								if(arg0.errCode==Response.NO_ERROR){
+									user.save();
 									requestModifyInfo();
 								}else {
 									ToastUtil.showMessage("昵称已存在,请修改再提交");
@@ -215,7 +216,7 @@ public class CommonModifyInfoActivity extends BaseActivity {
 	 * @author zhangyh2 TODO 判断昵称长度是否符合规范(大于3个字节，小于15个字节)。
 	 * @return <code>true</code> 匹配，<code>false</code> 不匹配
 	 */
-	protected boolean isNiChengLen(String name) {
+	public static  boolean isNiChengLen(String name) {
 		// TODO Auto-generated method stub
 		Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5A-Za-z0-9]*");
 		Matcher matcher = pattern.matcher(name);

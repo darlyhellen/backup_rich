@@ -1,6 +1,10 @@
 
 package com.umeng.comm.ui.fragments;
 
+import android.R.color;
+import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +40,7 @@ public class FriendsFragment extends FeedListFragment<FeedListPresenter> {
         return new FriendFeedPresenter(this);
     }
 
-    @Override
+    @SuppressLint("NewApi") @Override
     protected void initWidgets() {
         super.initWidgets();
         mFeedsListView.setFooterDividersEnabled(false);
@@ -49,7 +53,7 @@ public class FriendsFragment extends FeedListFragment<FeedListPresenter> {
                 .getId("umeng_comm_title_tv"));
         titleTextView.setText(ResFinder.getString("umeng_comm_recommend_friends"));
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-
+        titleTextView.setTextColor(Color.WHITE);
         // 处理返回事件，显示发现页面
         mRootView.findViewById(ResFinder.getId("umeng_comm_title_back_btn")).setOnClickListener(
                 new OnClickListener() {

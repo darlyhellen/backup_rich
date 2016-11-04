@@ -46,6 +46,7 @@
  */
 package com.umeng.comm.ui.fragments;
 
+import android.graphics.Color;
 import android.widget.TextView;
 
 import com.umeng.comm.core.utils.ResFinder;
@@ -75,6 +76,7 @@ public class RealTimeFeedFragment extends FriendsFragment {
         TextView titleTextView = (TextView) mRootView.findViewById(ResFinder
                 .getId("umeng_comm_title_tv"));
         titleTextView.setText(ResFinder.getString("umeng_comm_realtime")); // 实时内容
+        titleTextView.setTextColor(Color.WHITE);
     }
 
     public static RealTimeFeedFragment newRealTimeFeedRecommend() {

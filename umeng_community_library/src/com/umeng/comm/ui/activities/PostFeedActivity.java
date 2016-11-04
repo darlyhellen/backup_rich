@@ -225,9 +225,9 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         Topic mTopic = extraBundle.getParcelable(Constants.TAG_TOPIC);
         if (mTopic != null) {
             mSelecteTopics.add(mTopic);
-            if (CommConfig.getConfig().isDisplayTopicOnPostFeedPage()) {// 检查是否在编辑框添加此话题
-                mEditText.insertTopics(mSelecteTopics);
-            }
+//            if (CommConfig.getConfig().isDisplayTopicOnPostFeedPage()) {// 检查是否在编辑框添加此话题
+//                mEditText.insertTopics(mSelecteTopics);
+//            }
 //            startFadeOutAnimForTopicTipView();
         }
 
@@ -623,6 +623,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
             public void onClick(Topic topic) {
                 Intent intent = new Intent(PostFeedActivity.this,
                         TopicDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_TOPIC, topic);
                 PostFeedActivity.this.startActivity(intent);
             }
@@ -631,6 +632,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
             public void onClick(CommUser user) {
                 Intent intent = new Intent(PostFeedActivity.this,
                         UserInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, user);
                 PostFeedActivity.this.startActivity(intent);
             }
@@ -671,7 +673,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         final int id = v.getId();
         if (ResFinder.getId("umeng_comm_post_ok_btn") == id) { // 点击发送按钮
         	if(mSelecteTopics==null||mSelecteTopics.size()==0){
-        		showPickTopicActivity();
+        		showPickTopicActivity2();
         	}else{
         		postFeed(prepareFeed());
         	}
@@ -938,6 +940,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
 
                 @Override
                 public void onComplete(Topic topic) {
+                
                     if (topic != null) {
                         if (isCharsOverflow(topic.name)) {
                             showCharsOverflowTips();
@@ -973,6 +976,58 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         mSelectTopicDlg.show();
     }
 
+    private SelectTopicDialog mSelectTopicDlg2;
+
+    private void showPickTopicActivity2(){
+//      Intent intent = new Intent(PostFeedActivity.this,TopicPickActivity.class);
+//      startActivityForResult(intent, Constants.PICK_TOPIC_REQ_CODE);
+
+      if (mSelectTopicDlg2 == null) {
+          mSelectTopicDlg2 = new SelectTopicDialog(PostFeedActivity.this, ResFinder.getStyle(
+                  "umeng_comm_dialog_fullscreen"));
+
+          mSelectTopicDlg2.setOwnerActivity(PostFeedActivity.this);
+          // 数据获取监听器
+          mSelectTopicDlg2.setDataListener(new SimpleFetchListener<Topic>() {
+
+              @Override
+              public void onComplete(Topic topic) {
+                  if (topic != null) {
+                      if (isCharsOverflow(topic.name)) {
+                          showCharsOverflowTips();
+                          return;
+                      }
+                      if (!mEditText.mTopicMap.containsValue(topic)) {
+                          removeChar('#');
+                          List<Topic> topics = new ArrayList<Topic>();
+                          topics.add(topic);
+                          //mEditText.insertTopics(topics);
+                          mSelecteTopics.add(topic);
+                      }
+                  }
+                  // 显示输入框
+                 // showKeyboard();
+              	  postFeed(prepareFeed());
+              }
+          });
+
+          // 删除话题时的回调
+          mEditText.setTopicListener(new TopicPickerFragment.ResultListener<Topic>() {
+
+              @Override
+              public void onRemove(Topic topic) {
+                  mSelecteTopics.remove(topic);
+              }
+
+              @Override
+              public void onAdd(Topic topic) {
+
+              }
+          });
+      }
+      mSelectTopicDlg2.show();
+  }
+    
     /**
      * 移除字符</br>
      * 

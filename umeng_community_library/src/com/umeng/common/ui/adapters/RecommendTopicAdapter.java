@@ -34,6 +34,7 @@ import android.widget.ToggleButton;
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.imageloader.ImgDisplayOption;
 import com.umeng.comm.core.listeners.Listeners;
+import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
@@ -90,7 +91,8 @@ public class RecommendTopicAdapter extends BackupAdapter<Topic, RecommendTopicVi
         if (TextUtils.isEmpty(topic.icon)||topic.icon.equals("null")){
             viewHolder.mImageView.setImageResource(mTopicIcon);
         }else {
-            viewHolder.mImageView.setImageUrl(topic.icon, ImgDisplayOption.getTopicIconOption());
+        	ImageLoaderManager.getInstance().getCurrentSDK().displayImage(topic.icon,viewHolder.mImageView,ImgDisplayOption.getTopicIconOption());
+//            viewHolder.mImageView.setImageUrl(topic.icon, ImgDisplayOption.getTopicIconOption());
         }
 
 //        viewHolder.mGenderImageView.setVisibility(View.GONE);

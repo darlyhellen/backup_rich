@@ -1,5 +1,6 @@
 package me.imid.swipebacklayout.lib.app;
 
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

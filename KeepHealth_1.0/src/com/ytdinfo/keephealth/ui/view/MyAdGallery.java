@@ -36,6 +36,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.MyApp;
+import com.ytdinfo.keephealth.utils.ImageLoaderUtils;
 import com.ytdinfo.keephealth.utils.LogUtil;
 
 /**
@@ -160,36 +161,38 @@ public class MyAdGallery extends Gallery implements OnItemClickListener,
 						"file://" + mListImagePath.get(i), imageview);
 			} else {
 				ImageLoader.getInstance().displayImage(mUrllist.get(i),
-						imageview, new ImageLoadingListener() {
-
-							@Override
-							public void onLoadingStarted(String arg0, View arg1) {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
-							public void onLoadingFailed(String arg0, View arg1,
-									FailReason arg2) {
-								// TODO Auto-generated method stub
-								((ImageView) arg1)
-										.setImageResource(R.drawable.private_doc);
-							}
-
-							@Override
-							public void onLoadingComplete(String arg0,
-									View arg1, Bitmap arg2) {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
-							public void onLoadingCancelled(String arg0,
-									View arg1) {
-								// TODO Auto-generated method stub
-
-							}
-						});
+						imageview, ImageLoaderUtils.getOptionsNocircle()
+				// new ImageLoadingListener() {
+				//
+				// @Override
+				// public void onLoadingStarted(String arg0, View arg1) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// @Override
+				// public void onLoadingFailed(String arg0, View arg1,
+				// FailReason arg2) {
+				// // TODO Auto-generated method stub
+				// ((ImageView) arg1)
+				// .setImageResource(R.drawable.private_doc);
+				// }
+				//
+				// @Override
+				// public void onLoadingComplete(String arg0,
+				// View arg1, Bitmap arg2) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// @Override
+				// public void onLoadingCancelled(String arg0,
+				// View arg1) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				// }
+						);
 			}
 			listImgs.add(imageview);
 		}

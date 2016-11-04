@@ -111,6 +111,7 @@ public class SearchUsersAdapter extends BaseRecyclerAdapter<CommUser, SearchUser
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, UserInfoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.TAG_USER, user);
                 mActivity.startActivity(intent);
             }

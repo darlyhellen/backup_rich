@@ -22,6 +22,7 @@ import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.BaseActivity;
 import com.ytdinfo.keephealth.ui.MainActivity;
+import com.ytdinfo.keephealth.ui.VersionUpdatePresenter;
 import com.ytdinfo.keephealth.ui.view.CommonActivityTopView;
 import com.ytdinfo.keephealth.ui.view.CommonModifyView;
 import com.ytdinfo.keephealth.utils.DBUtilsHelper;
@@ -72,7 +73,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		commonModifyView.setOnClickListener(this);
 		ibt_switch.setOnClickListener(this);
 		bt_cancelUser.setOnClickListener(this);
-
 	}
 
 	@Override
@@ -153,30 +153,31 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 
 	private void cancelUser() {
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);
-		SharedPrefsUtil.remove(Constants.TOKEN);
 		SharedPrefsUtil.remove(Constants.USERID);
 		SharedPrefsUtil.remove(Constants.USERMODEL);
 		SharedPrefsUtil.remove(Constants.ONLINE_QUES_USERMODEL);
-		CommunitySDKImpl.getInstance().logout(SettingActivity.this, new LoginListener() {
-            @Override
-            public void onStart() {
+		CommunitySDKImpl.getInstance().logout(SettingActivity.this,
+				new LoginListener() {
+					@Override
+					public void onStart() {
 
-            }
+					}
 
-            @Override
-            public void onComplete(int stCode, CommUser userInfo) {
-                BroadcastUtils.sendUserLogoutBroadcast(getApplication());
-                finish();
-            }
-        });
+					@Override
+					public void onComplete(int stCode, CommUser userInfo) {
+						BroadcastUtils
+								.sendUserLogoutBroadcast(getApplication());
+						finish();
+					}
+				});
 		MainChatControllerListener.closeAllSubject(false);
 		DBUtilsHelper.instance = null;
 		ToastUtil.showMessage("已退出");
- 
 		loginOutUzan();
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
+		SharedPrefsUtil.remove(Constants.TOKEN);
 	}
 
 	/**

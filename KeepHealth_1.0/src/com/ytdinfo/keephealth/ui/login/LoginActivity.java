@@ -271,11 +271,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				sdk.initSDK(this.getApplicationContext());
 				CommUser suser = new CommUser();
 				if (userModel.getAddition1()==null||userModel.getAddition1()=="") {
-					suser.name = "UM_"+userModel.getUserAccount();
+					suser.name = "UM_"+userModel.getMobilephone();
 				} else {
 					suser.name = userModel.getAddition1();
 				}
-				suser.id = "UM_"+userModel.getUserAccount();
+				suser.id = "UM_"+userModel.getMobilephone();
 				suser.customField = userModel.getUserType();
 				if ("Man".equalsIgnoreCase(userModel.getUserSex())) {
 					suser.gender = Gender.MALE;

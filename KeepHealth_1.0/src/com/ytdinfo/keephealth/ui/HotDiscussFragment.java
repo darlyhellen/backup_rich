@@ -1,5 +1,6 @@
 package com.ytdinfo.keephealth.ui;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.umeng.comm.core.CommunitySDK;
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.impl.CommunityFactory;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.OnItemViewClickListener;
@@ -40,7 +42,7 @@ public class HotDiscussFragment extends BaseFragment{
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View rootView=inflater.inflate(R.layout.view_hot_news, container,
+		View rootView=inflater.inflate(R.layout.view_hot_discuss, container,
 				false);// 关联布局文件
 		initView(rootView);
 		findTheHotinformation();
@@ -60,19 +62,18 @@ public class HotDiscussFragment extends BaseFragment{
 		super.onResume();
 		registerBroadcast();
 	}
-	
+	 
 	private  void initView(View rootView)
 	{
+		
 		hotNewsView=(TextView)rootView.findViewById(R.id.id_hot_news);
 		hotNewsView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_jiankangquan, 0,R.drawable.jiantou,0);
 		hotNewsView.setText("健康圈");
 		hotNewsView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				synchronized (arg0) {
-					//todo 跳转到健康圈
+		 
 					   UmengNickNameUtils.handleUmengName(getActivity());
-				}
 			}
 		});
 		
@@ -113,6 +114,9 @@ public class HotDiscussFragment extends BaseFragment{
 	            	   }else {
 	            		   mLists=response.result;
 	            	   }
+	                   for (int i = 0; i < mLists.size(); i++){
+	                        	  mLists.get(i).isTop = 1;
+	                   }
 	            	   adapter.updateListViewData(mLists);
 	               }
             	}else {
@@ -171,7 +175,7 @@ public class HotDiscussFragment extends BaseFragment{
                         feed.forwardCount = item.forwardCount;
                         feed.isCollected = item.isCollected;
                         feed.category = item.category;
-                        break;
+                        break;	
                     }
                 }
                 // 此处不可直接调用adapter.notifyDataSetChanged，其他地方在notifyDataSetChanged（）方法中又逻辑处理

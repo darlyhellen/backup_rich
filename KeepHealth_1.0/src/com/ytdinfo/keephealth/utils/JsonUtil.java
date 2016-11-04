@@ -47,9 +47,15 @@ public class JsonUtil {
 		TBNews tbNews = new TBNews();
 		try {
 			JSONObject jsonObject = new JSONObject(json_str);
-			tbNews.setIcon(jsonObject.getString("icon"));
-			tbNews.setTitle(jsonObject.getString("title"));
-			tbNews.setUrl(jsonObject.getString("url"));
+			if(jsonObject.has("icon")){
+				tbNews.setIcon(jsonObject.getString("icon"));
+			}
+			if(jsonObject.has("title")){
+				tbNews.setTitle(jsonObject.getString("title"));
+			}
+			if(jsonObject.has("url")){
+				tbNews.setUrl(jsonObject.getString("url"));
+			}
 			tbNews.setDateCreate(System.currentTimeMillis()+"");
 		} catch (JSONException e) {
 			e.printStackTrace();

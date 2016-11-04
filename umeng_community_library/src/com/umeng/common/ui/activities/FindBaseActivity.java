@@ -303,6 +303,7 @@ public abstract class FindBaseActivity extends BaseFragmentActivity implements V
                     public void onComplete(int stCode, CommUser userInfo) {
                         if (stCode == 0) {
                             Intent setting = new Intent(FindBaseActivity.this, SettingActivity.class);
+                            setting.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             setting.putExtra(Constants.TYPE_CLASS, mContainerClass);
                             startActivity(setting);
                         }
@@ -311,6 +312,7 @@ public abstract class FindBaseActivity extends BaseFragmentActivity implements V
                 });
             } else {
                 Intent setting = new Intent(this, SettingActivity.class);
+                setting.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 setting.putExtra(Constants.TYPE_CLASS, mContainerClass);
                 startActivity(setting);
             }
