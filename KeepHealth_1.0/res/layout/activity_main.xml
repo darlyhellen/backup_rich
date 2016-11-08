@@ -5,19 +5,44 @@
     android:background="@color/bgwhite"
     tools:context=".IAintelligentguidance" >
 
+    <RadioButton
+        android:id="@+id/radiogroup22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:drawableTop="@drawable/healty__selector"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="健康商城"
+        android:textColor="@color/w_gray"
+        android:textSize="@dimen/textview_radioButton"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/vt_tablerow"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignTop="@id/radiogroup22" />
+
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/radiogroup"
+        android:layout_below="@+id/vt_tablerow"
         android:background="@color/divider" />
+
+    <FrameLayout
+        android:id="@+id/framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/line1" >
+    </FrameLayout>
 
     <RadioGroup
         android:id="@+id/radiogroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/main_white"
         android:orientation="horizontal"
         android:padding="5dp" >
 
@@ -26,7 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/home__selector"
             android:gravity="center"
@@ -39,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/clinic__selector"
             android:gravity="center"
@@ -52,20 +75,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/healty__selector"
             android:gravity="center"
-            android:text="健康圈"
+            android:text="健康商城"
             android:textColor="@color/w_gray"
             android:textSize="@dimen/textview_radioButton" />
 
-        <RadioButton
+        <com.umeng.common.ui.widgets.BadgeRadioButton
             android:id="@+id/tab_rb_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/news_selector"
             android:gravity="center"
@@ -78,7 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
             android:button="@null"
             android:drawableTop="@drawable/user_selector"
             android:gravity="center"
@@ -86,37 +106,5 @@
             android:textColor="@color/w_gray"
             android:textSize="@dimen/textview_radioButton" />
     </RadioGroup>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/radiogroup" >
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="10dp"
-            android:layout_height="0dp"
-            android:layout_weight="3" />
-
-        <ImageView
-            android:id="@+id/news_point"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/unread_count_bg"
-            android:visibility="invisible" />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </TableRow>
-
-    <FrameLayout
-        android:id="@+id/framelayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/line1" >
-    </FrameLayout>
 
 </RelativeLayout>

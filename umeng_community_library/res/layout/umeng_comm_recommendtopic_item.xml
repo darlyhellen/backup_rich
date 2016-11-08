@@ -71,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:paddingLeft="5dp"
             android:textColor="@color/umeng_comm_text_time"
             android:textSize="@dimen/umeng_comm_text_24px" />
     </LinearLayout>

@@ -26,16 +26,16 @@ public final class R {
 		public static final int shadow_right = 0x7f02055d;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0c0656;
+		public static final int action_settings = 0x7f0c065a;
 		public static final int all = 0x7f0c000b;
 		public static final int bottom = 0x7f0c000c;
 		public static final int left = 0x7f0c000d;
 		public static final int right = 0x7f0c000e;
-		public static final int swipe = 0x7f0c0348;
+		public static final int swipe = 0x7f0c034c;
 	}
 	public static final class layout {
-		public static final int activity_main = 0x7f03000c;
-		public static final int swipeback_layout = 0x7f0300dc;
+		public static final int activity_main = 0x7f03000d;
+		public static final int swipeback_layout = 0x7f0300de;
 	}
 	public static final class menu {
 		public static final int main = 0x7f0f0006;

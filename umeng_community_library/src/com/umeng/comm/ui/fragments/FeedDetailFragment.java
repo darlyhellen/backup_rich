@@ -524,7 +524,9 @@ import java.util.List;
         mCommentEditText.setHint("");
         mActionsLayout.setVisibility(View.GONE);
         View titleView = getActivity().findViewById(ResFinder.getId("umeng_comm_feed_title_layout"));
+        View lineView=getActivity().findViewById(ResFinder.getId("umeng_comm_feed_title_line"));
         if(titleView != null){
+        	lineView.setVisibility(View.GONE);
             titleView.setVisibility(View.GONE);
         }
     }
@@ -533,7 +535,9 @@ import java.util.List;
         super.hideCommentLayout();
         mActionsLayout.setVisibility(View.VISIBLE);
         View titleView = getActivity().findViewById(ResFinder.getId("umeng_comm_feed_title_layout"));
+        View lineView=getActivity().findViewById(ResFinder.getId("umeng_comm_feed_title_line"));
         if(titleView != null){
+        	lineView.setVisibility(View.VISIBLE);
             titleView.setVisibility(View.VISIBLE);
         }
     }

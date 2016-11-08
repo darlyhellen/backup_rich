@@ -73,7 +73,7 @@ public class SearchTopicAdapter extends RecyclerView.Adapter<SearchTopicAdapter.
     @Override
     public void onBindViewHolder(final TopicViewHolder topicViewHolder, final int i) {
         Topic item = topicList.get(i);
-        topicViewHolder.mTopicTv.setText(item.name.replace("#", ""));
+        topicViewHolder.mTopicTv.setText(item.name.replace("#", "\t"));
         topicViewHolder.mTopicIcon.setImageUrl(item.icon);
         topicViewHolder.mDescTv.setText(item.desc);
         topicViewHolder.mFollowedBtn.setChecked(!item.isFocused);

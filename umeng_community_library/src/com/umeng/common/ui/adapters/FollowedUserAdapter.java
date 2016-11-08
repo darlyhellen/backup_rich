@@ -85,8 +85,12 @@ public class FollowedUserAdapter extends CommonAdapter<CommUser, FollowedUserVie
                 }
             });
         }
-
-        holder.mNameTextView.setText(TextUtils.isEmpty(user.name) ? "" : user.name);
+        if(TextUtils.isEmpty(user.name))
+        	 holder.mNameTextView.setText("");
+        else if(user.name.startsWith("UM_"))
+        	 holder.mNameTextView.setText("匿名");
+		else 
+			 holder.mNameTextView.setText(user.name);
         holder.setUser(user);
 
         String postFeedCount = mPostFeedStr + CommonUtils.getLimitedCount(user.feedCount);

@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.google.gson.Gson;
@@ -64,7 +66,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			gallery.start(getActivity(), listImageUrl, listImagePath, 3000,
+			gallery.start(getActivity(), listImageUrl, listImagePath, 5000,
 					ovalLayout, R.drawable.point_bright, R.drawable.point_light);
 		};
 	};
@@ -148,6 +150,9 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	private HotDiscussFragment fragment;
 	private HotNewsFragment hotNewsFragment;
 
+	// V3版本下修改热卖商品标题栏，点击事件。
+	private TableRow hot;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -200,6 +205,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		scheduling = (ImageView) v.findViewById(R.id.v21_home_item_zjpb);
 		// 初始化以前样式控件
 		// 综合服务
+		hot = (TableRow) v.findViewById(R.id.id_hottable_v3);
 		gastroscope = (ImageView) v.findViewById(R.id.v21_zh_wjjn);
 		aha = (ImageView) v.findViewById(R.id.v21_zh_aha);
 		dentistry = (ImageView) v.findViewById(R.id.v21_zh_ck);
@@ -280,6 +286,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		registration.setOnClickListener(this);
 		scheduling.setOnClickListener(this);
 
+		hot.setOnClickListener(this);
 		gastroscope.setOnClickListener(this);
 		aha.setOnClickListener(this);
 		dentistry.setOnClickListener(this);
@@ -377,6 +384,12 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 				startActivityForResult(intent, 1001);
 			}
 			break;
+		case R.id.id_hottable_v3:
+			// 热卖文字跳转商城
+			if (checkUser()) {
+				registerYouzanUserForWeb(R.id.v21_home_item_store);
+			}
+			break;
 		case R.id.v21_zh_wjjn:
 			// 胶囊胃镜
 			if (checkUser()) {
@@ -462,8 +475,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 				case R.id.v21_home_item_store:
 					Intent intent = new Intent(getActivity(), WebActivity.class);
 					// 传入链接, 请修改成你们店铺的链接
-					intent.putExtra("loadUrl",
-							"https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl");
+					intent.putExtra("loadUrl", Constants.SHANGCHENG);
 					startActivity(intent);
 					break;
 				case R.id.v21_zh_wjjn:
@@ -526,7 +538,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 					localLoad();
 				} else {
 					gallery.start(getActivity(), new ArrayList<String>(),
-							listImagePath, 3000, ovalLayout,
+							listImagePath, 5000, ovalLayout,
 							R.drawable.point_bright, R.drawable.point_light);
 				}
 			} catch (Exception e) {
@@ -553,7 +565,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		listUrl.add(Constants.PRIVATEDOCTOR);
 		types.add("normal");
 		gallery.start(getActivity(), new ArrayList<String>(), listImagePath,
-				3000, ovalLayout, R.drawable.point_bright,
+				5000, ovalLayout, R.drawable.point_bright,
 				R.drawable.point_light);
 	}
 

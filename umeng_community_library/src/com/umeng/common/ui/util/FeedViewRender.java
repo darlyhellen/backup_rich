@@ -61,11 +61,11 @@ public final class FeedViewRender {
             final TextView contentTextView, FeedItem item,TopicClickSpanListener topicClickSpanListener,FrinendClickSpanListener friendClickSpanListener) {
         contentTextView.setClickable(true);
         contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        String wenben=item.text.replace("#", "");
+        String wenben=item.text.replace("#", "\t");
         // 消息文本内容
         contentTextView.setText(wenben);
         // 文本内容
-        final String content = item.text.replace("#", "");
+        final String content = item.text.replace("#", "\t");
         final Context context = contentTextView.getContext();
         //
         SpannableStringBuilder contentSsb = new SpannableStringBuilder(content);
@@ -86,7 +86,7 @@ public final class FeedViewRender {
             TopicClickSpanListener topicClickSpanListener,FrinendClickSpanListener friendClickSpanListener) {
         contentTextView.setClickable(true);
         contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        content=content.replace("#", "");
+        content=content.replace("#", "\t");
         // 消息文本内容
         contentTextView.setText(content);
         // 文本内容
@@ -160,7 +160,7 @@ public final class FeedViewRender {
         // int start = 0;
         for (CommUser friend : atFriends) {
             name = "@" + friend.name;
-            List<DecorationItem> items = findTagsInText(content.replace("#", ""), name.replace("#", ""));
+            List<DecorationItem> items = findTagsInText(content.replace("#", "\t"), name.replace("#", "\t"));
             for (DecorationItem decoratorItem : items) {
                 makeStringClickable(contentSsb, decoratorItem.start, decoratorItem.text,
                         new UserClickSpan(
@@ -234,7 +234,7 @@ public final class FeedViewRender {
                 continue;
             }
 
-            List<DecorationItem> items = findTagsInText(feedItem.text.replace("#", ""), name.replace("#", ""));
+            List<DecorationItem> items = findTagsInText(feedItem.text.replace("#", "\t"), name.replace("#", "\t"));
             for (DecorationItem decoratorItem : items) {
                 makeStringClickable(contentSsb, decoratorItem.start, decoratorItem.text,
                         new TopicClickSpan(context, topic,topicClickSpanListener));
@@ -258,7 +258,7 @@ public final class FeedViewRender {
                 continue;
             }
 
-            List<DecorationItem> items = findTagsInText(content.replace("#", ""), name.replace("#", ""));
+            List<DecorationItem> items = findTagsInText(content.replace("#", "\t"), name.replace("#", "\t"));
             for (DecorationItem decoratorItem : items) {
                 makeStringClickable(contentSsb, decoratorItem.start, decoratorItem.text,
                         new TopicClickSpan(context, topic,topicClickSpanListener));

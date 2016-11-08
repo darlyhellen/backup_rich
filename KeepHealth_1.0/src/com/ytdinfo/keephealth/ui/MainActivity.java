@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,8 @@ import com.umeng.comm.core.sdkmanager.LocationSDKManager;
 import com.umeng.comm.core.sdkmanager.LoginSDKManager;
 import com.umeng.comm.core.sdkmanager.ShareSDKManager;
 import com.umeng.comm.ui.fragments.CommunityMainFragment;
+import com.umeng.common.ui.widgets.BadgeRadioButton;
+import com.umeng.common.ui.widgets.BadgeView;
 import com.umeng.community.CustomShare;
 import com.umeng.community.NickNameCheckImpl;
 import com.umeng.community.NickNameCheckImpl.HomeJump;
@@ -92,8 +95,13 @@ public class MainActivity extends Base2Activity implements
 	private ConversationListFragment newsFragment;
 	private UserInfoFragment userInfoFragment;
 	private CommunityMainFragment community;
-	public RadioButton radioButton0, radioButton1, radioButton2, radioButton3,
+	// V3新版本下将话题按钮事件换成商场入口
+	private YouZanFragment youZanFragment;
+
+	private BadgeRadioButton radioButton1;
+	public RadioButton radioButton0, radioButton2, radioButton3,
 			radioButtonClinic;
+
 	CommunitySDK mCommSDK = null;
 	private int oldBtn = 0;
 	private boolean flag = true;
@@ -115,8 +123,6 @@ public class MainActivity extends Base2Activity implements
 		else
 			return true;
 	}
-
-	private ImageView newsPoint;
 
 	public static List<DocOnline> onlines;
 
@@ -141,7 +147,6 @@ public class MainActivity extends Base2Activity implements
 
 		// ysj
 		initView();
-
 		int checkedid_radiobt = SharedPrefsUtil.getValue(
 				Constants.CHECKEDID_RADIOBT, 0);
 		((RadioButton) radioGroup.getChildAt(checkedid_radiobt))
@@ -323,11 +328,11 @@ public class MainActivity extends Base2Activity implements
 		// TODO Auto-generated method stub
 		radioGroup = (RadioGroup) findViewById(R.id.radiogroup);
 		radioButton0 = (RadioButton) findViewById(R.id.tab_rb_1);
-		radioButton1 = (RadioButton) findViewById(R.id.tab_rb_2);
+		radioButton1 = (BadgeRadioButton) findViewById(R.id.tab_rb_2);
+		radioButton1.setPaintFlags(BadgeView.POSITION_TOP_RIGHT);
 		radioButton2 = (RadioButton) findViewById(R.id.tab_rb_3);
 		radioButton3 = (RadioButton) findViewById(R.id.tab_rb_4);
 		radioButtonClinic = (RadioButton) findViewById(R.id.tab_rb_clinic);
-		newsPoint = (ImageView) findViewById(R.id.news_point);
 	}
 
 	private void initHome() {
@@ -491,9 +496,9 @@ public class MainActivity extends Base2Activity implements
 			TBNews news = dbUtil.queryFirst();
 			if (news != null) {
 				arg1.setText(news.getTitle());
-				if("".equalsIgnoreCase(news.getDateCreate())){
+				if ("".equalsIgnoreCase(news.getDateCreate())) {
 					arg2.setText("");
-				}else {
+				} else {
 					arg2.setText(DateUtil.getDateString(
 							Long.parseLong(news.getDateCreate()),
 							DateUtil.SHOW_TYPE_CALL_LOG).trim());
@@ -668,30 +673,46 @@ public class MainActivity extends Base2Activity implements
 		case R.id.tab_rb_4:
 			radioButton3.setTextColor(getResources().getColor(
 					R.color.w_RadioButton));
-			int flag = UmengNickNameUtils
-					.checkNameIsUserName(MainActivity.this);
-			switch (flag) {
-			case 0:
-				Intent mIntent = new Intent(MainActivity.this,
-						LoginActivity.class);
-				startActivity(mIntent);
-				break;
-			case 1:
-				NickNameCheckImpl.instanceHomeJump = this;
-				UmengNickNameUtils.showModifyNickNameDialog(MainActivity.this);
-				break;
-			default:
-				if (community == null) {
-					community = new CommunityMainFragment();
-					community.setBackButtonVisibility(View.GONE);
-					transaction.add(R.id.framelayout, community);
+			// int flag = UmengNickNameUtils
+			// .checkNameIsUserName(MainActivity.this);
+			// switch (flag) {
+			// case 0:
+			// Intent mIntent = new Intent(MainActivity.this,
+			// LoginActivity.class);
+			// startActivity(mIntent);
+			// break;
+			// case 1:
+			// NickNameCheckImpl.instanceHomeJump = this;
+			// UmengNickNameUtils.showModifyNickNameDialog(MainActivity.this);
+			// break;
+			// default:
+			// if (community == null) {
+			// community = new CommunityMainFragment();
+			// community.setBackButtonVisibility(View.GONE);
+			// transaction.add(R.id.framelayout, community);
+			// } else {
+			// if (community.isVisible())
+			// return;
+			// transaction.show(community);
+			// }
+			// transaction.commitAllowingStateLoss();
+			// break;
+			// }
+			//
+			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
+				if (youZanFragment == null) {
+					youZanFragment = new YouZanFragment();
+					transaction.add(R.id.framelayout, youZanFragment);
 				} else {
-					if (community.isVisible())
+					if (youZanFragment.isVisible())
 						return;
-					transaction.show(community);
+					transaction.show(youZanFragment);
 				}
 				transaction.commitAllowingStateLoss();
 				break;
+			} else {
+				Intent i = new Intent(MainActivity.this, LoginActivity.class);
+				startActivityForResult(i, 1003);
 			}
 			break;
 		case R.id.tab_rb_clinic:
@@ -759,8 +780,8 @@ public class MainActivity extends Base2Activity implements
 		if (userInfoFragment != null) {
 			transaction.hide(userInfoFragment);
 		}
-		if (community != null) {
-			transaction.hide(community);
+		if (youZanFragment != null) {
+			transaction.hide(youZanFragment);
 		}
 		if (clinicFragment != null) {
 			transaction.hide(clinicFragment);
@@ -959,7 +980,7 @@ public class MainActivity extends Base2Activity implements
 
 							@Override
 							public void run() {
-								newsPoint.setVisibility(View.GONE);
+								radioButton1.setIndexShowBadge(false, false);
 							}
 						});
 
@@ -968,7 +989,7 @@ public class MainActivity extends Base2Activity implements
 
 							@Override
 							public void run() {
-								newsPoint.setVisibility(View.VISIBLE);
+								radioButton1.setIndexShowBadge(true, true);
 							}
 						});
 					}
@@ -980,16 +1001,17 @@ public class MainActivity extends Base2Activity implements
 	@Override
 	public void goToHealthQuan() {
 		// TODO Auto-generated method stub
-		if (community == null) {
-			community = new CommunityMainFragment();
-			community.setBackButtonVisibility(View.GONE);
-			transaction.add(R.id.framelayout, community);
-		} else {
-			if (community.isVisible())
-				return;
-			transaction.show(community);
-		}
-		transaction.commitAllowingStateLoss();
+		startActivity(new Intent(this, FriendsCircleActivity.class));
+		// if (community == null) {
+		// community = new CommunityMainFragment();
+		// community.setBackButtonVisibility(View.GONE);
+		// transaction.add(R.id.framelayout, community);
+		// } else {
+		// if (community.isVisible())
+		// return;
+		// transaction.show(community);
+		// }
+		// transaction.commitAllowingStateLoss();
 	}
 
 }

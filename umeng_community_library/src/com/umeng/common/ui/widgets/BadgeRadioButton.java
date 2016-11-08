@@ -30,57 +30,72 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
 
+import com.lidroid.xutils.util.LogUtils;
 import com.umeng.comm.core.utils.DeviceUtils;
 
 /**
  * 该视图继承自RadioButton
  */
 public class BadgeRadioButton extends RadioButton {
-    Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    /**
-     * 是否显示红点
-     */
-    protected boolean isShowBadge = false;
-    /**
-     * 是否已经显示过
-     */
-    protected boolean isShowed = false;
+	Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	/**
+	 * 是否显示红点
+	 */
+	protected boolean isShowBadge = false;
+	/**
+	 * 是否已经显示过
+	 */
+	protected boolean isShowed = false;
 
-    public BadgeRadioButton(Context context) {
-        this(context, null);
-    }
+	protected boolean isIndex = false;
 
-    public BadgeRadioButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        mPaint.setColor(Color.RED);
-    }
+	public BadgeRadioButton(Context context) {
+		this(context, null);
+	}
 
-    public BadgeRadioButton(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        mPaint.setColor(Color.RED);
-    }
+	public BadgeRadioButton(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		mPaint.setColor(Color.RED);
+	}
 
-    @Override
-    public void setChecked(boolean checked) {
-        super.setChecked(checked);
-        invalidate();
-        if (!isShowed && checked) {
-            isShowed = true;
-        }
-    }
+	public BadgeRadioButton(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		mPaint.setColor(Color.RED);
+	}
 
-    public void setShowBadge(boolean show) {
-        this.isShowBadge = show;
-        invalidate();
-    }
+	@Override
+	public void setChecked(boolean checked) {
+		super.setChecked(checked);
+		invalidate();
+		if (!isShowed && checked) {
+			isShowed = true;
+		}
+	}
 
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        if (isShowBadge && !isChecked() && !isShowed) {
-            canvas.drawCircle(getWidth() - 20, getTop() + 15, DeviceUtils.dp2px(getContext(), 4),
-                    mPaint);
-        }
+	public void setShowBadge(boolean show) {
+		this.isShowBadge = show;
+		invalidate();
+	}
 
-    }
+	public void setIndexShowBadge(boolean show, boolean index) {
+		this.isShowBadge = show;
+		this.isIndex = index;
+		invalidate();
+	}
+
+	@Override
+	protected void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
+		if (isShowBadge && !isChecked() && !isShowed) {
+			LogUtils.i(getWidth() + ",getWidth(), getTop()," + getHeight());
+			if (isIndex) {
+				canvas.drawCircle(getWidth()-20, DeviceUtils.dp2px(getContext(), 4),
+						DeviceUtils.dp2px(getContext(), 4), mPaint);
+			} else {
+				canvas.drawCircle(getWidth() - 20, getTop() + 15,
+						DeviceUtils.dp2px(getContext(), 4), mPaint);
+			}
+		}
+
+	}
 }

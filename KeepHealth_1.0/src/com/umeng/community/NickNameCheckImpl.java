@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -25,6 +26,7 @@ import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.app.HttpClient;
 import com.ytdinfo.keephealth.model.UserModel;
+import com.ytdinfo.keephealth.ui.FriendsCircleActivity;
 import com.ytdinfo.keephealth.ui.MainActivity;
 import com.ytdinfo.keephealth.ui.personaldata.CommonModifyInfoActivity;
 import com.ytdinfo.keephealth.utils.DialogCustomInterface;
@@ -193,11 +195,14 @@ public class NickNameCheckImpl implements AppInterface {
 										false);
 							}
 							// 进入社区
-							((MainActivity) mContext)
-									.radioGroupCheckId(R.id.tab_rb_4);
+//							((MainActivity) mContext)
+//									.radioGroupCheckId(R.id.tab_rb_4);
 							if (instanceHomeJump != null) {
 								instanceHomeJump.goToHealthQuan();
 								instanceHomeJump = null;
+							}else {
+								Intent mIntent2=new Intent(mContext,FriendsCircleActivity.class);
+								mContext.startActivity(mIntent2);
 							}
 							view.dismiss();
 

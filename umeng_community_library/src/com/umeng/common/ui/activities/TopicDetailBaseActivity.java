@@ -102,7 +102,7 @@ public abstract class TopicDetailBaseActivity extends BaseFragmentActivity imple
         titleTextView = (TextView) findViewById(ResFinder.getId("umeng_comm_title_tv"));
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         titleTextView.setTextColor(ResFinder.getColor("umeng_comm_white_color"));
-        titleTextView.setText(mTopic.name.replace("#", ""));
+        titleTextView.setText(mTopic.name.replace("#", "\t"));
         findViewById(ResFinder.getId("umeng_comm_title_setting_btn")).setVisibility(View.GONE);
         favouriteBtn = (ToggleButton) findViewById(ResFinder.getId("umeng_comm_favourite_btn"));
         favouriteBtn.setVisibility(View.VISIBLE);

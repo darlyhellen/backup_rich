@@ -43,7 +43,7 @@ public class HomeFragment extends BaseFragment implements OnClickListener,
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			gallery.start(getActivity(), listImageUrl, listImagePath, 3000,
+			gallery.start(getActivity(), listImageUrl, listImagePath, 5000,
 					ovalLayout, R.drawable.point_bright, R.drawable.point_light);
 		};
 	};
@@ -250,7 +250,7 @@ public class HomeFragment extends BaseFragment implements OnClickListener,
 		listImagePath.add(path + photoName + ".png");
 		listUrl.add(Constants.PRIVATEDOCTOR);
 		gallery.start(getActivity(), new ArrayList<String>(), listImagePath,
-				3000, ovalLayout, R.drawable.point_bright,
+				5000, ovalLayout, R.drawable.point_bright,
 				R.drawable.point_light);
 	}
 

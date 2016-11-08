@@ -5,12 +5,13 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-   <com.ytdinfo.keephealth.ui.view.ScrollHeaderView
-       android:id="@+id/v21_home_scroll"
+    <com.ytdinfo.keephealth.ui.view.ScrollHeaderView
+        android:id="@+id/v21_home_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         android:scrollbars="none" 
-        android:background="@color/w_white"> 
+        android:background="@color/w_white"
+        android:scrollbars="none" >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +40,7 @@
 
             <!-- 上面为标题和广告栏，下面为内容状态栏 -->
 
+
             <include layout="@layout/home_frag_org_v21" />
 
             <View
@@ -48,16 +50,31 @@
 
             <!-- 添加综合服务 -->
 
-            <TextView
+            <TableRow
+                android:id="@+id/id_hottable_v3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:text="综合服务"
-                android:textColor="@android:color/black" >
-            </TextView>
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/id_hotsell_v3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="热卖商品"
+                    android:textColor="@android:color/black" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/id_hotarrow_v3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/jiantou" />
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
@@ -229,13 +246,13 @@
                 android:layout_height="wrap_content" >
             </FrameLayout>
         </LinearLayout>
-     </com.ytdinfo.keephealth.ui.view.ScrollHeaderView>
+    </com.ytdinfo.keephealth.ui.view.ScrollHeaderView>
 
-       <com.ytdinfo.keephealth.ui.view.HomeV21Title
+    <com.ytdinfo.keephealth.ui.view.HomeV21Title
         android:id="@+id/v21_home_title"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
     </com.ytdinfo.keephealth.ui.view.HomeV21Title>
 
 </RelativeLayout>

@@ -2,27 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/umeng_comm_white_color"
     android:clickable="true"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/umeng_comm_dimen_84px"
-        android:background="#f5f6fa">
+        android:layout_height="@dimen/umeng_comm_dimen_100px"
+        android:background="@drawable/home_top_background">
 
-        <TextView
-            android:id="@+id/umeng_comm_comment_cancel_btn"
+        
+            <ImageView
+                 android:id="@+id/umeng_comm_comment_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            	android:gravity="center"
+            	android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/umeng_comm_dimen_32px"
+                android:layout_marginRight="@dimen/umeng_comm_dimen_32px"
+                android:background="@drawable/umeng_comm_cancel_bt"
+                android:contentDescription="@string/umeng_comm_new_post" />
+            
+     
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="发表评论"
+            android:textColor="@android:color/white"
+            android:textSize="18dp" />
+        
+<!--         <TextView
+           
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:paddingLeft="@dimen/umeng_comm_dimen_30px"
-            android:text="@string/umeng_comm_cancel"
+            android:background="@drawable/umeng_comm_cancel_bt"
             android:textColor="@color/umeng_comm_color_a5"
-            android:textSize="@dimen/umeng_comm_text_30px" />
-
-        <TextView
+            android:textSize="@dimen/umeng_comm_text_30px" /> -->
+            
+    <!--     <TextView
             android:id="@+id/umeng_comm_comment_send_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -34,6 +54,18 @@
             android:enabled="false"
             android:textColor="@drawable/umeng_comm_comment_input_send_selector"
             android:textSize="@dimen/umeng_comm_text_30px" />
+         -->
+           <ImageView
+                android:id="@+id/umeng_comm_comment_send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:enabled="false"
+                android:layout_marginLeft="@dimen/umeng_comm_dimen_32px"
+                android:layout_marginRight="@dimen/umeng_comm_dimen_32px"
+                android:background="@drawable/umeng_comm_send_bt"
+                android:contentDescription="@string/umeng_comm_new_post" />
 
         <View
             android:layout_width="match_parent"
@@ -42,6 +74,12 @@
             android:background="#eeeff3" />
     </RelativeLayout>
 
+    <LinearLayout  
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+     android:background="@color/umeng_comm_white_color"
+    android:orientation="vertical">
 
     <com.umeng.common.ui.widgets.CommentEditText
         android:id="@+id/umeng_comm_comment_edittext"
@@ -117,5 +155,5 @@
         android:layout_below="@id/umeng_comm_emoji"
         android:visibility="gone" />
 
-
+</LinearLayout>
 </LinearLayout>

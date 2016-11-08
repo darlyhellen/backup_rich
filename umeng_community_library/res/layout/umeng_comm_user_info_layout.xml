@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/umeng_comm_dimen_10px"
                 android:layout_marginRight="@dimen/umeng_comm_dimen_30px"
-                android:src="@drawable/umeng_comm_feed_detail_more" />
+                android:src="@drawable/gengduo" />
 
         </LinearLayout>
 

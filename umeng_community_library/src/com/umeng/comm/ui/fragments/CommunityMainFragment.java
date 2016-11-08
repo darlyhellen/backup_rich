@@ -394,6 +394,10 @@ public class CommunityMainFragment extends BaseFragment<Void, NullPresenter>
 		if (v.getId() == ResFinder.getId("umeng_comm_back_btn")) {
 			getActivity().finish();
 		}
+		if(v.getId()==ResFinder.getId("id_ibt_back"))
+		{
+			getActivity().finish();
+		}
 	}
 
 	/**

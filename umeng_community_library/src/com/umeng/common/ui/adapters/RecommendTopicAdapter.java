@@ -84,7 +84,7 @@ public class RecommendTopicAdapter extends BackupAdapter<Topic, RecommendTopicVi
     @Override
     protected void setItemData(int position, final RecommendTopicViewHolder viewHolder, View rootView) {
         final Topic topic = getItem(position);
-        viewHolder.mUserNameTextView.setText(topic.name.replace("#", ""));
+        viewHolder.mUserNameTextView.setText(topic.name.replace("#", "\t"));
         viewHolder.mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         viewHolder.mUserNameTextView.setTextColor(ResFinder.getColor("umeng_comm_title"));
 

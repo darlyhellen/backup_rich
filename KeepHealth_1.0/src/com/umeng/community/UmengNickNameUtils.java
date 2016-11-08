@@ -2,8 +2,10 @@ package com.umeng.community;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.umeng.comm.custom.AppAdd;
 import com.ytdinfo.keephealth.R;
+import com.ytdinfo.keephealth.ui.FriendsCircleActivity;
 import com.ytdinfo.keephealth.ui.MainActivity;
 import com.ytdinfo.keephealth.ui.login.LoginActivity;
 
@@ -24,7 +26,9 @@ public class UmengNickNameUtils {
 				UmengNickNameUtils.showModifyNickNameDialog(mContext);
 				break;
 			default:
-				((MainActivity)mContext).radioGroupCheckId(R.id.tab_rb_4);
+				//((MainActivity)mContext).radioGroupCheckId(R.id.tab_rb_4);
+				Intent mIntent2=new Intent(mContext,FriendsCircleActivity.class);
+				mContext.startActivity(mIntent2);
 				break;
 		}	
 	}

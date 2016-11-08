@@ -69,7 +69,7 @@ public class SelectTopicAdapter extends CommonAdapter<Topic, RecommendTopicViewH
     @Override
     protected void setItemData(int position, final RecommendTopicViewHolder viewHolder, View rootView) {
         final Topic topic = getItem(position);
-        viewHolder.mUserNameTextView.setText(topic.name.replace("#", ""));
+        viewHolder.mUserNameTextView.setText(topic.name.replace("#", "\t"));
         viewHolder.mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         viewHolder.mUserNameTextView.setTextColor(ResFinder.getColor("umeng_comm_title"));
         viewHolder.mImageView.setImageResource(mTopicIcon);

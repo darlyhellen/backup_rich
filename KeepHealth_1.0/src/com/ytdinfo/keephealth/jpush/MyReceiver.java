@@ -102,46 +102,7 @@ public class MyReceiver extends BroadcastReceiver {
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.i(TAG, "[MyReceiver]===接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-          //当接收到推送的消息后，将消息内容保存到sqlite数据库中
-        	String  desc = bundle.getString(JPushInterface.EXTRA_ALERT);
-        	String  extras_json = bundle.getString(JPushInterface.EXTRA_EXTRA);
-        	String  msg_id = bundle.getString(JPushInterface.EXTRA_MSG_ID);
-        	TBNews tbNews = JsonUtil.jsonTOtbnews(extras_json);
-        	tbNews.setDesc(desc);
-        	  ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-		        //设置消息的属性：发出者，接受者，发送时间等
-		        msg.setForm("10000");
-		        msg.setMsgTime(System.currentTimeMillis());
-		        // 设置消息接收者
-		        msg.setTo("10000");
-		        msg.setSessionId("10000");
-		        // 设置消息发送类型（发送或者接收）
-		        msg.setDirection(ECMessage.Direction.RECEIVE);
-		        // 创建一个文本消息体，并添加到消息对象中
-		        ECTextMessageBody msgBody = new ECTextMessageBody(desc);
-		    	// 调用接口发送IM消息
-				msg.setMsgTime(System.currentTimeMillis());
-				msg.setBody(msgBody);
-			    msg.setMsgStatus(MessageStatus.SUCCESS);
-			    int unReadCount=0;
-			    try{
-			    	if(ECDeviceKit.userId!=null){
-						  long salId= ConversationSqlManager.querySessionIdForBySessionId("10000");
-						  if(salId!=0)//有
-						  {
-							  unReadCount=ConversationSqlManager.querySessionUnreadCountBySessionId("10000");
-							  Log.e("Myrecevier","unReadCount:"+unReadCount);
-							  ConversationSqlManager.delSession("10000");
-						  } 
-						  Log.e("Myrecevier","salId:"+salId);
-						  ConversationSqlManager.insertSessionRecordV2(msg, unReadCount+1);
-			    	}
-			    }catch(Exception e)
-			    {
-			    	
-			    }
-        	DBUtil dbUtil = new DBUtil(MyApp.getInstance());
-        	dbUtil.insert(tbNews);
+          
             Log.i(TAG, "[MyReceiver]===接收到推送下来的通知的ID: " + notifactionId);
         	
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
