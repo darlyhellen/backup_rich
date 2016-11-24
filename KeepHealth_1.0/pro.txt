@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ytdinfo.keephealth"
-    android:versionCode="7"
-    android:versionName="3.1" >
+    android:versionCode="10"
+    android:versionName="3.2" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -34,27 +34,28 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+    
     <permission
         android:name="com.ytdinfo.keephealth.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
+ 
     <application
         android:name="com.ytdinfo.keephealth.app.MyApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" 
+        >
         <activity
             android:name="com.ytdinfo.keephealth.ui.view.MyPopWindow"
             android:screenOrientation="portrait"
@@ -63,7 +64,8 @@
         <activity
             android:name="com.ytdinfo.keephealth.ui.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MainTheme" >
+             android:theme="@style/MainTheme"
+             >
         </activity>
         <activity
             android:name="com.ytdinfo.keephealth.ui.login.LoginActivity"
@@ -180,12 +182,10 @@
             android:theme="@style/AppTheme.Transparent" >
         </activity>
 
-        <service
-            android:name="com.ytdinfo.keephealth.service.UpdateService"
+        <service android:name="com.ytdinfo.keephealth.service.UpdateService" 
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
         </service>
-
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -193,12 +193,10 @@
             android:theme="@style/AppTheme.Transparent" >
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="com.ytdinfo.keephealth" />
             </intent-filter>
         </activity>
-
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
@@ -215,14 +213,12 @@
                 <action android:name="cn.jpush.android.intent.PUSH_TIME" />
             </intent-filter>
         </service>
-
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter android:priority="1000" >
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-
                 <category android:name="com.ytdinfo.keephealth" />
             </intent-filter>
             <intent-filter>
@@ -293,7 +289,6 @@
         <service android:name="com.yuntongxun.kitsdk.TimerService" >
             <intent-filter>
                 <action android:name="com.ytdinfo.keephealth" />
-
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </service>
@@ -326,6 +321,7 @@
             android:theme="@style/AppTheme.Transparent" >
         </activity>
 
+       
         <meta-data
             android:name="LOGGING"
             android:value="true" />
@@ -396,6 +392,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="stateHidden" />
+
+       
+
         <activity
             android:name="com.yuntongxun.kitsdk.ui.voip.VoIPCallActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -457,19 +456,19 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="f43593b2702a7e58ae4b3569" />
+            android:value="c4dd2ad233e11390e857d3f5" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5641ab1567e58e0ec2000046" >
+            android:value="55cde86c67e58ebcfe002b38" >
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="魅族应用市场" />
+            android:value="default" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="b69c434253429ef1c6667cfbcd4df980" >
+            android:value="36feddaff3637ae5b6ef6407f8e1c10d" >
         </meta-data>
-
+      
         <service
             android:name="com.umeng.update.net.DownloadingService"
             android:process=":DownloadingService" >
@@ -479,6 +478,7 @@
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@style/AppTheme.Transparent" >
         </activity>
+ 
         <activity
             android:name="com.umeng.comm.ui.activities.FindActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -738,6 +738,7 @@
             android:name="com.umeng.community.login.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent" />
+ 
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -757,6 +758,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name="com.umeng.common.ui.activities.AlbumActivity" />
+         
         <activity
             android:name=".wxapi.WBShareActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -780,13 +782,15 @@
             android:name="com.sina.weibo.sdk.net.DownloadService"
             android:exported="false" >
         </service>
+       
+
         <service android:name="com.amap.api.location.APSService" >
         </service>
 
         <!-- 高德地图app key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="890003fde7a69fc0c93d44331c3953cb" />
+            android:value="33d1d01a54b844c7d426e8e509192754" />
 
         <!-- 有赞商城 -->
 
@@ -825,6 +829,15 @@
             android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        
+        <!-- 朋友圈独立页面 -->
+        <activity
+            android:name="com.ytdinfo.keephealth.ui.FriendsCircleActivity"
+            android:label="@string/title_activity_web_view"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent" >
+        </activity>
+        
     </application>
 
 </manifest>

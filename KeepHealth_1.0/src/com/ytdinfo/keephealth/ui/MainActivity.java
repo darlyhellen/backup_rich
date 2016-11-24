@@ -560,6 +560,7 @@ public class MainActivity extends Base2Activity implements
 		hideFragments(transaction);
 		switch (checkedId) {
 		case R.id.tab_rb_1:
+			MobclickAgent.onEvent(this,Constants.UMENG_EVENT_40, "首页");
 			radioButton0.setTextColor(getResources().getColor(
 					R.color.w_RadioButton));
 			if (homeFragment == null) {
@@ -573,6 +574,7 @@ public class MainActivity extends Base2Activity implements
 			transaction.commitAllowingStateLoss();
 			break;
 		case R.id.tab_rb_2:
+			MobclickAgent.onEvent(this,Constants.UMENG_EVENT_40, "消息");
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
 				radioGroup.check(R.id.tab_rb_2);
 				radioButton1.setTextColor(getResources().getColor(
@@ -653,6 +655,7 @@ public class MainActivity extends Base2Activity implements
 			}
 			break;
 		case R.id.tab_rb_3:
+			MobclickAgent.onEvent(this,Constants.UMENG_EVENT_40, "我的");
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
 				radioButton2.setTextColor(getResources().getColor(
 						R.color.w_RadioButton));
@@ -671,6 +674,7 @@ public class MainActivity extends Base2Activity implements
 			}
 			break;
 		case R.id.tab_rb_4:
+			MobclickAgent.onEvent(this,Constants.UMENG_EVENT_40, "健康商城");
 			radioButton3.setTextColor(getResources().getColor(
 					R.color.w_RadioButton));
 			// int flag = UmengNickNameUtils
@@ -716,6 +720,7 @@ public class MainActivity extends Base2Activity implements
 			}
 			break;
 		case R.id.tab_rb_clinic:
+			MobclickAgent.onEvent(this,Constants.UMENG_EVENT_40, "门诊");
 			// 首页点击门诊跳转进入Fragment的WebView中
 			if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
 				radioButtonClinic.setTextColor(getResources().getColor(
@@ -902,6 +907,7 @@ public class MainActivity extends Base2Activity implements
 		JPushInterface.onResume(this);
 
 		MobclickAgent.onResume(this);
+		OnUpdateMsgUnreadCounts();
 	}
 
 	@Override
@@ -993,6 +999,14 @@ public class MainActivity extends Base2Activity implements
 							}
 						});
 					}
+				}else {
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							radioButton1.setIndexShowBadge(false, false);
+						}
+					});
 				}
 			}
 		}.start();

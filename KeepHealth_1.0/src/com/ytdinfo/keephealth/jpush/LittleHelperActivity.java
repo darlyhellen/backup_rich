@@ -104,12 +104,24 @@ public class LittleHelperActivity extends BaseActivity {
 		MobclickAgent.onPageEnd("LittleHelperActivity");
 		MobclickAgent.onPause(this);
 	}
-@Override
-protected void onStop() {
-	// TODO Auto-generated method stub
-	super.onStop();
-	updateReadStatus();
-}
+	
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		updateReadStatus();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ytdinfo.keephealth.ui.BaseActivity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(mBroadcastReceiver);
+	}
 
 	private void initView() {
 

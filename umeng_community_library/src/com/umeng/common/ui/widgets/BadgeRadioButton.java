@@ -86,16 +86,17 @@ public class BadgeRadioButton extends RadioButton {
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
 		super.dispatchDraw(canvas);
-		if (isShowBadge && !isChecked() && !isShowed) {
-			LogUtils.i(getWidth() + ",getWidth(), getTop()," + getHeight());
-			if (isIndex) {
-				canvas.drawCircle(getWidth()-20, DeviceUtils.dp2px(getContext(), 4),
-						DeviceUtils.dp2px(getContext(), 4), mPaint);
-			} else {
+		if (isIndex) {
+			if (isShowBadge) {
+				canvas.drawCircle(getWidth() - 26,
+						DeviceUtils.dp2px(getContext(), 6),
+						DeviceUtils.dp2px(getContext(), 6), mPaint);
+			}
+		} else {
+			if (isShowBadge && !isChecked() && !isShowed) {
 				canvas.drawCircle(getWidth() - 20, getTop() + 15,
 						DeviceUtils.dp2px(getContext(), 4), mPaint);
 			}
 		}
-
 	}
 }

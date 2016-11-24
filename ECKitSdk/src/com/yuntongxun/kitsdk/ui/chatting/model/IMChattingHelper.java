@@ -15,10 +15,14 @@ package com.yuntongxun.kitsdk.ui.chatting.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -29,11 +33,16 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
@@ -602,6 +611,311 @@ public class IMChattingHelper implements OnChatReceiveListener,
 	}
 	
 	
+	private synchronized void postReceiveOfflineMessage(ECMessage msg,
+			boolean showNotice) {
+		
+		if (!msg.getForm().contains("g")) {
+			if (chatControllerListener != null) {
+				chatControllerListener.timeStart(msg.getForm());
+			}
+			String userData = msg.getUserData();
+			String subjectId;
+			if (userData != null && !TextUtils.isEmpty(userData)
+					&& msg.getUserData().charAt(32) != '1') {
+				String userinfo = userData.substring(32);
+				String userinfo2 = userData.substring(33);
+				String md5String = userData.substring(0, 32);
+				String mds5 = MD5Util.md5(userinfo);
+				if (!mds5.equalsIgnoreCase(md5String))
+					return;
+				subjectId = userinfo2.substring(0, 32).replace("~", "");
+				Log.e("userinfo",userinfo);
+				Log.e("toId",msg.getTo()+"");
+				Log.e("fromId",msg.getForm()+"");
+				if(msg.getType() == ECMessage.Type.TXT)
+					Log.e("message-content",((ECTextMessageBody)msg.getBody()).getMessage()+"");
+				Log.e("subjectId",subjectId);
+				try {
+					ChatInfoBean chatInfoBean = chatControllerListener
+							.getChatInfoDb().findFirst(
+									Selector.from(ChatInfoBean.class).where(
+											"SubjectID", "=", subjectId));
+
+					if (chatInfoBean == null) {
+						IMChattingHelper.chatControllerListener
+								.handleMessage(subjectId, msg.getForm());
+					} else {
+						if (!chatInfoBean.isStatus()) {
+							chatInfoBean.setStatus(true);
+							chatControllerListener.getChatInfoDb()
+									.saveOrUpdate(chatInfoBean);
+							Intent intnet = new Intent("com.rayelink.subtitle");
+							intnet.putExtra("docId",
+									chatInfoBean.getDocInfoBeanId());
+							intnet.putExtra("docStatus",
+									chatInfoBean.isStatus());
+							ECDeviceKit.getmContext().sendBroadcast(intnet);
+						}
+					}
+				} catch (DbException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+		// 接收到的IM消息，根据IM消息类型做不同的处理
+		// IM消息类型：ECMessage.Type
+		if (msg.getType() != ECMessage.Type.TXT) {
+			ECFileMessageBody body = (ECFileMessageBody) msg.getBody();
+
+			if (!TextUtils.isEmpty(body.getRemoteUrl())) {
+				boolean thumbnail = false;
+				String fileExt = DemoUtils
+						.getExtensionName(body.getRemoteUrl());
+//				// 尝试当传递过来的是文件格式的图片内容。则进行文件和图片类型转换。
+				if (msg.getType() == ECMessage.Type.FILE) {
+					if (fileExt.equalsIgnoreCase("png")
+							|| fileExt.equalsIgnoreCase("jpeg")
+							|| fileExt.equalsIgnoreCase("bmp")) {
+						// 假如文件后缀名为这些类型的图片。则进行转换。
+						msg.setType(ECMessage.Type.IMAGE);
+						ECImageMessageBody messageBody = new ECImageMessageBody();
+						messageBody.setThumbnailFileUrl(body.getRemoteUrl()+"_thum");
+						messageBody.setRemoteUrl(body.getRemoteUrl());
+						msg.setBody(messageBody);
+					}
+				}
+//				// 尝试当传递过来的是文件格式的图片内容。则进行文件和图片类型转换。
+
+				if (msg.getType() == ECMessage.Type.VOICE) {
+					body.setLocalUrl(new File(FileAccessor.getVoicePathName(),
+							DemoUtils.md5(String.valueOf(System
+									.currentTimeMillis())) + ".amr")
+							.getAbsolutePath());
+				} else if (msg.getType() == ECMessage.Type.IMAGE) {
+					ECImageMessageBody imageBody = (ECImageMessageBody) msg.getBody();
+					thumbnail = TextUtils.isEmpty(imageBody
+							.getThumbnailFileUrl());
+					imageBody.setLocalUrl(new File(FileAccessor 
+							.getImagePathName(), DemoUtils
+							.md5(thumbnail ? imageBody.getThumbnailFileUrl()
+									: imageBody.getRemoteUrl())
+							+ "." + fileExt).getAbsolutePath());
+				} else {
+					body.setLocalUrl(new File(FileAccessor.getFilePathName(),
+							DemoUtils.md5(String.valueOf(System
+									.currentTimeMillis())) + "." + fileExt)
+							.getAbsolutePath());
+
+				}
+				if (syncMessage != null) {
+					syncMessage.put(msg.getMsgId(), new SyncMsgEntry(
+							showNotice, msg));
+				}
+				if (mChatManager != null) {
+					if (!thumbnail) {
+						mChatManager.downloadThumbnailMessage(msg, this);
+					} else {
+						mChatManager.downloadMediaMessage(msg, this);
+					}
+				}
+				if (TextUtils.isEmpty(body.getFileName())
+						&& !TextUtils.isEmpty(body.getRemoteUrl())) {
+					body.setFileName(FileAccessor.getFileName(body
+							.getRemoteUrl()));
+				}
+				msg.setUserData("fileName=" + body.getFileName());
+				// msg.setUserData(ECChattingActivity.USER_DATA);
+				/*
+				 * if (IMessageSqlManager.insertIMessage(msg, msg.getDirection()
+				 * .ordinal()) > 0) { return; }
+				 */
+			} else {
+				LogUtil.e(TAG, "ECMessage fileUrl: null");
+			}
+		}
+		try {
+
+			if (msg.getType() == ECMessage.Type.TXT) {
+				if ("BMY://CloseSubject".equals(((ECTextMessageBody) msg
+						.getBody()).getMessage()))// 医生端主动结束咨询
+				{
+					String userData = msg.getUserData();
+					String userinfo2 = userData.substring(33);
+				 
+					String subjectId = userinfo2.substring(0, 32).replace("~", "");
+					
+					try {
+						ChatInfoBean chatInfoBean = chatControllerListener
+								.getChatInfoDb().findFirst(
+										Selector.from(ChatInfoBean.class)
+												.where("docInfoBeanId", "=",
+														msg.getForm()));
+						chatInfoBean.setTimeout(true);
+						chatInfoBean.setStatus(false);
+						chatControllerListener.getChatInfoDb().saveOrUpdate(
+								chatInfoBean);
+						IMChattingHelper.getInstance();
+						IMChattingHelper.chatControllerListener.closeSubject(subjectId, msg.getForm(), mHandler);
+						// 关闭当前聊天窗口变化
+					} catch (DbException e) {
+
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (msg.getUserData() != null
+						&& !msg.getUserData().equals("(null)")
+						&& msg.getUserData().charAt(32) == '1') {
+					// 计时
+					String s = msg.getUserData();
+					String userinfo = s.substring(32);
+					String userinfo2 = s.substring(33);
+					String md5String = s.substring(0, 32);
+					String mds5 = MD5Util.md5(userinfo);
+					if (!mds5.equalsIgnoreCase(md5String))
+						return;
+
+					String subjectId = userinfo2.substring(0, 32).replace("~",
+							"");
+
+					String docVoip = userinfo2.substring(32, 64).replace("~",
+							"");
+					if (chatControllerListener != null)
+						chatControllerListener.timeStop(msg.getForm());
+					CustomCallBack callBack=new CustomCallBack();
+					callBack.from=msg.getForm();
+					callBack.docVoip=docVoip;
+					callBack.subjectId=subjectId;
+					IMChattingHelper.chatControllerListener.getSubjectInfo(subjectId, msg.getForm(), callBack);
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		boolean flag=false;
+		if(msg.getType()==ECMessage.Type.TXT)
+		{
+			boolean flag1=((ECTextMessageBody) msg.getBody()).getMessage().toString().contains("该病人是由");
+			boolean flag2=((ECTextMessageBody) msg.getBody()).getMessage().toString().contains("医生转诊过来的咨询用户。");
+			flag=flag1&&flag2;
+		}
+		 
+		if(flag)
+			return;
+		
+		if (!(msg.getType() == ECMessage.Type.TXT && "BMY://CloseSubject"
+				.equals(((ECTextMessageBody) msg.getBody()).getMessage()))) {
+			if(!IMessageSqlManager.isHaveSameMessage(msg)){
+				if (IMessageSqlManager.insertIMessage(msg, msg.getDirection()
+						.ordinal()) <= 0) {
+					return;
+				}
+			}
+		}
+		
+		if (mOnMessageReportCallback != null) {
+			ArrayList<ECMessage> msgs = new ArrayList<ECMessage>();
+			msgs.add(msg);
+			mOnMessageReportCallback.onPushMessage(msg.getSessionId(), msgs);
+		}
+
+		// 是否状态栏提示
+		if (isApplicationBroughtToBackground(ECDeviceKit.getmContext()
+				.getApplicationContext()))
+			showNotification(msg);
+		
+		if(IMChattingHelper.getOnMessageReportCallback()==null){
+			Intent intnet = new Intent("com.rayelink.refreshchat");
+			intnet.putExtra("docId",
+					msg.getForm());
+			ECDeviceKit.getmContext().sendBroadcast(intnet);
+		}
+		
+	}
+	
+	
+	class  CustomCallBack extends RequestCallBack<String>
+	{
+
+		public DbUtils dbUtils=IMChattingHelper.getInstance().chatControllerListener
+				.getChatInfoDb();
+		
+		public String from;
+		public String docVoip;
+		public String subjectId;
+		
+		
+		@Override
+		public void onSuccess(ResponseInfo<String> arg0) {
+			try {
+				JSONObject jsonObject = new JSONObject(
+						arg0.result);
+				JSONObject data = jsonObject
+						.getJSONObject("Data");
+				if (data != null) {
+					Log.e("getSubjectInfo", data.toString());
+					JSONObject subject = data
+							.getJSONObject("Subject");
+					if (subject != null) {
+						 
+						Log.e("getSubjectInfo-subject",
+								subject.toString());
+						// 是否有此医生的会话
+					
+						ChatInfoBean chatinfoBean = dbUtils
+								.findFirst(Selector.from(
+										ChatInfoBean.class)
+										.where("docInfoBeanId",
+												"=", from));
+						// 如果有医生在线
+						if (chatinfoBean == null) {
+							chatinfoBean = new ChatInfoBean();
+						}
+						chatinfoBean.setSubjectType(subject
+								.getInt("SubjectType") + "");
+						chatinfoBean.setSubjectID(subject
+								.getInt("ID") + "");
+						chatinfoBean.setStatus("1".equals(subject.getString("Status")));
+						chatinfoBean.setComment(false);
+						chatinfoBean.setTimeout(false);
+						dbUtils.saveOrUpdate(chatinfoBean);
+						//0 ：结束会话   1：未结束会话  3：已经结束，医生把这个会话关闭掉
+						if("1".equals(subject.getString("Status")))
+						{
+							// 转诊
+							IMChattingHelper.chatControllerListener
+									.transferTreat(from, docVoip, subjectId);
+						}else 
+						{
+							chatinfoBean.setComment(true);
+							chatinfoBean.setTimeout(true);
+							dbUtils.saveOrUpdate(chatinfoBean);
+						}
+					}
+				}
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DbException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		@Override
+		public void onFailure(HttpException arg0, String arg1) {
+			// TODO Auto-generated method stub
+
+		}
+		
+	}
+	
+ 
+	
+	
 	private Handler mHandler=new Handler()
 	{
 		@Override
@@ -802,7 +1116,7 @@ public class IMChattingHelper implements OnChatReceiveListener,
 		if (msgs != null && !msgs.isEmpty() && !isFirstSync)
 			isFirstSync = true;
 		for (ECMessage msg : msgs) {
-			postReceiveMessage(msg, false);
+			postReceiveOfflineMessage(msg, false);
 		}
 	}
 

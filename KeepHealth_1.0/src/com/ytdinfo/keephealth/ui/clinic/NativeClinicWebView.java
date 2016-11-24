@@ -337,7 +337,15 @@ public class NativeClinicWebView extends BaseActivity implements WXCallBack {
                     i11.setClass(NativeClinicWebView.this, LoginActivity.class);
                     startActivity(i11);
                 }
-                if (url.contains("wap.koudaitong.com")) {
+                if (url.contains(Constants.ROOT_WEB)) {
+                    Intent intent = new Intent(NativeClinicWebView.this,
+                            ClinicWebView.class);
+                    intent.putExtra("loadUrl", url);
+                    startActivity(intent);
+                    webview.stopLoading();
+                    return;
+                }
+                if (url.contains("koudaitong.com")) {
                     synuser = new MyProgressDialog(NativeClinicWebView.this);
                     synuser.setMessage("加载中...");
                     synuser.show();

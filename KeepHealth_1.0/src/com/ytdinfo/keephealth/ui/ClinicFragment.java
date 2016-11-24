@@ -24,12 +24,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgentJSInterface;
+import com.youzan.sdk.Callback;
+import com.youzan.sdk.YouzanSDK;
+import com.youzan.sdk.YouzanUser;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.app.Constants;
+import com.ytdinfo.keephealth.model.UserModel;
 import com.ytdinfo.keephealth.ui.clinic.ClinicWebView;
+import com.ytdinfo.keephealth.ui.uzanstore.WebActivity;
 import com.ytdinfo.keephealth.ui.view.CommonActivityTopView;
+import com.ytdinfo.keephealth.ui.view.MyProgressDialog;
 import com.ytdinfo.keephealth.ui.view.MyWebView;
 import com.ytdinfo.keephealth.utils.LogUtil;
 import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
@@ -49,6 +56,8 @@ public class ClinicFragment extends Fragment {
 	private String loadUrl;
 
 	private String current_url;
+	
+	private MyProgressDialog synuser;
 
 	/*
 	 * (non-Javadoc)
@@ -161,7 +170,7 @@ public class ClinicFragment extends Fragment {
 			}
 
 			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			public void onPageStarted(WebView view, final String url, Bitmap favicon) {
 				LogUtil.i(TAG, "拦截url---onPageStarted-->" + url);
 				if (!url.equals(Constants.HOMEINDEX) && !url.contains("#")) {
 					// 用户点击任何连接，都跳转到另一个Webview中
@@ -174,9 +183,43 @@ public class ClinicFragment extends Fragment {
 								ClinicWebView.class);
 						intent.putExtra("loadUrl", url);
 						startActivityForResult(intent, 1001);
+						return;
 					}
 					
 				}
+				if (url.contains("koudaitong.com")) {
+                    synuser = new MyProgressDialog(getActivity());
+                    synuser.setMessage("加载中...");
+                    synuser.show();
+                    String jsonUserModel = SharedPrefsUtil.getValue(
+                            Constants.USERMODEL, "");
+                    UserModel userModel = new Gson().fromJson(jsonUserModel,
+                            UserModel.class);
+                    YouzanUser user = new YouzanUser();
+                    user.setUserId(userModel.getPid() + "");
+                    int sex = 0;
+                    if ("Man".endsWith(userModel.getUserSex())) {
+                        sex = 1;
+                    }
+                    user.setGender(sex);
+                    user.setNickName(userModel.getAddition1());
+                    user.setTelephone(userModel.getMobilephone());
+                    user.setUserName(userModel.getUserName());
+                    YouzanSDK.asyncRegisterUser(user, new Callback() {
+                        @Override
+                        public void onCallback() {
+                            synuser.dismiss();
+                            Intent i = new Intent();
+                            i.setClass(getActivity(), WebActivity.class);
+                            i.putExtra("loadUrl", url);
+                            startActivity(i);
+                            webview.stopLoading();
+                            return;
+                        }
+                    });
+                    webview.stopLoading();
+                    return;
+                }
 				super.onPageStarted(view, url, favicon);
 			}
 

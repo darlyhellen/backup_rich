@@ -215,10 +215,15 @@ public class UserInfoFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+
+				// Intent intent = new Intent(getActivity(),
+				// YouZanWebViewActivityV3_0_3.class);
+				// // 传入链接, 请修改成你们店铺的链接
+				// intent.putExtra("loadUrl", Constants.SHANGCHENG);
+				// startActivity(intent);
 				registerYouzanUserForWeb();
 			}
 		});
-
 	}
 
 	/**

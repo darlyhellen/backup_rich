@@ -86,7 +86,7 @@ public class MyApp extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		instance = this;
-
+		initUzan();
 		SharedPrefsUtil.putValue(Constants.ISLOADED, false);
 		SharedPrefsUtil.putValue(Constants.CHECKEDID_RADIOBT, 0);
 		SharedPrefsUtil.putValue(Constants.CHECKISUPDATE, true);
@@ -152,7 +152,7 @@ public class MyApp extends Application {
 			}
 		});
 
-		initUzan();
+		
 	}
 
 	/**
@@ -161,14 +161,8 @@ public class MyApp extends Application {
 	 * @author zhangyh2 TODO 初始化有赞SDK
 	 */
 	private void initUzan() {
-		// TODO Auto-generated method stub
 		/**
-		 * 初始化
-		 * 
-		 * @param Context
-		 *            application Context
-		 * @param userAgent
-		 *            用户代理, 填写UA
+		 * 初始化SDK
 		 */
 		YouzanSDK.init(this, "9d4c27edeafad2e13a1464165102698");
 	}

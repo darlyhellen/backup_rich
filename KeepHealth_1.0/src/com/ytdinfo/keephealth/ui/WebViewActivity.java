@@ -292,7 +292,7 @@ public class WebViewActivity extends BaseActivity implements WXCallBack {
                     }
 
                 }
-                if (url.contains("wap.koudaitong.com")) {
+                if (url.contains("koudaitong.com")) {
                     synuser = new MyProgressDialog(WebViewActivity.this);
                     synuser.setMessage("加载中...");
                     synuser.show();

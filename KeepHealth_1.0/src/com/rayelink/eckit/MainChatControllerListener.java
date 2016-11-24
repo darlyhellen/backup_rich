@@ -847,22 +847,22 @@ public class MainChatControllerListener implements ChatControllerListener {
 				});
 	}
 
-//	// 获取会话信息
-//	@Override
-//	public void getSubjectInfo(String subjectId, final String from,RequestCallBack<String> callBack) {
-//		// TODO Auto-generated method stub
-//		try {
-//			
-//			RequestParams requestParams = new RequestParams();
-//			requestParams.addQueryStringParameter("id", subjectId);
-//			HttpClient.get(MyApp.getInstance(), Constants.SUBJECTINFO,
-//					requestParams, callBack);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//	}
+	// 获取会话信息
+	@Override
+	public void getSubjectInfo(String subjectId, final String from,RequestCallBack<String> callBack) {
+		// TODO Auto-generated method stub
+		try {
+			
+			RequestParams requestParams = new RequestParams();
+			requestParams.addQueryStringParameter("id", subjectId);
+			HttpClient.get(MyApp.getInstance(), Constants.SUBJECTINFO,
+					requestParams, callBack);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	private ChatInfoBean getChatInfo(String voipId) {
 		try {

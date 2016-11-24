@@ -59,15 +59,15 @@ public class Constants {
 	// public static final String ROOT_URl = "http://172.3.207.15";
 
 	// 测试环境
-//	public static final String ROOT_URl = "http://172.3.207.26";
+	public static final String ROOT_URl = "http://172.3.207.26";
 
 	// 正式环境
-	 public static final String ROOT_URl = "http://api.bmyi.cn";
+	// public static final String ROOT_URl = "http://api.bmyi.cn";
 
 	// 生产环境
-	 public static final String ROOT_WEB = "http://clinics.bmyi.cn";
+	// public static final String ROOT_WEB = "http://clinics.bmyi.cn";
 	// 测试环境
-//	public static final String ROOT_WEB = "http://test.bmyi.cn:8080";
+	public static final String ROOT_WEB = "http://test.bmyi.cn:8080";
 
 	public static final String UZANSTORE = "https://wap.koudaitong.com/v2/showcase/homepage?alias=1e99alxjl";
 
@@ -110,33 +110,38 @@ public class Constants {
 	/**
 	 * 上午11:43:55 TODO洁牙
 	 */
-	//public static final String KOUQIANG = "https://wap.koudaitong.com/v2/showcase/goods?alias=2fvc0gkduuj5h&reft=1468403487771&spm=f43318615"
+	// public static final String KOUQIANG =
+	// "https://wap.koudaitong.com/v2/showcase/goods?alias=2fvc0gkduuj5h&reft=1468403487771&spm=f43318615"
 	public static final String KOUQIANG = "https://h5.koudaitong.com/v2/tag/12wm4rg5k"
 	/* ROOT_URl+ "/Go/?url=/html/add_server/kouqiang/List.html " */;
 	/**
 	 * 上午11:43:55 TODO康复医疗
 	 */
-	//public static final String KANGFULILIAO = "https://wap.koudaitong.com/v2/showcase/goods?alias=2xk5zb5hsns5x&reft=1468994572716&spm=f43318615";
+	// public static final String KANGFULILIAO =
+	// "https://wap.koudaitong.com/v2/showcase/goods?alias=2xk5zb5hsns5x&reft=1468994572716&spm=f43318615";
 	public static final String KANGFULILIAO = "https://h5.koudaitong.com/v2/tag/1e204u12b";
 	// ROOT_URl+ "/Go/?url=/Html/add_server/newkangfuliliao/List.html";
 	/**
 	 * 上午11:43:55 TODOAHA
 	 */
-	//public static final String AHA = "https://wap.koudaitong.com/v2/showcase/goods?alias=2octwjhuwgsyd&reft=1468403467016&spm=f43318615"
+	// public static final String AHA =
+	// "https://wap.koudaitong.com/v2/showcase/goods?alias=2octwjhuwgsyd&reft=1468403467016&spm=f43318615"
 	public static final String AHA = "https://h5.koudaitong.com/v2/feature/6d4f5fuf"
 	/* ROOT_URl+ "/Go/?url=/html/add_server/aha/homePage.html" */;
 	/**
 	 * 上午11:43:55 TODO胶囊胃镜
 	 * 
 	 */
-	//public static final String WEIJING = "https://wap.koudaitong.com/v2/showcase/tag?alias=by2cl198&reft=1468403432890&spm=f43318615";
+	// public static final String WEIJING =
+	// "https://wap.koudaitong.com/v2/showcase/tag?alias=by2cl198&reft=1468403432890&spm=f43318615";
 	public static final String WEIJING = "https://h5.koudaitong.com/v2/tag/aqgo564a";
+
 	/**
 	 * 上午11:43:55 TODO热卖商城箭头
 	 * 
 	 */
 	public static final String JIANTOU = "https://h5.koudaitong.com/v2/feature/jlfv4jo7";
-	
+
 	// ROOT_URl + "/Go/?url=/html/add_server/weijing/List.html";
 
 	public static final String SERVICE_URl = ROOT_URl + "/APIAccount/";
@@ -335,5 +340,75 @@ public class Constants {
 
 	/* 活跃用户数,0 */
 	public static final String UMENG_EVENT_24 = "event_24";
+
+	/*
+	 * TODO首页点击_Banner(分类事件),0
+	 */
+	public static final String UMENG_EVENT_25 = "home_banner";
+	/*
+	 * TODO首页点击_帮忙医商城,0
+	 */
+	public static final String UMENG_EVENT_26 = "home_01";
+	/*
+	 * TODO首页点击_体检预约,0
+	 */
+	public static final String UMENG_EVENT_27 = "home_02";
+	/*
+	 * TODO首页点击_报告查询,0
+	 */
+	public static final String UMENG_EVENT_28 = "home_03";
+	/*
+	 * TODO,首页点击_报告解读,0
+	 */
+	public static final String UMENG_EVENT_29 = "home_04";
+	/*
+	 * TODO,首页点击_帮忙医门诊,0
+	 */
+	public static final String UMENG_EVENT_30 = "home_11";
+	/*
+	 * TODO,首页点击_预约挂号,0
+	 */
+	public static final String UMENG_EVENT_31 = "home_12";
+	/*
+	 * TODO,首页点击_专家列表,0
+	 */
+	public static final String UMENG_EVENT_32 = "home_13";
+	/*
+	 * TODO,首页点击_热卖商品,0
+	 */
+	public static final String UMENG_EVENT_33 = "home_20";
+	/*
+	 * TODO,首页点击_热卖商品1,0
+	 */
+	public static final String UMENG_EVENT_34 = "home_21";
+	/*
+	 * TODO,首页点击_热卖商品2,0
+	 */
+	public static final String UMENG_EVENT_35 = "home_22";
+
+	/*
+	 * TODO,首页点击_热卖商品3,0
+	 */
+	public static final String UMENG_EVENT_36 = "home_23";
+
+	/*
+	 * TODO,首页点击_热卖商品4,0
+	 */
+	public static final String UMENG_EVENT_37 = "home_24";
+
+	/*
+	 * TODO,首页点击_热门资讯(分类事件),0
+	 */
+	public static final String UMENG_EVENT_38 = "home_news";
+
+	/*
+	 * TODO,首页点击_健康圈(分类事件),0
+	 */
+	public static final String UMENG_EVENT_39 = "home_com";
+
+	/*
+	 * TODO,首页点击_TabBar(分类事件),0
+	 */
+	public static final String UMENG_EVENT_40 = "home_tabbar";
 
 }

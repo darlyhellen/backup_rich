@@ -381,7 +381,7 @@ public class ZHWebViewActivity extends BaseActivity implements WXCallBack {
                     }
 
                 }
-                if (url.contains("wap.koudaitong.com")) {
+                if (url.contains("koudaitong.com")) {
                     synuser = new MyProgressDialog(ZHWebViewActivity.this);
                     synuser.setMessage("加载中...");
                     synuser.show();

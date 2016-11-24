@@ -10,6 +10,7 @@ public class TBNews {
 	private String url;
 	private Bitmap bitmap; 
 	private String dateCreate;
+	private String msg_id;
  
 
 	public Bitmap getBitmap() {
@@ -67,5 +68,15 @@ public class TBNews {
 	public void setDateCreate(String dateCreate) {
 		this.dateCreate = dateCreate;
 	}
+
+	public String getMsg_id() {
+		return msg_id;
+	}
+
+	public void setMsg_id(String msg_id) {
+		this.msg_id = msg_id;
+	}
+	
+	
 
 }

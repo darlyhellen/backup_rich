@@ -81,6 +81,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	private List<String> listImageUrl;
 	private List<String> listUrl;
 	private List<String> types;
+	private List<String> titles;
 	private MyAdGallery gallery;
 	private int[] imageId = new int[] { R.drawable.banner, R.drawable.banner };
 	LinearLayout ovalLayout;
@@ -171,6 +172,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		listImageUrl = new ArrayList<String>();
 		listUrl = new ArrayList<String>();
 		types = new ArrayList<String>();
+		titles = new ArrayList<String>();
 		if (!SharedPrefsUtil.getValue(Constants.ISLOADED, false)) {
 			initViewPagerData();
 			SharedPrefsUtil.putValue(Constants.ISLOADED, true);
@@ -326,12 +328,14 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.v21_home_item_store:
 			// v21 点击进入商城首页（正确）
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_26);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_home_item_store);
 			}
 			break;
 		case R.id.v21_home_item_tjyy:
 			// 体检预约（正确）
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_27);
 			if (checkUser()) {
 				Intent i = new Intent();
 				i.setClass(getActivity(), WebViewActivity.class);
@@ -341,6 +345,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			break;
 		case R.id.v21_home_item_bgcx:
 			// 报告查询（正确）
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_28);
 			if (checkUser()) {
 				Intent i = new Intent();
 				i.setClass(getActivity(), WebViewActivity.class);
@@ -350,6 +355,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			}
 			break;
 		case R.id.v21_home_item_bgjd:
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_29);
 			// 报告解读（正确）
 			if (checkUser()) {
 				MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_23);
@@ -361,6 +367,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 
 		case R.id.v21_home_item_zhensuo:
 			// 同步用户，同步成功跳入诊所。失败则原地
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_30);
 			if (checkUser()) {
 				// 跳转到主页面的
 				((MainActivity) getActivity()).radioButtonClinic
@@ -368,6 +375,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			}
 			break;
 		case R.id.v21_home_item_yygh:
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_31);
 			if (checkUser()) {
 				Intent intent = new Intent(getActivity(), ClinicWebView.class);
 				intent.putExtra("loadUrl", Constants.DOCTORLIST);
@@ -376,6 +384,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			}
 			break;
 		case R.id.v21_home_item_zjpb:
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_32);
 			// 专家排班
 			if (checkUser()) {
 				Intent intent = new Intent(getActivity(), ClinicWebView.class);
@@ -386,30 +395,35 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			break;
 		case R.id.id_hottable_v3:
 			// 热卖文字跳转商城
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_33);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_home_item_store);
 			}
 			break;
 		case R.id.v21_zh_wjjn:
 			// 胶囊胃镜
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_34);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_zh_wjjn);
 			}
 			break;
 		case R.id.v21_zh_aha:
 			// AHA
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_35);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_zh_aha);
 			}
 			break;
 		case R.id.v21_zh_ck:
 			// 齿科
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_36);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_zh_ck);
 			}
 			break;
 		case R.id.v21_zh_kfll:
 			// 康复理疗
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_37);
 			if (checkUser()) {
 				registerYouzanUserForWeb(R.id.v21_zh_kfll);
 			}
@@ -563,6 +577,7 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 		types = new ArrayList<String>();
 		listImagePath.add(path + photoName + ".png");
 		listUrl.add(Constants.PRIVATEDOCTOR);
+		
 		types.add("normal");
 		gallery.start(getActivity(), new ArrayList<String>(), listImagePath,
 				5000, ovalLayout, R.drawable.point_bright,
@@ -620,16 +635,19 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 			listImageUrl.clear();
 			listUrl.clear();
 			types.clear();
+			titles.clear();
 			JSONArray jsonArray = new JSONArray(jsonStr);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				String ImgUrl = jsonObject.getString("ImgUrl");
 				String Url = jsonObject.getString("Url");
 				String Type = jsonObject.getString("TypeNumber");
+				String Title = jsonObject.getString("TitleName");
 				LogUtil.i("wpc", "ImgUrl==" + ImgUrl + "\nUrl==" + Url);
 				listImageUrl.add(ImgUrl);
 				listUrl.add(Url);
 				types.add(Type);
+				titles.add(Title);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -676,7 +694,11 @@ public class HomeFragmentV21 extends Fragment implements OnClickListener,
 	@Override
 	public void onItemClick(final int curIndex) {
 		// 私人医生
-
+		if (titles.get(curIndex)!=null) {
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_25, titles.get(curIndex));
+		}else {
+			MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_25, "其他");
+		}
 		// 根据bannar返回值，进行修改跳转页面
 		LogUtil.i("wpc", "onItemClick---3");
 		if (checkUser()) {

@@ -12,8 +12,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.youzan.sdk.Callback;
+import com.youzan.sdk.YouzanSDK;
+import com.youzan.sdk.YouzanUser;
 import com.ytdinfo.keephealth.R;
+import com.ytdinfo.keephealth.app.Constants;
 import com.ytdinfo.keephealth.model.TBNews;
+import com.ytdinfo.keephealth.model.UserModel;
+import com.ytdinfo.keephealth.ui.WebViewActivity;
+import com.ytdinfo.keephealth.ui.ZHWebViewActivity;
+import com.ytdinfo.keephealth.ui.clinic.ClinicWebView;
+import com.ytdinfo.keephealth.ui.clinic.NativeClinicWebView;
+import com.ytdinfo.keephealth.ui.uzanstore.WebActivity;
+import com.ytdinfo.keephealth.utils.SharedPrefsUtil;
 
 public class LittleHelperAdapter extends BaseAdapter {
 	private String TAG = "LittleHelperAdapter";
@@ -22,7 +34,7 @@ public class LittleHelperAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private Context mContext;
 
-//	private Bitmap icon_bitmap;
+	// private Bitmap icon_bitmap;
 
 	public LittleHelperAdapter(Context context, List<TBNews> list) {
 		mList = list;
@@ -70,19 +82,18 @@ public class LittleHelperAdapter extends BaseAdapter {
 		holder.tv_title.setText(tbNews.getTitle());
 		holder.tv_desc.setText(tbNews.getDesc());
 		holder.iv_icon.setImageBitmap(tbNews.getBitmap());
-		
+
 		convertView.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(mContext, LittleHelperWebViewActivity.class);
+				Intent i = new Intent(mContext,
+						LittleHelperWebViewActivity.class);
 				i.putExtra("loadUrl", tbNews.getUrl());
 				mContext.startActivity(i);
 			}
 		});
-		
-		
-		
+
 		return convertView;
 	}
 
@@ -91,6 +102,5 @@ public class LittleHelperAdapter extends BaseAdapter {
 		public TextView tv_title;
 		public TextView tv_desc;
 	}
-
 
 }

@@ -24,6 +24,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.util.LogUtils;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.common.ui.widgets.NestedListView;
 import com.ytdinfo.keephealth.R;
 import com.ytdinfo.keephealth.adapter.WholseAdapterV21;
@@ -67,6 +68,7 @@ public class HotNewsFragment extends BaseFragment {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_38,"最新资讯");
 				Intent intent = new Intent(getActivity(), ClinicWebView.class);
 				intent.putExtra("loadUrl", Constants.NEWSLISTS);
 				intent.putExtra("title", "最新资讯");
@@ -82,10 +84,21 @@ public class HotNewsFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-
+				
 				// 点击热门咨询，跳转热门咨询。后退跳入消息列表
 				WholseModel model = (WholseModel) parent
 						.getItemAtPosition(position);
+				if (model!=null&&model.getTitle()!=null) {
+					String ti = null;
+					if (model.getTitle().length() > 32) {
+						ti = model.getTitle().substring(0, 31);
+					} else {
+						ti = model.getTitle();
+					}
+					MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_38,ti);
+				}else {
+					MobclickAgent.onEvent(getActivity(), Constants.UMENG_EVENT_38,"其他");
+				}
 				synchronized (model) {
 					if (model != null) {
 						Intent intent = new Intent(getActivity(),

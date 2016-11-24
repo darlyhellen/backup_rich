@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.yuntongxun.kitsdk.adapter.ConversationAdapter;
 import com.yuntongxun.kitsdk.beans.ChatInfoBean;
 import com.yuntongxun.kitsdk.ui.ECChattingActivity.RetryComplete;
@@ -62,4 +63,6 @@ public interface ChatControllerListener {
 			public void closeSubject(final String subjectId,final String docVip,final Handler mHandler);
 			
 			public void isChattingDocOnline(final ChatInfoBean tempInfo, final String docid,final Button retry);
+			
+			public void getSubjectInfo(String subjectId, final String from,RequestCallBack<String> callBack); 
 }

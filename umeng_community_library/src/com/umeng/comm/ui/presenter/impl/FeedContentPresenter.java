@@ -28,6 +28,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.beans.FeedItem;
@@ -40,148 +41,158 @@ import com.umeng.common.ui.dialogs.ImageBrowser;
 
 import java.util.List;
 
-
 /**
  * @author mrsimple
  */
 public class FeedContentPresenter extends BaseFeedWeiboPresenter {
-    ImageBrowser mImageBrowser;
-    FeedItem mFeedItem;
+	ImageBrowser mImageBrowser;
+	FeedItem mFeedItem;
 
-    @Override
-    public void attach(Context context) {
-        super.attach(context);
-        mImageBrowser = new ImageBrowser(context);
-    }
+	@Override
+	public void attach(Context context) {
+		super.attach(context);
+		mImageBrowser = new ImageBrowser(context);
+	}
 
-    /**
-     * 跳转到转发页面</br>
-     */
-    private void gotoFeedDetailActivity(FeedItem feedItem) {
-        Intent intent = new Intent(mContext, FeedDetailActivity.class);
-        feedItem.extraData.clear();
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(Constants.FEED, feedItem);
-        mContext.startActivity(intent);
-    }
-    
-    
-    private void gotoFeedDetailActivityV2(FeedItem feedItem)
-    {
-        Intent intent = new Intent(mContext, FeedDetailActivity.class);
-        feedItem.extraData.clear();
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(Constants.FEED, feedItem);
-        intent.putExtra("BACK_TO_COMMUNITY", true);
-        ((Activity)mContext).startActivityForResult(intent, 1005);
-    }
-    
+	/**
+	 * 跳转到转发页面</br>
+	 */
+	private void gotoFeedDetailActivity(FeedItem feedItem) {
+		Intent intent = new Intent(mContext, FeedDetailActivity.class);
+		feedItem.extraData.clear();
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.putExtra(Constants.FEED, feedItem);
+		mContext.startActivity(intent);
+	}
 
-    public void clickFeedItem() {
-        gotoFeedDetailActivity(mFeedItem);
-    }
-    
-    public void clickFeedItemV2()
-    {
-        gotoFeedDetailActivityV2(mFeedItem);
-    }
+	private void gotoFeedDetailActivityV2(FeedItem feedItem) {
 
-    public void clickOriginFeedItem(FeedItem feedItem) {
-        mFeedItem = feedItem;
-        if (mFeedItem.sourceFeed != null
-                && mFeedItem.sourceFeed.status >= FeedItem.STATUS_SPAM&&mFeedItem.status != FeedItem.STATUS_LOCK) {
-            ToastMsg.showShortMsgByResName("umeng_comm_feed_deleted");
-            return;
-        }
-        gotoFeedDetailActivity(getForwardDetailFeed());
-    }
+		if (feedItem.text != null) {
+			String ti = null;
+			if (feedItem.text.length() > 32) {
+				ti = feedItem.text.substring(0, 31);
+			} else {
+				ti = feedItem.text;
+			}
+			MobclickAgent.onEvent(mContext, "home_com", ti);
+		} else {
+			MobclickAgent.onEvent(mContext, "home_com", "其他");
+		}
+		Intent intent = new Intent(mContext, FeedDetailActivity.class);
+		feedItem.extraData.clear();
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.putExtra(Constants.FEED, feedItem);
+		intent.putExtra("BACK_TO_COMMUNITY", true);
+		((Activity) mContext).startActivityForResult(intent, 1005);
+	}
 
-    /**
-     * 点击转发feed的原始feed时需要从内容中删除原始作者的名字
-     * 
-     * @return
-     */
-    private FeedItem getForwardDetailFeed() {
-        FeedItem feedItem = mFeedItem.sourceFeed;
-        if (feedItem != null) {
-            String feedText = feedItem.text;
-            // 如果点击是被转发的内容,那么将@原始feed的创建者的用户名从内容中去掉
-            int creatorNameIndex = feedText.indexOf(":");
-            if (feedText.startsWith("@") && creatorNameIndex >= 0) {
-                FeedItem originfeedItem = feedItem.clone();
-                int length = feedText.length();
-                int start = creatorNameIndex + 1;
-                originfeedItem.text = feedText.substring(start, length);
-                feedItem = originfeedItem;
-            }
-        } else {
-            feedItem = mFeedItem;
-        }
-        return feedItem;
-    }
+	public void clickFeedItem() {
+		gotoFeedDetailActivity(mFeedItem);
+	}
 
-    public void setFeedItem(FeedItem feedItem) {
-        this.mFeedItem = feedItem;
-    }
+	public void clickFeedItemV2() {
+		gotoFeedDetailActivityV2(mFeedItem);
+	}
 
-    protected FeedItem findFeedWithId(String feedId) {
-        return mFeedItem.id.equals(feedId) ? mFeedItem : new FeedItem();
-    }
+	public void clickOriginFeedItem(FeedItem feedItem) {
+		mFeedItem = feedItem;
+		if (mFeedItem.sourceFeed != null
+				&& mFeedItem.sourceFeed.status >= FeedItem.STATUS_SPAM
+				&& mFeedItem.status != FeedItem.STATUS_LOCK) {
+			ToastMsg.showShortMsgByResName("umeng_comm_feed_deleted");
+			return;
+		}
+		gotoFeedDetailActivity(getForwardDetailFeed());
+	}
 
-    /**
-     * 跳转到个人中心。</br>
-     * 
-     * @param user
-     */
-    public void gotoUserInfoActivity(final CommUser user, final String containerClassName) {
-                                Intent intent = new Intent(mContext, UserInfoActivity.class);
-                        if (user == null) {// 来自开发者外部调用的情况
-                            intent.putExtra(Constants.TAG_USER, CommConfig.getConfig().loginedUser);
-                        } else {
-                            intent.putExtra(Constants.TAG_USER, user);
-                        }
-                        intent.putExtra(Constants.TYPE_CLASS,
-                                containerClassName);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        mContext.startActivity(intent);
-//        CommonUtils.checkLoginAndFireCallback(mContext,
-//                new SimpleFetchListener<LoginResponse>() {
-//
-//                    @Override
-//                    public void onComplete(LoginResponse response) {
-//                        // 取消登录情况，不做任何提示
-//                        if (response.errCode == ErrorCode.CANCAL_CODE) {
-//                            return;
-//                        }
-//                        if (response.errCode != ErrorCode.NO_ERROR) {
-//                            ToastMsg.showShortMsgByResName("umeng_comm_login_failed");
-//                            return;
-//                        }
-//
-//                        Intent intent = new Intent(mContext, UserInfoActivity.class);
-//                        if (user == null) {// 来自开发者外部调用的情况
-//                            intent.putExtra(Constants.TAG_USER, CommConfig.getConfig().loginedUser);
-//                        } else {
-//                            intent.putExtra(Constants.TAG_USER, user);
-//                        }
-//                        intent.putExtra(Constants.TYPE_CLASS,
-//                                containerClassName);
-//                        mContext.startActivity(intent);
-//                    }
-//                });
-    }
+	/**
+	 * 点击转发feed的原始feed时需要从内容中删除原始作者的名字
+	 * 
+	 * @return
+	 */
+	private FeedItem getForwardDetailFeed() {
+		FeedItem feedItem = mFeedItem.sourceFeed;
+		if (feedItem != null) {
+			String feedText = feedItem.text;
+			// 如果点击是被转发的内容,那么将@原始feed的创建者的用户名从内容中去掉
+			int creatorNameIndex = feedText.indexOf(":");
+			if (feedText.startsWith("@") && creatorNameIndex >= 0) {
+				FeedItem originfeedItem = feedItem.clone();
+				int length = feedText.length();
+				int start = creatorNameIndex + 1;
+				originfeedItem.text = feedText.substring(start, length);
+				feedItem = originfeedItem;
+			}
+		} else {
+			feedItem = mFeedItem;
+		}
+		return feedItem;
+	}
 
-    public void jumpToImageBrowser(List<ImageItem> images, int position) {
-        mImageBrowser.setImageList(images, position);
-        mImageBrowser.show();
-    }
+	public void setFeedItem(FeedItem feedItem) {
+		this.mFeedItem = feedItem;
+	}
 
-    @Override
-    public void loadDataFromServer() {
-    }
+	protected FeedItem findFeedWithId(String feedId) {
+		return mFeedItem.id.equals(feedId) ? mFeedItem : new FeedItem();
+	}
 
-    @Override
-    public void loadDataFromDB() {
+	/**
+	 * 跳转到个人中心。</br>
+	 * 
+	 * @param user
+	 */
+	public void gotoUserInfoActivity(final CommUser user,
+			final String containerClassName) {
+		Intent intent = new Intent(mContext, UserInfoActivity.class);
+		if (user == null) {// 来自开发者外部调用的情况
+			intent.putExtra(Constants.TAG_USER,
+					CommConfig.getConfig().loginedUser);
+		} else {
+			intent.putExtra(Constants.TAG_USER, user);
+		}
+		intent.putExtra(Constants.TYPE_CLASS, containerClassName);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		mContext.startActivity(intent);
+		// CommonUtils.checkLoginAndFireCallback(mContext,
+		// new SimpleFetchListener<LoginResponse>() {
+		//
+		// @Override
+		// public void onComplete(LoginResponse response) {
+		// // 取消登录情况，不做任何提示
+		// if (response.errCode == ErrorCode.CANCAL_CODE) {
+		// return;
+		// }
+		// if (response.errCode != ErrorCode.NO_ERROR) {
+		// ToastMsg.showShortMsgByResName("umeng_comm_login_failed");
+		// return;
+		// }
+		//
+		// Intent intent = new Intent(mContext, UserInfoActivity.class);
+		// if (user == null) {// 来自开发者外部调用的情况
+		// intent.putExtra(Constants.TAG_USER,
+		// CommConfig.getConfig().loginedUser);
+		// } else {
+		// intent.putExtra(Constants.TAG_USER, user);
+		// }
+		// intent.putExtra(Constants.TYPE_CLASS,
+		// containerClassName);
+		// mContext.startActivity(intent);
+		// }
+		// });
+	}
 
-    }
+	public void jumpToImageBrowser(List<ImageItem> images, int position) {
+		mImageBrowser.setImageList(images, position);
+		mImageBrowser.show();
+	}
+
+	@Override
+	public void loadDataFromServer() {
+	}
+
+	@Override
+	public void loadDataFromDB() {
+
+	}
 }

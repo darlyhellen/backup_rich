@@ -454,20 +454,16 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				cookieManager.acceptCookie();
 				if (url.contains("ryclinic://yuyuechenggong")) {
 					// 预约成功跳转首页
-					setResult(1001, intent);
+					// setResult(1004, intent);
 					finish();
-				}
-
-				if (!url.contains(Constants.NEWSPAGE)
-						&& myProgressDialog2 != null) {
-					myProgressDialog2.show();
+					return;
 				}
 				if (url.equalsIgnoreCase(Constants.HOMEINDEX)) {
 					// 跳转到首页
-					setResult(1002, intent);
+					// setResult(1004, intent);
 					finish();
+					return;
 				}
-
 				LogUtil.i(TAG, "拦截url---onPageStarted-->" + url);
 				HashMap<String, String> hashmap = new HashMap<String, String>();
 				if (null != SharedPrefsUtil.getValue(Constants.TOKEN, null)) {
@@ -489,7 +485,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 					}
 
 				}
-				if (url.contains("wap.koudaitong.com")) {
+				if (url.contains("koudaitong.com")) {
 					synuser = new MyProgressDialog(ClinicWebView.this);
 					synuser.setMessage("加载中...");
 					synuser.show();
@@ -523,6 +519,10 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 							});
 					webview.stopLoading();
 					return;
+				}
+				if (!url.contains(Constants.NEWSPAGE)
+						&& myProgressDialog2 != null) {
+					myProgressDialog2.show();
 				}
 
 				super.onPageStarted(view, url, favicon);
@@ -907,6 +907,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 
 	// ------高德定位前期使用版本过低，没有定位失败回调方案。无法正常使用故而替换为手机自身定位方案。
 	boolean tiel = false;
+
 	private void localForautoNav() {
 		tiel = false;
 		LogUtils.i("吊起定位方法localForautoNav");
@@ -916,20 +917,16 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				.requestLocation(ClinicWebView.this,
 						new SimpleFetchListener<Location>() {
 							@Override
-							public void onComplete(
-									final Location arg0) {
-								LogUtils.i(arg0.getLatitude()
-										+ "高德地图定位"
+							public void onComplete(final Location arg0) {
+								LogUtils.i(arg0.getLatitude() + "高德地图定位"
 										+ arg0.getLongitude());
 								// ？如何 判断定位失败
 								if (arg0.getLatitude() != 0
 										&& arg0.getLongitude() != 0) {
 									tiel = true;
 									setLocation(arg0);
-									LocationSDKManager
-											.getInstance()
-											.getCurrentSDK()
-											.onPause();
+									LocationSDKManager.getInstance()
+											.getCurrentSDK().onPause();
 								} else {
 									// 没有拿到数据调取胡接口
 									setNoLocation();
@@ -943,7 +940,7 @@ public class ClinicWebView extends BaseActivity implements WXCallBack {
 				// TODO Auto-generated method stub
 				try {
 					Thread.sleep(5000);
-					LogUtils.i("sleep启动完成"+tiel);
+					LogUtils.i("sleep启动完成" + tiel);
 					if (!tiel) {
 						setNoLocation();
 					}
